@@ -5,7 +5,13 @@ interface Props {
 
 const InputTextLogin = ({ heading1, heading2 }: Props) => {
   return (
-    <div>
+    <div
+      style={{
+        backgroundColor: "white",
+        padding: 15 + "px",
+        borderRadius: 20 + "px",
+      }}
+    >
       <form>
         <div className="form-group" style={{ marginTop: 10 + "px" }}>
           <label htmlFor="exampleInputEmail1">{heading1}</label>
