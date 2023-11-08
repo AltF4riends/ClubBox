@@ -49,36 +49,7 @@ const BackgroundLogin = ({ children }: Props) => {
               alignItems: "center",
             }}
           >
-            <div
-              style={{
-                margin: 0,
-                padding: 0,
-                height: 70 + "vh",
-                width: 25 + "vw",
-                borderTopLeftRadius: 20,
-                borderBottomLeftRadius: 20,
-                backgroundColor: "maroon",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            ></div>
-            <div
-              style={{
-                margin: 0,
-                padding: 0,
-                height: 70 + "vh",
-                width: 25 + "vw",
-                borderTopRightRadius: 20,
-                borderBottomRightRadius: 20,
-                backgroundColor: "white",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {children}
-            </div>
+            {children}
           </div>
         </div>
       </div>
