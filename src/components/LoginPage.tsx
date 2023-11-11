@@ -6,8 +6,6 @@ import utm from "../Images/UTM-LOGO.png";
 import clubbox from "../Images/4bd4b1b0-975c-4d88-9755-b6e3f16be011.jpg";
 import clubgroup from "../Images/pngtree-group-people-back-view-png-image_5092405.png";
 
-import { Link } from "react-router-dom";
-
 const LoginPage = () => {
   let heading1 = "Email Address";
   let heading2 = "Password";

@@ -1,7 +1,12 @@
-import React from "react";
+import BackgroundFPassword from "./ForgottenPasswordPage/BackgroundFPassword";
+import InputEmailFPassword from "./ForgottenPasswordPage/InputEmailFPassword";
 
 const ForgottenPasswordPage = () => {
-  return <div>ForgottenPasswordPage</div>;
+  return (
+    <BackgroundFPassword>
+      <InputEmailFPassword></InputEmailFPassword>
+    </BackgroundFPassword>
+  );
 };
 
 export default ForgottenPasswordPage;

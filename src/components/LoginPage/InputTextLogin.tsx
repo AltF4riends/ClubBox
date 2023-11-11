@@ -17,7 +17,7 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
         width: " 46.87vh",
       }}
     >
-      <form>
+      <form action="/home">
         <div className="form-group" style={{ marginTop: 10 + "px" }}>
           <label htmlFor="exampleInputEmail1">{heading1}</label>
           <input
