@@ -21,8 +21,8 @@ const RightBoxLogin = ({ children }: Props) => {
       <div
         className="container-sm"
         style={{
-          width: 290 + "px",
-          height: 300 + "px",
+          width: "22.65vw",
+          height: "49.75vh",
           position: "relative",
 
           backgroundPosition: "center",

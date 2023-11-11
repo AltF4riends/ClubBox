@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface Props {
   heading1: string;
   heading2: string;
@@ -9,8 +11,10 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
       style={{
         backgroundColor: "white",
         padding: 5 + "px",
-        borderRadius: 20 + "px",
+        borderRadius: 1.25 + "rem",
         margin: 0,
+        height: "40.11vw",
+        width: " 46.87vh",
       }}
     >
       <form>
@@ -21,7 +25,7 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             className="form-control"
             id="exampleFormControlInput1"
             placeholder="name@graduate.utm.my"
-            style={{ height: "38px" }}
+            style={{ height: "6.30vh" }}
           ></input>
         </div>
         <div className="form-group" style={{ marginTop: 10 + "px" }}>
@@ -31,7 +35,7 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             className="form-control"
             id="exampleFormControlInput1"
             placeholder=""
-            style={{ height: "38px" }}
+            style={{ height: "6.30vh" }}
           ></input>
         </div>
         <button
@@ -40,10 +44,10 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
           style={{
             color: "maroon",
             marginTop: 15 + "px",
-            width: 270 + "px",
+            width: 21.09 + "vw",
             backgroundColor: "white",
             borderColor: "maroon",
-            borderWidth: 4 + "px",
+            borderWidth: 0.31 + "vw",
             borderRadius: 50 + "px",
           }}
         >
@@ -58,15 +62,17 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             margin: "10px",
           }}
         >
-          <b>Forgot Password?</b>
+          <Link to={"/forgotpassword"} style={{ color: "maroon" }}>
+            <b>Forgot Password?</b>
+          </Link>
         </p>
 
         <p
           style={{
             textAlign: "center",
-            fontSize: "14px",
-            marginTop: "40px",
-            marginBottom: "5px",
+            fontSize: "0.875em",
+            marginTop: "6.633vh",
+            marginBottom: "0.829vh",
           }}
         >
           <b>Do Not Have An Account?</b>
@@ -77,8 +83,8 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             color: "maroon",
             textAlign: "center",
             textDecoration: "underline",
-            fontSize: "13px",
-            marginTop: "5px",
+            fontSize: "0.875em",
+            marginTop: "0.829vh",
           }}
         >
           <b>Click Here To Register Yourself Now</b>
