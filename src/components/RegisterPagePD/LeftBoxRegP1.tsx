@@ -45,7 +45,7 @@ const LeftBoxRegP1 = ({children}:Props) => {
                   style={{
                   width: 190 + "px",
                   height: 100 + "px",
-                  backgroundImage: "url('../src/components/Images/4bd4b1b0-975c-4d88-9755-b6e3f16be011.jpg')",
+                  backgroundImage: "url('../src/components/Images/SmallerClub.jpg')",
                   backgroundSize: "50%",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
