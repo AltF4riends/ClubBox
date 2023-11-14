@@ -10,11 +10,7 @@ import UploadVideo from "./UploadVideo";
 import AboutMe from "./AboutMe";
 import RegDetails from "./RegDetails";
 
-interface Props {
-  children: ReactNode;
-}
-
-const RegisterForm = ({ children }: Props) => {
+const RegisterForm = () => {
   const { regPage, setRegPage }: any = useContext(FormPageContext);
 
   const [formData, setFormData] = useState({
@@ -63,8 +59,7 @@ const RegisterForm = ({ children }: Props) => {
     return regPage < 2 ? "Proceed" : "Submit";
   };
 
-  const buttonFormat = 
-  {
+  const buttonFormat = {
     border: "2px solid maroon",
     color: "maroon",
     padding: "15px 32px",
@@ -75,7 +70,7 @@ const RegisterForm = ({ children }: Props) => {
     borderRadius: "50px",
     width: "225px",
     fontWeight: "bold",
-  }
+  };
 
   return (
     <BackgroundLogin>

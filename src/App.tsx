@@ -8,10 +8,8 @@ import {
 import LoginPage from "./components/LoginPage";
 import ForgottenPasswordPage from "./components/ForgottenPasswordPage";
 import PasswordQuestionPage from "./components/ForgottenPasswordPage/PasswordQuestionPage";
+import RegisterForm from "./components/RegisterPagePD/RegisterForm";
 
-import NavBar from "./components/HomePage/NavBar";
-import Footer from "./components/HomePage/Footer";
-import Slider from "./components/HomePage/Slider";
 import Dashboard from "./components/Dashboard";
 
 function App() {
@@ -22,6 +20,7 @@ function App() {
         <Route path="/forgotpassword" element={<ForgottenPasswordPage />} />
         <Route path="/home" element={<Dashboard />} />
         <Route path="/password_questions" element={<PasswordQuestionPage />} />
+        <Route path="/register" element={<RegisterForm />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
