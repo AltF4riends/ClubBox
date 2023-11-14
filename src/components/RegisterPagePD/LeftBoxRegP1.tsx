@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import React from 'react'
+import smallClubBox from "../RegisterPagePD/SmallerClub.jpg";
+import custInterview from "../RegisterPagePD/customerInterview.png";
 
 interface Props {
   children: ReactNode;
@@ -39,17 +40,19 @@ const LeftBoxRegP1 = ({children}:Props) => {
               flexDirection: "column",
             }}>
 
-              {children}
-
                 <div
                   style={{
                   width: 190 + "px",
                   height: 100 + "px",
-                  backgroundImage: "url('../src/components/Images/SmallerClub.jpg')",
-                  backgroundSize: "50%",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center",
                 }}>
+
+                <img
+                        src={smallClubBox}
+                        style={{
+                          height: 100 + "px",
+                          width: 190 + "px",
+                        }}
+                        alt="ClubBox Logo"/>
                 </div>
 
                 <div>
@@ -73,12 +76,14 @@ const LeftBoxRegP1 = ({children}:Props) => {
                   marginTop: 100 + "px",
                   width: 200 + "px",
                   height: 200 + "px",
-                  backgroundImage: "url('../src/components/Images/customerInterview.png')",
-                  backgroundSize: "100%",
-                  backgroundRepeat: "no-repeat",
-                  backgroundPosition: "center",
                 }}>
-
+                    <img
+                      src={custInterview}
+                      style={{
+                        height: 200 + "px",
+                        width: 200 + "px",
+                      }}
+                      alt="ClubBox Logo"/>
                 </div>
       </div>
     </div>

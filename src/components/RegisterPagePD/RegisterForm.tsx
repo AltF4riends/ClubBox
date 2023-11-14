@@ -14,7 +14,8 @@ interface Props {
   children: ReactNode;
 }
 
-const RegisterForm = ({ children }: Props) => {
+
+const RegisterForm = () => {
   const { regPage, setRegPage }: any = useContext(FormPageContext);
 
   const [formData, setFormData] = useState({

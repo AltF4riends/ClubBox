@@ -87,7 +87,9 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             marginTop: "0.829vh",
           }}
         >
+          <Link to={"/register_page"} style={{ color: "maroon" }}>        
           <b>Click Here To Register Yourself Now</b>
+          </Link>  
         </p>
       </form>
     </div>
