@@ -14,7 +14,6 @@ import PasswordQuestionPage from "./components/ForgottenPasswordPage/PasswordQue
 import RegisterForm from "./components/RegisterPagePD/RegisterForm";
 
 import Dashboard from "./components/Dashboard";
-import RegisterForm from "./components/RegisterPagePD/RegisterForm";
 
 
 const initRegPage = () =>
