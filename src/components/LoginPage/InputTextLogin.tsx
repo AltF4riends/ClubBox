@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useHref } from "react-router-dom";
+import { useRef } from "react";
 
 interface Props {
   heading1: string;
@@ -6,6 +7,15 @@ interface Props {
 }
 
 const InputTextLogin = ({ heading1, heading2 }: Props) => {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const handleLogIn = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(emailRef.current?.value);
+    window.location.href = "/home";
+  };
+
   return (
     <div
       style={{
@@ -17,11 +27,12 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
         width: " 46.87vh",
       }}
     >
-      <form action="/home">
+      <form onSubmit={handleLogIn}>
         <div className="form-group" style={{ marginTop: 10 + "px" }}>
           <label htmlFor="exampleInputEmail1">{heading1}</label>
           <input
             type="email"
+            ref={emailRef}
             className="form-control"
             id="exampleFormControlInput1"
             placeholder="name@graduate.utm.my"
@@ -32,6 +43,7 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
           <label htmlFor="exampleInputEmail1">{heading2}</label>
           <input
             type="password"
+            ref={passwordRef}
             className="form-control"
             id="exampleFormControlInput1"
             placeholder=""

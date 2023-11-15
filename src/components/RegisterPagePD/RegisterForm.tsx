@@ -64,8 +64,7 @@ const RegisterForm = () => {
     return regPage < 2 ? "Proceed" : "Submit";
   };
 
-  const buttonFormat = 
-  {
+  const buttonFormat = {
     border: "2px solid maroon",
     color: "maroon",
     padding: "15px 32px",
@@ -76,7 +75,7 @@ const RegisterForm = () => {
     borderRadius: "50px",
     width: "225px",
     fontWeight: "bold",
-  }
+  };
 
   return (
     <BackgroundLogin>

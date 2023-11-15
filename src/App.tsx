@@ -11,10 +11,8 @@ import { useState } from 'react';
 import LoginPage from "./components/LoginPage";
 import ForgottenPasswordPage from "./components/ForgottenPasswordPage";
 import PasswordQuestionPage from "./components/ForgottenPasswordPage/PasswordQuestionPage";
+import RegisterForm from "./components/RegisterPagePD/RegisterForm";
 
-import NavBar from "./components/HomePage/NavBar";
-import Footer from "./components/HomePage/Footer";
-import Slider from "./components/HomePage/Slider";
 import Dashboard from "./components/Dashboard";
 import RegisterForm from "./components/RegisterPagePD/RegisterForm";
 
