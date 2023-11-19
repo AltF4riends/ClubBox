@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import { FormPageContext } from "./contexts/FormPageContext";
-import { useState } from 'react';
+import { useState } from "react";
 
 import LoginPage from "./components/LoginPage";
 import ForgottenPasswordPage from "./components/ForgottenPasswordPage";
@@ -15,19 +15,17 @@ import RegisterForm from "./components/RegisterPagePD/RegisterForm";
 
 import Dashboard from "./components/Dashboard";
 
-const initRegPage = () =>
-{
+const initRegPage = () => {
   const [regPage, setRegPage] = useState(0);
 
   return (
     <div>
-     <FormPageContext.Provider value={{regPage, setRegPage}}>
-     <RegisterForm/>
-     </FormPageContext.Provider>
+      <FormPageContext.Provider value={{ regPage, setRegPage }}>
+        <RegisterForm />
+      </FormPageContext.Provider>
     </div>
-   )
-}
-
+  );
+};
 
 function App() {
   return (
