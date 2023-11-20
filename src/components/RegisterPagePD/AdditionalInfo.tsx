@@ -6,8 +6,7 @@ import { Link } from "react-router-dom";
 
 function AdditionalInfo() {
   let heading1 = "Fill In Your Additional Details Now";
-  const buttonFormat = 
-  {
+  const buttonFormat = {
     border: "2px solid maroon",
     color: "maroon",
     padding: "15px 32px",
@@ -17,75 +16,102 @@ function AdditionalInfo() {
     cursor: "pointer",
     borderRadius: "50px",
     width: "300px",
-  }
+  };
 
   return (
     <BackgroundLogin>
-    <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
-    <RightBoxRegP1>
-    <div    
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexDirection: "column",
-    }}>
+      <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
+      <RightBoxRegP1>
         <div
-          className="form-header"
           style={{
-            width: 500 + "px",
-            height: 100 + "px",
-            marginBottom: "25px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
           }}
         >
-          <h1
+          <div
+            className="form-header"
+            style={{
+              width: 500 + "px",
+              height: 100 + "px",
+              marginBottom: "25px",
+            }}
+          >
+            <h1
+              style={{
+                textAlign: "center",
+              }}
+            >
+              {heading1}
+            </h1>
+          </div>
+
+          <h6
             style={{
               textAlign: "center",
             }}
           >
-            {heading1}
-          </h1>
-        </div>
-          
-      <h6 style = {{
-          textAlign: "center",
-          }}> You May Perform This Later In the Settings {'->'} Profile </h6>
+            {" "}
+            You May Perform This Later In the Settings {"->"} Profile{" "}
+          </h6>
 
-      <Link to={"/about_me"}>
-      <div
-        style={{
-          marginTop: 25+"px",
-          width: "300px",
-          height: "100px",
-          justifyContent: "space-around",
-      }}>
-      <button type="button" className="btn btn-light" style={buttonFormat}>About Me</button>
-      </div>
-      </Link>
+          <Link to={"/about_me"}>
+            <div
+              style={{
+                marginTop: 25 + "px",
+                width: "300px",
+                height: "100px",
+                justifyContent: "space-around",
+              }}
+            >
+              <button
+                type="button"
+                className="btn btn-light"
+                style={buttonFormat}
+              >
+                About Me
+              </button>
+            </div>
+          </Link>
 
-      <Link to={"/upload_photo"}>
-      <div
-      style={{
-        marginTop: 25+"px",
-        width: "300px",
-        height: "100px",
-    }}>
-      <button type="button" className="btn btn-light" style={buttonFormat}>Upload Profile Picture</button>
-      </div>
-      </Link>
+          <Link to={"/upload_photo"}>
+            <div
+              style={{
+                marginTop: 25 + "px",
+                width: "300px",
+                height: "100px",
+              }}
+            >
+              <button
+                type="button"
+                className="btn btn-light"
+                style={buttonFormat}
+              >
+                Upload Profile Picture
+              </button>
+            </div>
+          </Link>
 
-      <Link to={"/upload_video"}>
-      <div
-      style={{
-        marginTop: 25+"px",
-        width: "300px",
-        height: "100px",
-    }}>
-      <button type="button" className="btn btn-light" style={buttonFormat}>Upload Video of Introduction</button>
-      </div>
-      </Link>
+          <Link to={"/upload_video"}>
+            <div
+              style={{
+                marginTop: 25 + "px",
+                width: "300px",
+                height: "100px",
+              }}
+            >
+              <button
+                type="button"
+                className="btn btn-light"
+                style={buttonFormat}
+              >
+                Upload Video of Introduction
+              </button>
+            </div>
+          </Link>
 
-      <div
+          <div
             style={{
               display: "flex",
               marginTop: "25px",
@@ -95,7 +121,7 @@ function AdditionalInfo() {
               justifyContent: "right",
             }}
           >
-            <Link to={"/home"}>
+            <Link to={"/"}>
               <button
                 type="button"
                 className="btn btn-light btn-lg"
@@ -105,10 +131,10 @@ function AdditionalInfo() {
               </button>
             </Link>
           </div>
-    </div>
-    </RightBoxRegP1>
+        </div>
+      </RightBoxRegP1>
     </BackgroundLogin>
   );
 }
 
-export default AdditionalInfo
+export default AdditionalInfo;
