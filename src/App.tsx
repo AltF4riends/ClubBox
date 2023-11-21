@@ -10,7 +10,7 @@ import { AuthContextProvider } from "./components/RegisterPagePD/AuthContextAlph
 import LoginPage from "./components/LoginPage";
 import ForgottenPasswordPage from "./components/ForgottenPasswordPage";
 import PasswordQuestionPage from "./components/ForgottenPasswordPage/PasswordQuestionPage";
-import RegisterForm from "./RegisterForm";
+import RegisterForm from "./components/RegisterForm";
 
 import Dashboard from "./components/Dashboard";
 import ForgotPasswordQNA from "./components/RegisterPagePD/ForgotPasswordQNA";
@@ -18,6 +18,7 @@ import AdditionalInfo from "./components/RegisterPagePD/AdditionalInfo";
 import AboutMe from "./components/RegisterPagePD/AboutMe";
 import UploadPhoto from "./components/RegisterPagePD/UploadPhoto";
 import UploadVideo from "./components/RegisterPagePD/UploadVideo";
+import EditPersonalDetailsPage from "./components/EditPersonalDetailsPage";
 
 function App() {
   return (
@@ -41,8 +42,8 @@ function App() {
           <Route path="/about_me" element={<AboutMe />} />
           <Route path="/upload_photo" element={<UploadPhoto />} />
           <Route path="/upload_video" element={<UploadVideo />} />
-
-          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/edit-personal-details" element={<EditPersonalDetailsPage/>}/>
+          <Route path="*" element={<Navigate to="/" />}/>
         </Routes>
       </Router>
     </AuthContextProvider>

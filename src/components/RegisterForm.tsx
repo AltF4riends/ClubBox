@@ -1,9 +1,9 @@
 import { ReactNode, useRef, useState } from "react";
-import BackgroundLogin from "./components/RegisterPagePD/BackgroundLogin";
-import LeftBoxRegP1 from "./components/RegisterPagePD/LeftBoxRegP1";
-import RightBoxRegP1 from "./components/RegisterPagePD/RightBoxRegP1";
+import BackgroundLogin from "./RegisterPagePD/BackgroundLogin";
+import LeftBoxRegP1 from "./RegisterPagePD/LeftBoxRegP1";
+import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
 import { Link } from "react-router-dom";
-import { UserAuth } from "./components/RegisterPagePD/AuthContextAlpha";
+import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
