@@ -5,8 +5,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { FormPageContext } from "./contexts/FormPageContext";
-import { useState } from "react";
+import { AuthContextProvider } from "./components/RegisterPagePD/AuthContextAlpha";
 
 import LoginPage from "./components/LoginPage";
 import ForgottenPasswordPage from "./components/ForgottenPasswordPage";
@@ -22,23 +21,31 @@ import UploadVideo from "./components/RegisterPagePD/UploadVideo";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/forgotpassword" element={<ForgottenPasswordPage />} />
-        <Route path="/home" element={<Dashboard />} />
-        <Route path="/password_questions" element={<PasswordQuestionPage />} />
+    <AuthContextProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/forgotpassword" element={<ForgottenPasswordPage />} />
+          <Route path="/home" element={<Dashboard />} />
+          <Route
+            path="/password_questions"
+            element={<PasswordQuestionPage />}
+          />
 
-        <Route path="/register_page" element={<RegisterForm></RegisterForm>} />
-        <Route path="/forget_password_qna" element={<ForgotPasswordQNA />} />
-        <Route path="/additional_info" element={<AdditionalInfo />} />
-        <Route path="/about_me" element={<AboutMe />} />
-        <Route path="/upload_photo" element={<UploadPhoto />} />
-        <Route path="/upload_video" element={<UploadVideo />} />
+          <Route
+            path="/register_page"
+            element={<RegisterForm></RegisterForm>}
+          />
+          <Route path="/forget_password_qna" element={<ForgotPasswordQNA />} />
+          <Route path="/additional_info" element={<AdditionalInfo />} />
+          <Route path="/about_me" element={<AboutMe />} />
+          <Route path="/upload_photo" element={<UploadPhoto />} />
+          <Route path="/upload_video" element={<UploadVideo />} />
 
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthContextProvider>
     //guukug
   );
 }
