@@ -16,6 +16,8 @@ const RightBoxLogin = ({ children }: Props) => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        overflow: "hidden",
+        overflowWrap: "anywhere",
       }}
     >
       <div

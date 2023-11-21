@@ -20,6 +20,8 @@ const LeftBoxLogin = ({ children }: Props) => {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
+        overflow: "hidden",
+        overflowWrap: "anywhere",
       }}
     >
       {children}

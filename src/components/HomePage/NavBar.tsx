@@ -1,8 +1,9 @@
+import feet from "../../Images/plain-black-background-02fh7564l8qq4m6d.jpg";
 function NavBar() {
   return (
     <nav
       className="navbar navbar-expand-lg bg-body-tertiary"
-      style={{ backgroundColor: "black" }}
+      style={{ backgroundImage: `url('${feet}')`, backgroundColor: "black" }}
     >
       <div className="container-fluid">
         <a className="navbar-brand" href="#" style={{ color: "white" }}>

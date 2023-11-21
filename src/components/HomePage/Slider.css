@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url("../Compoents/back.png"); /* Your base64-encoded image here */
+  background-image: url("./back.png"); /* Your base64-encoded image here */
   background-size: 200vh;
   background-position: center;
   background-repeat: no-repeat;

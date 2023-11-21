@@ -1,8 +1,11 @@
+import feet from "../../Images/plain-black-background-02fh7564l8qq4m6d.jpg";
+
 function Footer() {
   return (
     <footer
       className="navbar navbar-expand-lg bg-body-tertiary"
       style={{
+        backgroundImage: `url('${feet}')`,
         backgroundColor: "black",
         position: "fixed",
         bottom: 0,
