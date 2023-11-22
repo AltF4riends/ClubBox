@@ -229,17 +229,6 @@ const RegisterForm = () => {
             </div>
           </form>
         </div>
-
-        <div
-          style={{
-            display: "flex",
-            marginTop: "25px",
-            width: 520 + "px",
-            height: 100 + "px",
-            alignItems: "flex-end",
-            justifyContent: "right",
-          }}
-        ></div>
       </RightBoxRegP1>
     </BackgroundLogin>
   );
