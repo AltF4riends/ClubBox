@@ -1,4 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
+import { useState } from "react";
+import { Alert } from "react-bootstrap";
 
 interface Props {
   heading1: string;
@@ -6,6 +9,25 @@ interface Props {
 }
 
 const InputTextLogin = ({ heading1, heading2 }: Props) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const { signIn } = UserAuth();
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await signIn(email, password);
+      navigate("/home");
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+        console.log(e.message);
+      }
+    }
+  };
   return (
     <div
       style={{
@@ -16,7 +38,8 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
         width: " 46.87vh",
       }}
     >
-      <form action="/home">
+      {error && <Alert variant="danger">{error}</Alert>}
+      <form onSubmit={handleSubmit}>
         <div className="form-group" style={{ marginTop: 10 + "px" }}>
           <label htmlFor="exampleInputEmail1">{heading1}</label>
           <input
@@ -25,6 +48,7 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             id="exampleFormControlInput1"
             placeholder="name@graduate.utm.my"
             style={{ height: "6.30vh" }}
+            onChange={(e) => setEmail(e.target.value)}
             required
           ></input>
         </div>
@@ -36,6 +60,7 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
             id="exampleFormControlInput1"
             placeholder=""
             style={{ height: "6.30vh" }}
+            onChange={(e) => setPassword(e.target.value)}
             required
           ></input>
         </div>
