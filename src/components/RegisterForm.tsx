@@ -1,16 +1,23 @@
-import { ReactNode, useRef, useState } from "react";
+import { useState } from "react";
 import BackgroundLogin from "./RegisterPagePD/BackgroundLogin";
 import LeftBoxRegP1 from "./RegisterPagePD/LeftBoxRegP1";
 import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
-import { Link } from "react-router-dom";
 import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 const RegisterForm = () => {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const cpasswordRef = useRef<HTMLInputElement>(null);
+  //const emailRef = useRef<HTMLInputElement>(null);
+  //const passwordRef = useRef<HTMLInputElement>(null);
+  //const cpasswordRef = useRef<HTMLInputElement>(null);
+  const [fName, setFName] = useState("");
+  const [lName, setLName] = useState("");
+  const [matricNo, setmatricNo] = useState("");
+  const [yearCourse, setyearCourse] = useState("");
+  const [phoneNum, setPhoneNum] = useState("");
+  const [curAddress, setCurAddress] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpassword, setCPassword] = useState("");
@@ -18,7 +25,7 @@ const RegisterForm = () => {
   const { createUser } = UserAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [filled, setFilled] = useState(false);
+
   async function handleSubmit(e: any) {
     e.preventDefault();
     console.log("Clicked");
@@ -32,6 +39,16 @@ const RegisterForm = () => {
         setError("");
         setLoading(true);
         await createUser(email, password);
+        const docRef = await addDoc(collection(db, "Student"), {
+          firstName: fName,
+          lastName: lName,
+          matricNo: matricNo,
+          yearCourse: yearCourse,
+          phoneNumber: phoneNum,
+          address: curAddress,
+          utmEmail: email,
+          password: password,
+        });
         console.log("Signedup");
         navigate("/forget_password_qna");
       } catch {
@@ -97,6 +114,7 @@ const RegisterForm = () => {
                   id="firstName"
                   placeholder="First Name"
                   aria-label="First Name"
+                  onChange={(e) => setFName(e.target.value)}
                 />
                 <br />
               </div>
@@ -111,6 +129,7 @@ const RegisterForm = () => {
                   id="lastName"
                   placeholder="Last Name"
                   aria-label="Last Name"
+                  onChange={(e) => setLName(e.target.value)}
                 />
                 <br />
               </div>
@@ -125,6 +144,7 @@ const RegisterForm = () => {
                   id="mtrNum"
                   placeholder="eg. A20EC0000"
                   aria-label="Matric Number"
+                  onChange={(e) => setmatricNo(e.target.value)}
                 />
                 <br />
               </div>
@@ -139,6 +159,7 @@ const RegisterForm = () => {
                   id="yrcse"
                   placeholder="eg. 3/SECJH"
                   aria-label="YearCourse"
+                  onChange={(e) => setyearCourse(e.target.value)}
                 />
                 <br />
               </div>
@@ -153,6 +174,7 @@ const RegisterForm = () => {
                   id="phNum"
                   placeholder="eg. 0123456789"
                   aria-label="Phone Number"
+                  onChange={(e) => setPhoneNum(e.target.value)}
                 />
                 <br />
               </div>
@@ -167,6 +189,7 @@ const RegisterForm = () => {
                   id="curAddress"
                   placeholder=""
                   aria-label="Current Address"
+                  onChange={(e) => setCurAddress(e.target.value)}
                 />
                 <br />
               </div>
@@ -181,7 +204,6 @@ const RegisterForm = () => {
                   id="utmEmail"
                   placeholder="example@graduate.utm.my"
                   aria-label="UTM Email"
-                  ref={emailRef}
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 <br />
@@ -198,7 +220,6 @@ const RegisterForm = () => {
                   placeholder=""
                   aria-label="Password"
                   onChange={(e) => setPassword(e.target.value)}
-                  ref={passwordRef}
                 />
                 <br />
               </div>
@@ -214,7 +235,6 @@ const RegisterForm = () => {
                   placeholder=""
                   aria-label="Confirm Password"
                   onChange={(e) => setCPassword(e.target.value)}
-                  ref={cpasswordRef}
                 />
                 <br />
               </div>
