@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url("./ECImages/gradientBlack.jpeg"); /* Your base64-encoded image here */
+    background-size: 200vh;
+    background-position: center;
+    background-repeat: no-repeat;
+  
+    height: 100vh;
+  }

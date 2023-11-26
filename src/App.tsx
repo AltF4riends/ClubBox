@@ -19,6 +19,9 @@ import AboutMe from "./components/RegisterPagePD/AboutMe";
 import UploadPhoto from "./components/RegisterPagePD/UploadPhoto";
 import UploadVideo from "./components/RegisterPagePD/UploadVideo";
 import EditPersonalDetailsPage from "./components/EditPersonalDetailsPage";
+import ManageClub from "./components/ManageClub";
+import EditClubInfo from "./components/EditClubInfo";
+import ClubAnnouncement from "./components/ClubAnnouncement";
 
 function App() {
   return (
@@ -43,6 +46,9 @@ function App() {
           <Route path="/upload_photo" element={<UploadPhoto />} />
           <Route path="/upload_video" element={<UploadVideo />} />
           <Route path="/edit-personal-details" element={<EditPersonalDetailsPage/>}/>
+          <Route path="/manage_club" element={<ManageClub />} />
+          <Route path="/edit_club_info" element={<EditClubInfo />} />
+          <Route path="/make_club_announcement" element={<ClubAnnouncement />} />
           <Route path="*" element={<Navigate to="/" />}/>
         </Routes>
       </Router>
