@@ -22,9 +22,9 @@ const AboutMe = () => {
 
   return (
     <div>
-    <BackgroundLogin>
-    <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
-    <RightBoxRegP1>
+      <BackgroundLogin>
+        <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
+        <RightBoxRegP1>
           <h1
             style={{
               textAlign: "center",
@@ -32,27 +32,26 @@ const AboutMe = () => {
           >
             {heading1}
           </h1>
-      <h6
-        style={{
-          textAlign: "center",
-        }}
-      >
-        Write a Maximum of 300 Words About Yourself For Others To See (This Will
-        Help For Club Admissions)
-      </h6>
-      <br />
-      <div className="mb-3"
-      >
-        <textarea
-          className="form-control"
-          id="exampleFormControlTextarea1"
-          rows={10}
-          cols={100}
-          placeholder="Start Typing..."
-        ></textarea>
-      </div>
+          <h6
+            style={{
+              textAlign: "center",
+            }}
+          >
+            Write a Maximum of 300 Words About Yourself For Others To See (This
+            Will Help For Club Admissions)
+          </h6>
+          <br />
+          <div className="mb-3">
+            <textarea
+              className="form-control"
+              id="exampleFormControlTextarea1"
+              rows={10}
+              cols={100}
+              placeholder="Start Typing..."
+            ></textarea>
+          </div>
 
-      <div
+          <div
             style={{
               display: "flex",
               marginTop: "25px",
@@ -72,7 +71,7 @@ const AboutMe = () => {
               </button>
             </Link>
           </div>
-      </RightBoxRegP1>
+        </RightBoxRegP1>
       </BackgroundLogin>
     </div>
   );

@@ -22,6 +22,8 @@ import EditPersonalDetailsPage from "./components/EditPersonalDetailsPage";
 import ManageClub from "./components/ManageClub";
 import EditClubInfo from "./components/EditClubInfo";
 import ClubAnnouncement from "./components/ClubAnnouncement";
+import FaqPage from "./components/FaqPage/FaqMainPage";
+import FaqMainPage from "./components/FaqPage/FaqMainPage";
 
 import Calendar from "react-calendar";
 import CalendarMain from "./components/CalendarPage/CalendarMain";
@@ -39,6 +41,7 @@ function App() {
             path="/password_questions"
             element={<PasswordQuestionPage />}
           />
+          <Route path="/faqpage" element={<FaqMainPage />} />
 
           <Route
             path="/register_page"
@@ -60,7 +63,10 @@ function App() {
             element={<ClubAnnouncement />}
           />
           <Route path="*" element={<Navigate to="/" />} />
+<<<<<<< HEAD
           <Route path="/CalendarMain" element={<CalendarComp />} />
+=======
+>>>>>>> 050330d57cd220f4a45efe842b64d36375bfe2a3
         </Routes>
       </Router>
     </AuthContextProvider>
