@@ -5,7 +5,7 @@ import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
 import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const RegisterForm = () => {

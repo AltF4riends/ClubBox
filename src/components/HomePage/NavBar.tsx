@@ -37,16 +37,18 @@ const NavBar = () => {
           id="navbarSupportedContent"
         >
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <a
-                className="nav-link active"
-                aria-current="page"
-                href="#"
-                style={{ color: "grey" }}
-              >
-                Home
-              </a>
-            </li>
+            <Link to={"/home"}>
+              <li className="nav-item">
+                <a
+                  className="nav-link active"
+                  aria-current="page"
+                  href="#"
+                  style={{ color: "white" }}
+                >
+                  Home
+                </a>
+              </li>
+            </Link>
             <li className="nav-item">
               <a className="nav-link" href="#" style={{ color: "white" }}>
                 Shop
@@ -61,6 +63,17 @@ const NavBar = () => {
                 Clubs
               </a>
             </li>
+            <Link to={"/faqpage"}>
+              <li className="nav-item">
+                <a
+                  className="nav-link disabled"
+                  aria-disabled="true"
+                  style={{ color: "white" }}
+                >
+                  FAQ
+                </a>
+              </li>
+            </Link>
           </ul>
           <div
             className="dropdown"
