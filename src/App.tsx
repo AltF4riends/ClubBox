@@ -25,9 +25,12 @@ import ClubAnnouncement from "./components/ClubAnnouncement";
 import FaqPage from "./components/FaqPage/FaqMainPage";
 import FaqMainPage from "./components/FaqPage/FaqMainPage";
 
-import Calendar from "react-calendar";
+import Calendar from "./components/CalendarComp";
 import CalendarMain from "./components/CalendarPage/CalendarMain";
 import CalendarComp from "./components/CalendarComp";
+import ProfilePage from "./components/ProfilePage";
+import ClubAdmission from "./components/ClubAdmission";
+import ViewEvent from "./components/ViewEvent";
 
 function App() {
   return (
@@ -37,16 +40,20 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/forgotpassword" element={<ForgottenPasswordPage />} />
           <Route path="/home" element={<Dashboard />} />
+          <Route path="/profilePage" element={<ProfilePage />} />
           <Route
             path="/password_questions"
             element={<PasswordQuestionPage />}
           />
           <Route path="/faqpage" element={<FaqMainPage />} />
 
+          <Route path="/Club_Admission" element={<ClubAdmission />} />
+          <Route path="/event/:id" element={<ViewEvent />} />
           <Route
             path="/register_page"
             element={<RegisterForm></RegisterForm>}
           />
+
           <Route path="/forget_password_qna" element={<ForgotPasswordQNA />} />
           <Route path="/additional_info" element={<AdditionalInfo />} />
           <Route path="/about_me" element={<AboutMe />} />
@@ -64,6 +71,7 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/CalendarMain" element={<CalendarComp />} />
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>
     </AuthContextProvider>

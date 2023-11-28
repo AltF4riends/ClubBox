@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import feet from "../../Images/plain-black-background-02fh7564l8qq4m6d.jpg";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -55,15 +56,14 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a
-                className="nav-link disabled"
-                aria-disabled="true"
+              <Link
+                to="/Club_Admission"
+                className="nav-link"
                 style={{ color: "white" }}
               >
                 Clubs
-              </a>
+              </Link>
             </li>
-<<<<<<< HEAD
             <li className="nav-item">
               <Link
                 className="nav-link"
@@ -73,7 +73,6 @@ const NavBar = () => {
                 Calendar
               </Link>
             </li>
-=======
             <Link to={"/faqpage"}>
               <li className="nav-item">
                 <a
@@ -85,7 +84,6 @@ const NavBar = () => {
                 </a>
               </li>
             </Link>
->>>>>>> 050330d57cd220f4a45efe842b64d36375bfe2a3
           </ul>
           <div
             className="dropdown"
@@ -137,11 +135,19 @@ const NavBar = () => {
                 </a>
               </li>
             </ul>
+            <Link to="/ProfilePage">
+              <img
+                className="rounded-circle"
+                height="40"
+                width="40"
+                src="public/profile.png"
+                alt="Profile"
+              />
+            </Link>
           </div>
         </div>
       </div>
     </nav>
   );
 };
-
 export default NavBar;
