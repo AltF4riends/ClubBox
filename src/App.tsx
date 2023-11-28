@@ -63,10 +63,7 @@ function App() {
             element={<ClubAnnouncement />}
           />
           <Route path="*" element={<Navigate to="/" />} />
-<<<<<<< HEAD
           <Route path="/CalendarMain" element={<CalendarComp />} />
-=======
->>>>>>> 050330d57cd220f4a45efe842b64d36375bfe2a3
         </Routes>
       </Router>
     </AuthContextProvider>
