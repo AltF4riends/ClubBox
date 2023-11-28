@@ -10,7 +10,7 @@ function Slider() {
       className="carousel slide"
       data-bs-ride="carousel"
       style={{
-        paddingTop: "40px",
+        paddingTop: "10px",
         paddingBottom: "70px",
       }}
     >
