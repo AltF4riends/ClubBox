@@ -23,6 +23,10 @@ import ManageClub from "./components/ManageClub";
 import EditClubInfo from "./components/EditClubInfo";
 import ClubAnnouncement from "./components/ClubAnnouncement";
 
+import Calendar from "react-calendar";
+import CalendarMain from "./components/CalendarPage/CalendarMain";
+import CalendarComp from "./components/CalendarComp";
+
 function App() {
   return (
     <AuthContextProvider>
@@ -45,11 +49,18 @@ function App() {
           <Route path="/about_me" element={<AboutMe />} />
           <Route path="/upload_photo" element={<UploadPhoto />} />
           <Route path="/upload_video" element={<UploadVideo />} />
-          <Route path="/edit-personal-details" element={<EditPersonalDetailsPage/>}/>
+          <Route
+            path="/edit-personal-details"
+            element={<EditPersonalDetailsPage />}
+          />
           <Route path="/manage_club" element={<ManageClub />} />
           <Route path="/edit_club_info" element={<EditClubInfo />} />
-          <Route path="/make_club_announcement" element={<ClubAnnouncement />} />
-          <Route path="*" element={<Navigate to="/" />}/>
+          <Route
+            path="/make_club_announcement"
+            element={<ClubAnnouncement />}
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/CalendarMain" element={<CalendarComp />} />
         </Routes>
       </Router>
     </AuthContextProvider>

@@ -61,6 +61,15 @@ const NavBar = () => {
                 Clubs
               </a>
             </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/CalendarMain"
+                style={{ color: "white" }}
+              >
+                Calendar
+              </Link>
+            </li>
           </ul>
           <div
             className="dropdown"
