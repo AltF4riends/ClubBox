@@ -43,7 +43,7 @@ function Search() {
         ></button>
 
         <button
-          className="btn btn-secondary dropdown-toggle"
+          className="btn btn-secondary dropdown-toggle details"
           type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"

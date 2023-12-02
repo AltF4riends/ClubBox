@@ -118,9 +118,15 @@ const NavBar = () => {
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
               <li>
-                <a className="dropdown-item" href="#">
-                  Profile
-                </a>
+                <div className="dropdown-item">
+                  <Link
+                    to="/ProfilePage"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    {" "}
+                    Profile
+                  </Link>
+                </div>
               </li>
               <li>
                 <a className="dropdown-item" href="#">
@@ -135,15 +141,6 @@ const NavBar = () => {
                 </a>
               </li>
             </ul>
-            <Link to="/ProfilePage">
-              <img
-                className="rounded-circle"
-                height="40"
-                width="40"
-                src="public/profile.png"
-                alt="Profile"
-              />
-            </Link>
           </div>
         </div>
       </div>
