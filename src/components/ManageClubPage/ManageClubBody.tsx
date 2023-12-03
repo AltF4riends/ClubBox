@@ -198,10 +198,29 @@ const ManageClubBody = () => {
               height: "15vh",
               width: " 50vw",
               justifyContent: "flex-end",
-              alignItems: "flex-end",
+              alignItems: "space-between",
               flexDirection: "row"
             }}
             >
+              <div
+              style={{
+                height: "5vh",
+                width: " 20vw",
+              }}            
+              >
+                <Link to={"/make_club_announcement"}>
+                <button
+                      type="button"
+                      className="btn btn-primary btn-lg"
+                      style={{
+                        width: "300px"
+                      }}
+                    >
+                      Make Club Announcement
+                </button>
+                </Link>
+              </div>
+
               <div
               style={{
                 height: "5vh",

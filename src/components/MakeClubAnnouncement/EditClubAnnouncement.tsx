@@ -1,16 +1,23 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const EditClubAnnouncement = () => {
 
-  const announcementTitle = {
-    height: "10vh",
+  const announcementLargeTitle = {
+    height: "5vh",
     width: "65vw",
   }  
 
-  const announcementBody = {
-    height: "55vh",
-    width: "65vw",
+  const announcementTitle = {
+    height: "8vh",
+    width: "60vw",
   }  
+
+  const announcementBody = {
+    height: "50vh",
+    width: "60vw",
+  }  
+
   return (
     <div
     style={{
@@ -25,22 +32,45 @@ const EditClubAnnouncement = () => {
             style={{
                 display: "flex",
                 height: "75vh",
-                width: "80vw",
+                width: "75vw",
                 backgroundColor: "rgba(255,255,255,0.7)",
                 borderRadius: "45px",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
             }}>
+                <div style ={announcementLargeTitle}>
+                  <h1 style = {{
+                    textAlign: "center",
+                    color:"maroon",
+                  }}
+                  >Make a Club Announcement
+                  </h1>
+                </div>
+
                 <div className="form-group" style={announcementTitle}>
-                    <label htmlFor="exampleFormControlTextarea1">Club Announcement Title</label>
-                    <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Club Announement Title"/>
+                    <label htmlFor="exampleFormControlTextarea1" style = {{fontSize: "24px"}}>Club Announcement Title</label>
+                    <input type="text" className="form-control" id="" placeholder="Club Announement Title"/>
                 </div>
 
                 <div className="form-group" style={announcementBody}>
-                    <label htmlFor="exampleFormControlTextarea1">Example textarea</label>
-                    <textarea className="form-control" id="exampleFormControlTextarea1"  rows="20" placeholder='Type in your Club Announcement'></textarea>
+                    <label htmlFor="exampleFormControlTextarea1" style = {{fontSize: "24px"}}>Club Announcement Body</label>
+                    <textarea className="form-control" id="" rows="20" placeholder='Type in your Club Announcement'></textarea>
                 </div>
+
+                <div>
+                  <Link to={"/manage_club"}>
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-lg"
+                      style={{
+                        width: "400px"
+                      }}
+                    >
+                      Save and Publish Club Announcement
+                    </button>
+                  </Link>
+              </div>
             </div>
         </form>
     </div>

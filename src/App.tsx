@@ -32,6 +32,8 @@ import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/ClubAdmission";
 import ViewEvent from "./components/ViewEvent";
 
+
+
 function App() {
   return (
     <AuthContextProvider>

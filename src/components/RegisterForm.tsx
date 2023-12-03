@@ -39,7 +39,7 @@ const RegisterForm = () => {
         setError("");
         setLoading(true);
         await createUser(email, password);
-        const docRef = await addDoc(collection(db, "Student"), {
+        const docRef = await addDoc(collection(db, "Student", userID), {
           firstName: fName,
           lastName: lName,
           matricNo: matricNo,
@@ -53,6 +53,7 @@ const RegisterForm = () => {
         navigate("/forget_password_qna");
       } catch {
         setError("Failed to create an account");
+        console.log(userID);//
       }
       setLoading(false);
     }

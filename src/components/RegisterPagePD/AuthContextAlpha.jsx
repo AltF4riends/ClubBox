@@ -8,15 +8,17 @@ import {
 } from 'firebase/auth';
 import { auth } from '../../firebase';
 
+
 const UserContext = createContext();
 
+globalThis.userID = "";//
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
 
 
   const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password).then(function(data){console.log('uid', data.user.uid);});
+    return createUserWithEmailAndPassword(auth, email, password).then(function(data){userID = data.user.uid;});
   };
 
    const signIn = (email, password) =>  {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 const EditInfoBody = () => {
@@ -40,6 +40,48 @@ const EditInfoBody = () => {
     height: "6vh",
     width: "48vw",
   }
+
+  const buttonFormatEdit = 
+  {
+    border:"none",
+    backgroundColor: "rgba(255,255,255,0.0)",
+  }
+
+  const [isInputEnabled, setIsInputEnabled] = useState(true);
+
+  const toggleInputEnabled = () => {
+    setIsInputEnabled((prevEnabled) => !prevEnabled);
+  };
+
+  const [isInputEnabled1, setIsInputEnabled1] = useState(true);
+
+  const toggleInputEnabled1 = () => {
+    setIsInputEnabled1((prevEnabled1) => !prevEnabled1);
+  };
+
+  const [isInputEnabled2, setIsInputEnabled2] = useState(true);
+
+  const toggleInputEnabled2 = () => {
+    setIsInputEnabled2((prevEnabled2) => !prevEnabled2);
+  };
+
+  const [isInputEnabled3, setIsInputEnabled3] = useState(true);
+
+  const toggleInputEnabled3 = () => {
+    setIsInputEnabled3((prevEnabled3) => !prevEnabled3);
+  };
+
+  const [isInputEnabled4, setIsInputEnabled4] = useState(true);
+
+  const toggleInputEnabled4 = () => {
+    setIsInputEnabled4((prevEnabled4) => !prevEnabled4);
+  };
+
+  const [isInputEnabled5, setIsInputEnabled5] = useState(true);
+
+  const toggleInputEnabled5 = () => {
+    setIsInputEnabled5((prevEnabled5) => !prevEnabled5);
+  };
 
   return (
     <div
@@ -88,11 +130,20 @@ const EditInfoBody = () => {
 
             <div
             style={smallEditBox}>
-              <h5>Edit</h5>
+              <button type="button" onClick={toggleInputEnabled} style={buttonFormatEdit}>
+                <h6 style={{
+                  fontStyle: "bold",
+                  textDecoration: "underline",
+                  fontSize: "24px"
+                }}>
+                {isInputEnabled ? '' : 'Save '} 
+                  Edit
+                </h6>
+              </button>
             </div>
 
             <div className="form-group">
-              <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Club Name" disabled/>
+              <input type="text" className="form-control" id="" placeholder="Club Name" disabled={isInputEnabled}/>
             </div>
           </div>
 
@@ -104,15 +155,23 @@ const EditInfoBody = () => {
 
             <div
             style={smallEditBox}>
-              <h5>Edit</h5>
+              <button type="button" onClick={toggleInputEnabled1} style={buttonFormatEdit}>
+                <h6 style={{
+                  fontStyle: "bold",
+                  textDecoration: "underline",
+                  fontSize: "24px"
+                }}>
+                {isInputEnabled1 ? '' : 'Save '} 
+                  Edit
+                </h6>
+              </button>
             </div>
 
-            <div
-            style={smallDefaultBox}>
-              <h4>https://www.linkedin.com/in/david-buergel-959b6a166/</h4>
+            <div className="form-group">
+              <input type="text" className="form-control" id="" placeholder="LinkedIn Account Link" disabled={isInputEnabled1}/>
             </div>
           </div>
-          
+
           <div
           style={editBlockFormat}>
             <div
@@ -121,12 +180,20 @@ const EditInfoBody = () => {
 
             <div
             style={smallEditBox}>
-              <h5>Edit</h5>
+              <button type="button" onClick={toggleInputEnabled2} style={buttonFormatEdit}>
+                <h6 style={{
+                  fontStyle: "bold",
+                  textDecoration: "underline",
+                  fontSize: "24px"
+                }}>
+                {isInputEnabled2 ? '' : 'Save '} 
+                  Edit
+                </h6>
+              </button>
             </div>
 
-            <div
-            style={smallDefaultBox}>
-              <h4>Not Provided</h4>
+            <div className="form-group">
+              <input type="text" className="form-control" id="" placeholder="Twitter Link" disabled={isInputEnabled2}/>
             </div>
           </div>
 
@@ -138,12 +205,20 @@ const EditInfoBody = () => {
 
             <div
             style={smallEditBox}>
-              <h5>Edit</h5>
+              <button type="button" onClick={toggleInputEnabled3} style={buttonFormatEdit}>
+                <h6 style={{
+                  fontStyle: "bold",
+                  textDecoration: "underline",
+                  fontSize: "24px"
+                }}>
+                {isInputEnabled3 ? '' : 'Save '} 
+                  Edit
+                </h6>
+              </button>
             </div>
 
-            <div
-            style={smallDefaultBox}>
-              <h4>Not Provided</h4>
+            <div className="form-group">
+              <input type="text" className="form-control" id="" placeholder="Facebook Link" disabled={isInputEnabled3}/>
             </div>
           </div>
 
@@ -155,12 +230,20 @@ const EditInfoBody = () => {
 
             <div
             style={smallEditBox}>
-              <h5>Edit</h5>
+              <button type="button" onClick={toggleInputEnabled4} style={buttonFormatEdit}>
+                <h6 style={{
+                  fontStyle: "bold",
+                  textDecoration: "underline",
+                  fontSize: "24px"
+                }}>
+                {isInputEnabled4 ? '' : 'Save '} 
+                  Edit
+                </h6>
+              </button>
             </div>
 
-            <div
-            style={smallDefaultBox}>
-              <h4>Not Provided</h4>
+            <div className="form-group">
+              <input type="text" className="form-control" id="" placeholder="Not Provided" disabled={isInputEnabled4}/>
             </div>
           </div>
 
@@ -172,14 +255,23 @@ const EditInfoBody = () => {
 
             <div
             style={smallEditBox}>
-              <h5>Edit</h5>
+              <button type="button" onClick={toggleInputEnabled5} style={buttonFormatEdit}>
+                <h6 style={{
+                  fontStyle: "bold",
+                  textDecoration: "underline",
+                  fontSize: "24px"
+                }}>
+                {isInputEnabled5 ? '' : 'Save '} 
+                  Edit
+                </h6>
+              </button>
             </div>
 
-            <div
-            style={smallDefaultBox}>
-              <h4>Not Provided</h4>
+            <div className="form-group">
+              <input type="text" className="form-control" id="" placeholder="Not Provided" disabled={isInputEnabled5}/>
             </div>
           </div>
+
         </div>
         
         <div      
