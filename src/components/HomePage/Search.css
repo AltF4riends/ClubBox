@@ -52,3 +52,12 @@
 .contact form input:last-child:hover{
   background-color: #0d0d0d;
 }
+
+
+.btn.btn-secondary.dropdown-toggle.details {
+  background: #212121;
+  padding: 10px 19px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline;
+}

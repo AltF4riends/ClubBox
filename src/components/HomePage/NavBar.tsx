@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import feet from "../../Images/plain-black-background-02fh7564l8qq4m6d.jpg";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -55,13 +56,13 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a
-                className="nav-link disabled"
-                aria-disabled="true"
+              <Link
+                to="/Club_Admission"
+                className="nav-link"
                 style={{ color: "white" }}
               >
                 Clubs
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <Link
@@ -117,9 +118,15 @@ const NavBar = () => {
             </button>
             <ul className="dropdown-menu dropdown-menu-end">
               <li>
-                <a className="dropdown-item" href="#">
-                  Profile
-                </a>
+                <div className="dropdown-item">
+                  <Link
+                    to="/ProfilePage"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    {" "}
+                    Profile
+                  </Link>
+                </div>
               </li>
               <li>
                 <a className="dropdown-item" href="#">
@@ -140,5 +147,4 @@ const NavBar = () => {
     </nav>
   );
 };
-
 export default NavBar;
