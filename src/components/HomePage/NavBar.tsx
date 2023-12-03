@@ -63,7 +63,6 @@ const NavBar = () => {
                 Clubs
               </a>
             </li>
-<<<<<<< HEAD
             <li className="nav-item">
               <Link
                 className="nav-link"
@@ -73,7 +72,6 @@ const NavBar = () => {
                 Calendar
               </Link>
             </li>
-=======
             <Link to={"/faqpage"}>
               <li className="nav-item">
                 <a
@@ -85,7 +83,6 @@ const NavBar = () => {
                 </a>
               </li>
             </Link>
->>>>>>> 050330d57cd220f4a45efe842b64d36375bfe2a3
           </ul>
           <div
             className="dropdown"
