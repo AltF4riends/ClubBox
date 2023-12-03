@@ -1,20 +1,16 @@
-// Dashboard.js
-
 import React from "react";
 import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
-import Slider from "./HomePage/Slider";
-import Search from "./HomePage/Search";
+import CalendarMain from "./CalendarPage/CalendarMain";
 
-function Dashboard() {
+function CalendarComp() {
   return (
     <div>
       <NavBar />
-      <Search />
       <Footer />
-      <Slider />
+      <CalendarMain />
     </div>
   );
 }
 
-export default Dashboard;
+export default CalendarComp;

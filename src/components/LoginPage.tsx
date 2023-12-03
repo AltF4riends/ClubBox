@@ -9,6 +9,7 @@ import clubgroup from "../Images/pngtree-group-people-back-view-png-image_509240
 const LoginPage = () => {
   let heading1 = "Email Address";
   let heading2 = "Password";
+
   return (
     <BackgroundLogin>
       <LeftBoxLogin>

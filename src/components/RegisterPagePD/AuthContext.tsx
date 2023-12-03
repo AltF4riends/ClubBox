@@ -1,7 +1,11 @@
 import React from "react";
 import { ReactNode, useContext, useState, useEffect } from "react";
 import { auth } from "../../firebase";
-import { UserCredential, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  UserCredential,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 
 interface Props {
   children: ReactNode;

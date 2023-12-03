@@ -10,7 +10,7 @@ function Slider() {
       className="carousel slide"
       data-bs-ride="carousel"
       style={{
-        paddingTop: "40px",
+        paddingTop: "10px",
         paddingBottom: "70px",
       }}
     >
@@ -37,6 +37,7 @@ function Slider() {
                 desc="this event is very nice you should join please"
                 price="55RM"
                 logo="public/aeisec logo.png"
+                eventId={1}
               ></Cards>
               <Cards
                 image="public/ted.jpg"
@@ -44,6 +45,7 @@ function Slider() {
                 desc="this event is very nice you should join please"
                 price="25RM"
                 logo="public/TED logo.png"
+                eventId={2}
               ></Cards>
               <Cards
                 image="public/Compfair.jpg"
@@ -51,6 +53,7 @@ function Slider() {
                 desc="this event is very nice you should join please"
                 price="Free"
                 logo="public/PERSAKA logo.jpeg"
+                eventId={3}
               ></Cards>
             </div>
           </div>

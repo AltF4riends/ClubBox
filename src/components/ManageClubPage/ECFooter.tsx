@@ -1,8 +1,12 @@
-function Footer() {
+import feet from "../../Images/plain-black-background-02fh7564l8qq4m6d.jpg";
+
+//Try to make 2 divs in a large one
+function ECFooter() {
   return (
     <footer
-      className="navbar navbar-expand-lg bs-body-tertiary"
+      className="navbar navbar-expand-lg bg-body-tertiary"
       style={{
+        backgroundImage: `url('${feet}')`,
         backgroundColor: "black",
         position: "fixed",
         bottom: 0,
@@ -68,4 +72,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default ECFooter;
