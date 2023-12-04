@@ -22,11 +22,11 @@ export const AuthContextProvider = ({ children }) => {
   };
 
    const signIn = (email, password) =>  {
-    return signInWithEmailAndPassword(auth, email, password)
+    return signInWithEmailAndPassword(auth, email, password).then(function(data){userID = data.user.uid.toString(); console.log(userID)});
    }
 
   const logout = () => {
-      return signOut(auth)
+      return signOut(auth).then(function(data){userID = ""; console.log(userID)});
   }
 
   useEffect(() => {

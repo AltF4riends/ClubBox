@@ -7,8 +7,33 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 function ProfilePage() {
+  async function handleOnLoad(e: any) {
+    e.preventDefault();
+    const docRef = doc(db, "Student", userID);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      console.log(docSnap.data().firstName);
+      setProfileInfo({
+        ...profileInfo,
+        legalName: docSnap.data().firstName,
+        email: docSnap.data().utmEmail,
+        phoneNumber: docSnap.data().phoneNumber,
+        governmentId: docSnap.data().matricNo,
+        address: docSnap.data().address,
+        emergencyContact: docSnap.data().phoneNumber,
+      });
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      console.log(userID);
+    }
+  }
   const [isEditing, setIsEditing] = useState(false);
   const [profileInfo, setProfileInfo] = useState({
     legalName: "",
@@ -34,7 +59,7 @@ function ProfilePage() {
 
   return (
     <>
-      <div>
+      <div onLoad={handleOnLoad}>
         <NavBar />
 
         <div

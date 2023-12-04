@@ -1,12 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
-import feet from "../../Images/plain-black-background-02fh7564l8qq4m6d.jpg";
+import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
+import { useState } from "react";
 
 const NavBar = () => {
   const navigate = useNavigate();
+  const { signOut } = UserAuth();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission behavior
-
+    e.preventDefault();
+    setError("");
+    try {
+      await signOut();
+      navigate("/");
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+        console.log(e.message);
+      }
+    }
     // Perform any asynchronous tasks if needed
 
     // Use the navigate function to redirect to the desired route
