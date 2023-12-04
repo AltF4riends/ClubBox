@@ -29,7 +29,7 @@ import Calendar from "./components/CalendarComp";
 import CalendarMain from "./components/CalendarPage/CalendarMain";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
-import ClubAdmission from "./components/ClubAdmission";
+
 import ViewEvent from "./components/ViewEvent";
 
 function App() {
@@ -47,7 +47,6 @@ function App() {
           />
           <Route path="/faqpage" element={<FaqMainPage />} />
 
-          <Route path="/Club_Admission" element={<ClubAdmission />} />
           <Route path="/event/:id" element={<ViewEvent />} />
           <Route
             path="/register_page"

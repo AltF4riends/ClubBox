@@ -35,7 +35,10 @@ function ViewEvent() {
           marginLeft: "10px",
         }}
       >
-        <div className="container" style={{ margin: "0 150px" }}>
+        <div
+          className="container"
+          style={{ margin: "0 150px", alignItems: "center" }}
+        >
           <div className="row">
             {/* Event Title */}
             <div className="col-12">
