@@ -5,7 +5,7 @@ import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
 import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { collection, addDoc, setDoc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const RegisterForm = () => {
@@ -39,7 +39,7 @@ const RegisterForm = () => {
         setError("");
         setLoading(true);
         await createUser(email, password);
-        const docRef = await addDoc(collection(db, "Student", userID), {
+        const docRef = await setDoc(doc(db, "Student", userID), {
           firstName: fName,
           lastName: lName,
           matricNo: matricNo,
@@ -53,7 +53,7 @@ const RegisterForm = () => {
         navigate("/forget_password_qna");
       } catch {
         setError("Failed to create an account");
-        console.log(userID);//
+        console.log(userID); //
       }
       setLoading(false);
     }

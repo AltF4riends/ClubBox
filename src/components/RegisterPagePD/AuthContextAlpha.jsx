@@ -18,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
 
 
   const createUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password).then(function(data){userID = data.user.uid;});
+    return createUserWithEmailAndPassword(auth, email, password).then(function(data){userID = data.user.uid.toString(); console.log(userID)});
   };
 
    const signIn = (email, password) =>  {

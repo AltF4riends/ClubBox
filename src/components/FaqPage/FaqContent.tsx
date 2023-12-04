@@ -52,7 +52,7 @@ const FaqContent = () => {
           flexDirection: "column",
         }}
       >
-        <Dropdown>
+        <Dropdown style={{ marginBottom: "60px", width: "50vw" }}>
           <Dropdown.Toggle
             variant="success"
             id="dropdown-autoclose-true"
@@ -63,17 +63,21 @@ const FaqContent = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu style={{ fontSize: "20px", position: "relative" }}>
-            <Dropdown.Item>Action</Dropdown.Item>
+            <Dropdown.Item>
+              No, You can only use utm provided email to register yourself to
+              the system.
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        <Dropdown>
+
+        <Dropdown style={{ marginBottom: "60px", width: "50vw" }}>
           <Dropdown.Toggle
             variant="success"
             id="dropdown-autoclose-true"
             style={{ fontSize: "25px", position: "relative" }}
           >
-            1. Is it possible for me to register myself without having a
-            @graduate.utm.my email?
+            2. Is it mandatory to fill in the About Me Information in my
+            profile?
           </Dropdown.Toggle>
 
           <Dropdown.Menu
@@ -83,7 +87,26 @@ const FaqContent = () => {
               position: "relative",
             }}
           >
-            <Dropdown.Item>Action</Dropdown.Item>
+            <Dropdown.Item>
+              No, It is not mandatory to fill it in but is advised to do so for
+              Club representatives to get to know you more easily.
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+
+        <Dropdown style={{ marginBottom: "60px", width: "50vw" }}>
+          <Dropdown.Toggle
+            variant="success"
+            id="dropdown-autoclose-true"
+            style={{ fontSize: "25px", position: "relative" }}
+          >
+            3. Is it possible to fill in multiple admission forms to join clubs?
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu style={{ fontSize: "20px", position: "relative" }}>
+            <Dropdown.Item>
+              Yes, you may fill in or enroll multiple clubs at a time.
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </div>
