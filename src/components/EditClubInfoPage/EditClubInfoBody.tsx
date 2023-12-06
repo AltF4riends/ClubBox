@@ -1,7 +1,9 @@
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { db } from '../../firebase';
 
-const EditInfoBody = () => {
+function EditInfoBody() {
 
   const smallInfoBlockFormat =
   {
@@ -83,6 +85,50 @@ const EditInfoBody = () => {
     setIsInputEnabled5((prevEnabled5) => !prevEnabled5);
   };
 
+  const [clubInfo, setClubInfo] = useState({
+    clubName: "",
+    clubLI: "",
+    clubTwitter: "",
+    clubFB: "",
+    clubAppReq: "",
+    clubDesc: "",
+  });
+
+  async function handleOnLoad(e: any) {
+    e.preventDefault();
+    const docRef = doc(db, "Club", "cl001");
+    const docSnap = await getDoc(docRef);
+    console.log("why");
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      console.log(docSnap.data().clubName);
+      setClubInfo({
+        ...clubInfo,
+        clubName: docSnap.data().clubName,
+        clubLI: docSnap.data().clubLinkedIn,
+        clubTwitter: docSnap.data().clubTwitter,
+        clubFB: docSnap.data().clubFacebook,
+        clubAppReq: docSnap.data().address,
+        clubDesc: docSnap.data().clubDesc,
+      });
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log(clubInfo.clubName);
+      console.log("No such document!");
+    }
+  }
+
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    setClubInfo({ ...clubInfo, [e.target.name]: e.target.value });
+  };
+
+/*
+  await updateDoc(clubRef, {
+    capital: true
+  });
+*/
+
   return (
     <div
     style={{
@@ -91,7 +137,8 @@ const EditInfoBody = () => {
       width: "100vw",
       justifyContent: "center",
       alignItems: "center",
-    }}>
+    }}
+    onLoad={handleOnLoad}>
       <form>
       <div
       style={{
@@ -101,8 +148,7 @@ const EditInfoBody = () => {
         backgroundColor: "rgba(255,255,255,0.7)",
         borderRadius: "45px",
         justifyContent: "center",
-        alignItems: "center",
-      }}>
+        alignItems: "center", }}>
         
         <div      
         style={{
@@ -143,7 +189,9 @@ const EditInfoBody = () => {
             </div>
 
             <div className="form-group">
-              <input type="text" className="form-control" id="" placeholder="Club Name" disabled={isInputEnabled}/>
+              <input type="text" className="form-control" id="clubName" name = "clubName" placeholder="Club Name" disabled={isInputEnabled} 
+              value={clubInfo.clubName}
+              onChange={handleChange}/>
             </div>
           </div>
 
@@ -168,7 +216,7 @@ const EditInfoBody = () => {
             </div>
 
             <div className="form-group">
-              <input type="text" className="form-control" id="" placeholder="LinkedIn Account Link" disabled={isInputEnabled1}/>
+              <input type="text" className="form-control" id="" placeholder="LinkedIn Account Link" disabled={isInputEnabled1} />
             </div>
           </div>
 
@@ -193,7 +241,7 @@ const EditInfoBody = () => {
             </div>
 
             <div className="form-group">
-              <input type="text" className="form-control" id="" placeholder="Twitter Link" disabled={isInputEnabled2}/>
+              <input type="text" className="form-control" id="" placeholder="Twitter Link" disabled={isInputEnabled2} />
             </div>
           </div>
 
