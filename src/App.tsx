@@ -49,6 +49,7 @@ function App() {
           />
           <Route path="/faqpage" element={<FaqMainPage />} />
 
+          <Route path="/createevents" element={<CreateEvents />} />
           <Route path="/Club_Admission" element={<ClubAdmission />} />
           <Route path="/event/:id" element={<ViewEvent />} />
           <Route

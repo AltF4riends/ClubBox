@@ -6,23 +6,21 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 function ViewEvent() {
-  const { id } = useParams(); // Get the event ID from the URL parameter
+  useParams(); // Get the event ID from the URL parameter
 
   // Simulated data for the event details
   const eventData = {
     title: "Leaders2You Summit",
-    image:
-      "xampp/htdocs/labs/altf4riends.github.io/public/L2YS Agenda Reveal.png",
+    image: "public/L2YS Agenda Reveal.png",
     description:
       "Leaders2You Summit is a gathering of emerging leaders focused on personal and professional growth...",
     location: "Event Location: Dewan Sultan Iskandar, UTM, Johor, Malaysia",
     fee: "Event Fee: 55 RM",
-    mapImage:
-      "xampp/htdocs/labs/altf4riends.github.io/public/ClubBox System – Figma - Opera 11_28_2023 7_01_26 PM.png",
+    mapImage: "public/eventmap.png",
   };
 
   return (
-    <>
+    <div>
       <NavBar />
       <div
         className="carousel-background"
@@ -45,7 +43,11 @@ function ViewEvent() {
           <div className="row">
             {/* Event Image */}
             <div className="col-md-6">
-              <img src={eventData.image} alt="Event" className="img-fluid" />
+              <img
+                src={eventData.image}
+                alt="L2YS Agenda Reveal"
+                className="img-fluid"
+              />
             </div>
             {/* Vertical Line */}
             <div className="col-md-1 border-right"></div>
@@ -58,7 +60,7 @@ function ViewEvent() {
               {/* Event Map */}
               <img
                 src={eventData.mapImage}
-                alt="Event Location Map"
+                alt="eventmap"
                 className="img-fluid"
               />
               {/* Event Fee and Pay Button */}
@@ -74,7 +76,7 @@ function ViewEvent() {
         </div>
       </div>
       <Footer />
-    </>
+    </div>
   );
 }
 
