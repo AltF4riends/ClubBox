@@ -24,9 +24,7 @@ function ProfilePage() {
         legalName: docSnap.data().firstName,
         email: docSnap.data().utmEmail,
         phoneNumber: docSnap.data().phoneNumber,
-        governmentId: docSnap.data().matricNo,
         address: docSnap.data().address,
-        emergencyContact: docSnap.data().phoneNumber,
       });
     } else {
       // docSnap.data() will be undefined in this case
@@ -39,10 +37,8 @@ function ProfilePage() {
     legalName: "",
     email: "",
     phoneNumber: "",
-    governmentId: "",
     address: "",
-    emergencyContact: "",
-    forgetPassowrdQuestion: "",
+    forgetPasswordQuestion: "", // Corrected property name
   });
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
@@ -180,30 +176,6 @@ function ProfilePage() {
                   marginLeft: 0,
                 }}
               />
-              <div className="form-group" style={{ textAlign: "left" }}>
-                <label htmlFor="governmentId">Government ID</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  id="governmentId"
-                  name="governmentId"
-                  value={profileInfo.governmentId}
-                  onChange={handleChange}
-                  readOnly={!isEditing}
-                  style={{
-                    backgroundColor: "rgba(240, 255, 255, 0.7)",
-                    width: "30%",
-                  }}
-                />
-                <button
-                  type="button"
-                  className="btn btn-link"
-                  onClick={() => setIsEditing(!isEditing)}
-                  style={{ margin: "0 400px" }}
-                >
-                  {isEditing ? "Save" : "Edit"}
-                </button>
-              </div>
               <hr
                 style={{
                   borderTop: "2px solid white",
@@ -242,30 +214,6 @@ function ProfilePage() {
                   marginLeft: 0,
                 }}
               />
-              <div className="form-group" style={{ textAlign: "left" }}>
-                <label htmlFor="emergencyContact">Emergency Contact</label>
-                <input
-                  type="text"
-                  className="form-control form-control-sm"
-                  id="emergencyContact"
-                  name="emergencyContact"
-                  value={profileInfo.emergencyContact}
-                  onChange={handleChange}
-                  readOnly={!isEditing}
-                  style={{
-                    backgroundColor: "rgba(240, 255, 255, 0.7)",
-                    width: "30%",
-                  }}
-                />
-                <button
-                  type="button"
-                  className="btn btn-link"
-                  onClick={() => setIsEditing(!isEditing)}
-                  style={{ margin: "0 400px" }}
-                >
-                  {isEditing ? "Save" : "Edit"}
-                </button>
-              </div>
               <hr
                 style={{
                   borderTop: "2px solid white",
