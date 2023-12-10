@@ -33,6 +33,7 @@ import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/ClubAdmission";
 import ViewEvent from "./components/ViewEvent";
+import CreateEvents from "./components/CreateEvents";
 
 function App() {
   return (
