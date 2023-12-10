@@ -27,12 +27,12 @@ import FaqMainPage from "./components/FaqPage/FaqMainPage";
 
 import Calendar from "./components/CalendarComp";
 import CalendarMain from "./components/CalendarPage/CalendarMain";
+import NewEvent from "./components/CreateEvent/NewEvent";
+import NewEventComp from "./components/NewEventComp";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/ClubAdmission";
 import ViewEvent from "./components/ViewEvent";
-
-
 
 function App() {
   return (
@@ -73,6 +73,7 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" />} />
           <Route path="/CalendarMain" element={<CalendarComp />} />
+          <Route path="/NewEventComp" element={<NewEventComp />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Router>

@@ -97,6 +97,14 @@ const NavBar = () => {
                 </a>
               </li>
             </Link>
+
+            <Link
+              className="nav-link"
+              to="/NewEventComp"
+              style={{ color: "white" }}
+            >
+              Add Event
+            </Link>
           </ul>
           <div
             className="dropdown"

@@ -38,7 +38,7 @@ const fetchEventsFromFirestore = async (
 
       eventData[dateStr].push({
         eventName: data.eventName,
-        type: "success", // Set the desired status for all badges
+        type: "success",
       });
     });
 
