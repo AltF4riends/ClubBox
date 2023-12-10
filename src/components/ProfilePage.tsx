@@ -21,7 +21,8 @@ function ProfilePage() {
       console.log(docSnap.data().firstName);
       setProfileInfo({
         ...profileInfo,
-        legalName: docSnap.data().firstName,
+        fullName: docSnap.data().firstName,
+
         email: docSnap.data().utmEmail,
         phoneNumber: docSnap.data().phoneNumber,
         address: docSnap.data().address,
@@ -34,7 +35,7 @@ function ProfilePage() {
   }
   const [isEditing, setIsEditing] = useState(false);
   const [profileInfo, setProfileInfo] = useState({
-    legalName: "",
+    fullName: "",
     email: "",
     phoneNumber: "",
     address: "",
@@ -82,13 +83,13 @@ function ProfilePage() {
             <div className="row">
               <div className="col-md-6">
                 <div className="form-group">
-                  <label htmlFor="legalName">Legal Name</label>
+                  <label htmlFor="fullName">Full Name</label>
                   <input
                     type="text"
                     className="form-control form-control-sm"
-                    id="legalName"
-                    name="legalName"
-                    value={profileInfo.legalName}
+                    id="fullName"
+                    name="fullName"
+                    value={profileInfo.fullName}
                     onChange={handleChange}
                     readOnly={!isEditing}
                     style={{
@@ -113,6 +114,43 @@ function ProfilePage() {
                   marginLeft: 0,
                 }}
               />
+
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="fullName">last Name</label>
+                    <input
+                      type="text"
+                      className="form-control form-control-sm"
+                      id="fullName"
+                      name="fullName"
+                      value={profileInfo.fullName}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
+                      style={{
+                        backgroundColor: "rgba(240, 255, 255, 0.6)",
+                        width: "61%",
+                      }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className="btn btn-link"
+                    onClick={() => setIsEditing(!isEditing)}
+                    style={{ margin: "0 400px" }}
+                  >
+                    {isEditing ? "Save" : "Edit"}
+                  </button>
+                </div>
+                <hr
+                  style={{
+                    borderTop: "2px solid white",
+                    width: "60%",
+                    marginLeft: 0,
+                  }}
+                />
+              </div>
+
               <div className="form-group" style={{ textAlign: "left" }}>
                 <label htmlFor="email">Email</label>
                 <input
