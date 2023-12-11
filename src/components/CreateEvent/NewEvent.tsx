@@ -62,11 +62,17 @@ const NewEvent: React.FC = () => {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "100vh",
+    height: "75%",
+    maxHeight: "75%",
   };
 
   const formStyle: React.CSSProperties = {
     width: "70%",
+    height: "80%",
+    maxHeight: "75%",
+    marginTop: "30px",
+    marginBottom: "30px",
+
     backgroundColor: "rgba(255,255,255,0.7)",
     borderRadius: "10px",
     padding: "20px",
@@ -78,7 +84,7 @@ const NewEvent: React.FC = () => {
   };
 
   const submitButtonStyle: React.CSSProperties = {
-    marginTop: "20px",
+    marginTop: "10px",
     padding: "10px",
     backgroundColor: "blue",
     color: "white",

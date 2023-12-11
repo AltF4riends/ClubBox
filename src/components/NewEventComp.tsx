@@ -10,7 +10,6 @@ function NewEventComp() {
   return (
     <div>
       <NavBar />
-      <Search />
 
       <NewEvent />
     </div>
