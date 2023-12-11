@@ -10,6 +10,7 @@ import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "./ProfilePage.css"; // Import the CSS file
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 function ProfilePage() {
   async function handleOnLoad(e: any) {
@@ -56,31 +57,29 @@ function ProfilePage() {
     setIsEditing(!isEditing);
   };
 
-  const saveInfo = () => {
+  const storage = getStorage();
+
+  const saveInfo = async () => {
     setIsEditing(!isEditing);
 
-    //Storage bycket for image
-    //if (image) {
+    // Storage bucket for image
+    if (image) {
+      const storageRef = ref(storage, `profile-images/${userID}/${image.name}`);
 
-    /*
+      try {
+        await uploadBytes(storageRef, image);
 
-    const storageRef = ref(storage, `profile-images/${userID}/${image.name}`);
-    
-    try {
-      await uploadBytes(storageRef, image);
+        // Get the download URL after the upload is complete (optional)
+        const downloadURL = await getDownloadURL(storageRef);
 
-      // Get the download URL after the upload is complete (optional)
-      const downloadURL = await getDownloadURL(storageRef);
+        // Now you can use `downloadURL` to save it to the user's profile data or display the image
 
-      // Now you can use `downloadURL` to save it to the user's profile data or display the image
-
-      setIsUploading(false);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      setIsUploading(false);
+        setIsUploading(false);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        setIsUploading(false);
+      }
     }
-      setIsUploading(false);
-    }*/
   };
 
   const inputRef = useRef<HTMLInputElement | null>(null);
