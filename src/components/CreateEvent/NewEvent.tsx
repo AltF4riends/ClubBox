@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./NewEvent.css";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
 
 interface FormData {
   clubID: string;
@@ -17,7 +22,7 @@ const NewEvent: React.FC = () => {
     clubID: "",
     eventName: "",
     eventTime: "",
-    eventDate: "",
+    eventDate: new Date().toISOString().split("T")[0],
     eventDesc: "",
     eventCond: "",
     eventType: "",
@@ -43,7 +48,7 @@ const NewEvent: React.FC = () => {
         clubID: "",
         eventName: "",
         eventTime: "",
-        eventDate: "",
+        eventDate: new Date().toISOString().split("T")[0],
         eventDesc: "",
         eventCond: "",
         eventType: "",
@@ -59,97 +64,96 @@ const NewEvent: React.FC = () => {
 
   const containerStyle: React.CSSProperties = {
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
     height: "100vh",
   };
 
   const formStyle: React.CSSProperties = {
-    width: "70%",
-    backgroundColor: "rgba(255,255,255,0.7)",
-    borderRadius: "10px",
+    textAlign: "center",
     padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    backgroundColor: "#f4f4f4",
+    width: "50vh",
   };
 
   const inputStyle: React.CSSProperties = {
-    margin: "10px 0",
-    padding: "10px",
+    marginBottom: "15px",
   };
 
   const submitButtonStyle: React.CSSProperties = {
-    marginTop: "20px",
-    padding: "10px",
-    backgroundColor: "blue",
+    backgroundColor: "#4CAF50",
     color: "white",
+    padding: "10px 20px",
+    borderRadius: "5px",
     cursor: "pointer",
+  };
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(
+    new Date(formData.eventDate) // Convert string to Date
+  );
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+
+    if (date) {
+      setFormData((prevData) => ({
+        ...prevData,
+        eventDate: date.toISOString().split("T")[0], // Convert Date to string
+      }));
+    }
+  };
+  const [selectedTime, setSelectedTime] = useState<Date | null>(null);
+  const handleTimeChange = (time: string | null) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      eventTime: time || "00:00", // Set a default time if time is null
+    }));
   };
 
   return (
     <div style={containerStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
-        <h1>Event Info</h1>
-
-        <div style={inputStyle}>
-          <h3>Club ID</h3>
-          <input
-            type="text"
-            className="form-control"
-            name="clubID"
-            value={formData.clubID}
-            onChange={handleChange}
-          />
-        </div>
+        <h1>New Event Info</h1>
 
         <div style={inputStyle}>
           <h3>Event Name</h3>
           <input
             type="text"
-            className="form-control"
+            className="inputField"
             name="eventName"
             value={formData.eventName}
             onChange={handleChange}
           />
         </div>
 
-        <div style={inputStyle}>
+        <div>
           <h3>Event Time</h3>
-          <input
-            type="text"
-            className="form-control"
-            name="eventTime"
-            value={formData.eventTime}
-            onChange={handleChange}
-          />
+          <TimePicker onChange={handleTimeChange} value={formData.eventTime} />
         </div>
 
         <div style={inputStyle}>
           <h3>Event Date</h3>
-          <input
-            type="text"
-            className="form-control"
-            name="eventDate"
-            value={formData.eventDate}
-            onChange={handleChange}
+          <label htmlFor="eventDate"></label>
+          <DatePicker
+            selected={selectedDate}
+            onChange={handleDateChange}
+            dateFormat="yyyy-MM-dd"
+            id="eventDate"
           />
         </div>
 
         <div style={inputStyle}>
           <h3>Event Description</h3>
-          <input
-            type="text"
-            className="form-control"
-            name="eventDesc"
-            value={formData.eventDesc}
-            onChange={handleChange}
-          />
+          <textarea className="inputField" name="eventDesc"></textarea>
         </div>
 
         <div style={inputStyle}>
           <h3>Event Conditions</h3>
           <input
             type="text"
-            className="form-control"
+            className="inputField"
             name="eventCond"
             value={formData.eventCond}
             onChange={handleChange}
@@ -158,13 +162,12 @@ const NewEvent: React.FC = () => {
 
         <div style={inputStyle}>
           <h3>Event Type</h3>
-          <input
-            type="text"
-            className="form-control"
-            name="eventType"
-            value={formData.eventType}
-            onChange={handleChange}
-          />
+          <label></label>
+
+          <select name="eventType" id="eventType">
+            <option value="Online">Online</option>
+            <option value="Face-to-face">Face-to-face</option>
+          </select>
         </div>
 
         <button type="submit" style={submitButtonStyle}>
