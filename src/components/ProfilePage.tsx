@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, ChangeEvent } from "react";
 import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
 import "./HomePage/Slider.css";
-import { Breadcrumb, Table } from "react-bootstrap";
+import { Breadcrumb } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,69 +10,127 @@ import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "./ProfilePage.css"; // Import the CSS file
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  StorageReference, // Make sure to import StorageReference
+} from "firebase/storage";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
 
 function ProfilePage() {
-  async function handleOnLoad(e: any) {
-    e.preventDefault();
-    const docRef = doc(db, "Student", userID);
-    const docSnap = await getDoc(docRef);
+  // State for user ID
+  const [userID, setUserID] = useState<string | null>(null);
 
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      console.log(docSnap.data().firstName);
-      console.log(docSnap.data().lastName);
-
-      setProfileInfo({
-        ...profileInfo,
-        firstName: docSnap.data().firstName,
-        lastName: docSnap.data().lastName,
-
-        email: docSnap.data().utmEmail,
-        phoneNumber: docSnap.data().phoneNumber,
-        address: docSnap.data().address,
-      });
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
-      console.log(userID);
-    }
-  }
-  const [isEditing, setIsEditing] = useState(false);
+  // State for profile information
   const [profileInfo, setProfileInfo] = useState({
     firstName: "",
     lastName: "",
-
     email: "",
     phoneNumber: "",
     address: "",
-    forgetPasswordQuestion: "", // Corrected property name
+    forgetPasswordQuestion: "",
   });
 
-  const handleChange = (e: { target: { name: any; value: any } }) => {
+  // State for image URL
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  // State for editing mode
+  const [isEditing, setIsEditing] = useState(false);
+
+  // State for image file
+  const [image, setImage] = useState<File | null>(null);
+
+  // State for uploading status
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Effect to handle user authentication changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserID(user.uid);
+      } else {
+        setUserID(null);
+      }
+    });
+
+    // Cleanup function to unsubscribe from the observer when the component unmounts
+    return () => unsubscribe();
+  }, []); // Empty dependency array to run the effect only once on mount
+
+  useEffect(() => {
+    const handleOnLoad = async () => {
+      if (userID) {
+        const docRef = doc(db, "Student", userID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setProfileInfo({
+            ...profileInfo,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.utmEmail,
+            phoneNumber: data.phoneNumber,
+            address: data.address,
+          });
+        } else {
+          console.log("No such document!");
+        }
+      }
+    };
+
+    handleOnLoad();
+  }, [userID]); // Dependency array to rerun the effect when userID changes
+
+  // Event handler for input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setProfileInfo({ ...profileInfo, [e.target.name]: e.target.value });
   };
 
-  const toggleEdit = () => {
+  // Toggle editing mode
+  const toggleEdit = async () => {
+    if (isEditing) {
+      // Save data to Firebase when exiting edit mode
+      await updateDoc(doc(db, "Student", userID!), profileInfo);
+    }
     setIsEditing(!isEditing);
   };
 
-  const storage = getStorage();
+  // Event handler for image click
+  const handleImageClick = () => {
+    inputRef.current?.click();
+  };
 
+  // Event handler for image change
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setImage(file);
+    }
+  };
+
+  // Event handler for saving information
   const saveInfo = async () => {
     setIsEditing(!isEditing);
 
-    // Storage bucket for image
     if (image) {
-      const storageRef = ref(storage, `profile-images/${userID}/${image.name}`);
+      let storageRef = ref(
+        getStorage(),
+        `profile-images/${userID}/${image.name}`
+      );
 
       try {
         await uploadBytes(storageRef, image);
-
-        // Get the download URL after the upload is complete (optional)
         const downloadURL = await getDownloadURL(storageRef);
 
-        // Now you can use `downloadURL` to save it to the user's profile data or display the image
+        setImageUrl(downloadURL);
+
+        await updateDoc(doc(db, "Student", userID!), { imageUrl: downloadURL });
 
         setIsUploading(false);
       } catch (error) {
@@ -82,27 +140,12 @@ function ProfilePage() {
     }
   };
 
+  // Ref for file input
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [image, setImage] = useState<File | null>(null);
-
-  const handleImageClick = () => {
-    inputRef.current?.click();
-  };
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
-    if (file) {
-      console.log(file);
-      setImage(file);
-    }
-  };
-
-  const [isUploading, setIsUploading] = useState(false);
 
   return (
     <>
-      <div onLoad={handleOnLoad}>
+      <div>
         <NavBar />
 
         <div
@@ -118,12 +161,12 @@ function ProfilePage() {
         >
           <div>
             <Breadcrumb>
-              <Breadcrumb.Item href="/">Dashboard</Breadcrumb.Item>
+              <Breadcrumb.Item href="/home">Dashboard</Breadcrumb.Item>
               <Breadcrumb.Item active>Profile</Breadcrumb.Item>
             </Breadcrumb>
           </div>
 
-          <div className="container mt-5" style={{ margin: "0 0px" }}>
+          <div className="container mt-5">
             <div className="image-upload-container">
               <div className="box-decoration">
                 <div onClick={handleImageClick} style={{ cursor: "pointer" }}>
@@ -153,16 +196,15 @@ function ProfilePage() {
                   />
                 </div>
 
-                <button
-                  className="image-upload-button"
-                  onClick={saveInfo}
-                  disabled={isUploading}
-                >
-                  {isUploading ? "Uploading..." : "Upload"}
-                </button>
-
-                <div className="col-md-12">
+                <div className="col-md-12" style={{ margin: "0 400px" }}>
                   <h2 className="text-left">Personal Info</h2>
+                  <button
+                    className="image-upload-button"
+                    onClick={toggleEdit}
+                    disabled={isUploading}
+                  >
+                    {isEditing ? "Save" : "Edit"}
+                  </button>
                   <div className="row">
                     <div className="col-md-6">
                       <div className="form-group">
@@ -181,14 +223,7 @@ function ProfilePage() {
                           }}
                         />
                       </div>
-                      <button
-                        type="button"
-                        className="btn btn-link"
-                        onClick={() => setIsEditing(!isEditing)}
-                        style={{ margin: "0 400px" }}
-                      >
-                        {isEditing ? "Save" : "Edit"}
-                      </button>
+
                       <hr
                         style={{
                           borderTop: "2px solid white",
@@ -217,14 +252,6 @@ function ProfilePage() {
                           }}
                         />
                       </div>
-                      <button
-                        type="button"
-                        className="btn btn-link"
-                        onClick={() => setIsEditing(!isEditing)}
-                        style={{ margin: "0 400px" }}
-                      >
-                        {isEditing ? "Save" : "Edit"}
-                      </button>
                       <hr
                         style={{
                           borderTop: "2px solid white",
@@ -249,17 +276,9 @@ function ProfilePage() {
                           readOnly={!isEditing}
                           style={{
                             backgroundColor: "rgba(240, 255, 255, 0.6)",
-                            width: "30%",
+                            width: "61%",
                           }}
                         />
-                        <button
-                          type="button"
-                          className="btn btn-link"
-                          onClick={() => setIsEditing(!isEditing)}
-                          style={{ margin: "0 400px" }}
-                        >
-                          {isEditing ? "Save" : "Edit"}
-                        </button>
                       </div>
 
                       <hr
@@ -284,17 +303,9 @@ function ProfilePage() {
                           readOnly={!isEditing}
                           style={{
                             backgroundColor: "rgba(240, 255, 255, 0.7)",
-                            width: "30%",
+                            width: "61%",
                           }}
                         />
-                        <button
-                          type="button"
-                          className="btn btn-link"
-                          onClick={() => setIsEditing(!isEditing)}
-                          style={{ margin: "0 400px" }}
-                        >
-                          {isEditing ? "Save" : "Edit"}
-                        </button>
                       </div>
                       <hr
                         style={{
@@ -320,53 +331,9 @@ function ProfilePage() {
                           readOnly={!isEditing}
                           style={{
                             backgroundColor: "rgba(240, 255, 255, 0.7)",
-                            width: "30%",
+                            width: "61%",
                           }}
                         />
-                        <button
-                          type="button"
-                          className="btn btn-link"
-                          onClick={() => setIsEditing(!isEditing)}
-                          style={{ margin: "0 400px" }}
-                        >
-                          {isEditing ? "Save" : "Edit"}
-                        </button>
-                      </div>
-                      <hr
-                        style={{
-                          borderTop: "2px solid white",
-                          width: "35%",
-                          marginLeft: 0,
-                        }}
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="form-group" style={{ textAlign: "left" }}>
-                        <label htmlFor="forgetPasswordQuestion">
-                          Forget Password Question
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control form-control-sm"
-                          id="ForgetPasswordQuestion"
-                          name="forgetPasswordQuestion"
-                          value={profileInfo.forgetPasswordQuestion}
-                          onChange={handleChange}
-                          readOnly={!isEditing}
-                          style={{
-                            backgroundColor: "rgba(240, 255, 255, 0.7)",
-                            width: "30%",
-                          }}
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-link"
-                          onClick={() => setIsEditing(!isEditing)}
-                          style={{ margin: "0 400px" }}
-                        >
-                          {isEditing ? "Save" : "Edit"}
-                        </button>
                       </div>
                       <hr
                         style={{

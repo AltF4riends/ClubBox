@@ -1,12 +1,16 @@
-import { useState } from "react";
-import BackgroundLogin from "./RegisterPagePD/BackgroundLogin";
-import LeftBoxRegP1 from "./RegisterPagePD/LeftBoxRegP1";
-import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
-import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
-import { Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { useRef, useState, useEffect } from "react";
+import NavBar from "./HomePage/NavBar";
+import Footer from "./HomePage/Footer";
+import "./HomePage/Slider.css";
+import { Breadcrumb } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import "./ProfilePage.css"; // Import the CSS file
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const RegisterForm = () => {
   //const emailRef = useRef<HTMLInputElement>(null);
