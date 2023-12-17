@@ -3,13 +3,14 @@ import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
 import ClubinfoPage from "./ClubinfoPage";
 import Search from "./HomePage/Search";
+import ClubAdmission from "./ClubAdmission";
 
 function ClubPage() {
   return (
     <div>
       <NavBar />
       <Search />
-      <ClubinfoPage />
+      <ClubAdmission />
       <Footer />
     </div>
   );

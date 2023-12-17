@@ -1,11 +1,11 @@
 import { useState } from "react";
-import NavBar from "./HomePage/NavBar";
-import Footer from "./HomePage/Footer";
+
 import "./HomePage/Slider.css";
-import Cards from "./HomePage/Cards";
+import "./ClubAdmission.css";
+
+import { Card, Col, Row } from "antd";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import { storage } from "../firebase";
 import { getStorage, ref } from "firebase/storage";
 
 const eventData = [
@@ -69,58 +69,92 @@ const ClubAdmission = () => {
   return (
     <>
       <div onLoad={handleLoad}>
-        <NavBar />
-        <div
-          className="carousel-background"
-          style={{
-            backgroundColor: "rgba(240, 255, 255, 0.6)", // Azure with alpha for transparency
-            borderRadius: "15px",
-            paddingBottom: "15px",
-            paddingTop: "30px",
-            marginRight: "10px",
-            marginLeft: "10px",
-          }}
-        >
-          <h1>Club Admission</h1>
+        <div>
+          <h1 color="white">Clubs</h1>
+
           <div
             className="d-flex justify-content-between"
             style={{ margin: "0 150px" }}
           >
-            <Cards
-              image={eventData[1].image}
-              title={eventData[1].title}
-              desc={eventData[1].description}
-              price=""
-              logo={eventData[1].image}
-            ></Cards>
-            <Cards
-              image={eventData[2].image}
-              title={eventData[2].title}
-              desc={eventData[2].description}
-              price={""}
-              logo={eventData[2].image}
-            ></Cards>
-            <Cards
-              image="public/Compfair.jpg"
-              title="PERSAKA"
-              desc={""}
-              price={""}
-              logo="public/PERSAKA logo.jpeg"
-            ></Cards>
-            <button onClick={() => handleEventSelect(event)}>Select</button>
-          </div>
-
-          {selectedEvent && (
-            <div>
-              <h2>Enroll in {selectedEvent.title}</h2>
-              <input type="file" onChange={handleFileChange} />
-              <button onClick={handleEnroll}>Enroll</button>
+            <div className="card-grid">
+              <Card
+                cover={
+                  <img alt={eventData[1].title} src={eventData[1].image} />
+                }
+                title={eventData[1].title}
+              >
+                <p>{eventData[1].description}</p>
+              </Card>
+              <Card
+                cover={
+                  <img alt={eventData[2].title} src={eventData[2].image} />
+                }
+                title={eventData[2].title}
+              >
+                <p>{eventData[2].description}</p>
+              </Card>
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
             </div>
-          )}
+
+            <div className="card-grid">
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
+
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
+
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
+            </div>
+            <div className="card-grid">
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
+
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
+
+              <Card
+                cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
+                title="PERSAKA"
+                extra={<div>{/* Price or any other extra content */}</div>}
+              >
+                {/* Description or any other content */}
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };

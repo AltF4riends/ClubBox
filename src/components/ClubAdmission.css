@@ -1,0 +1,57 @@
+
+
+body {
+  background-image: url("./back.png"); /* Your base64-encoded image here */
+}
+
+
+/* Center the text and set its color to white */
+h1 {
+  text-align: center;
+  color: white;
+}
+
+/* Adjust the width and height of the cards */
+.ant-card {
+  width: 300px; /* Set the desired width */
+  height: 300px; /* Set the desired height */
+  margin: 16px; /* Add margin between cards */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the images inside fit the size of the card */
+.ant-card-cover img {
+  width: 10vw;
+  height: 20vh; /* Fill the entire height of the card cover */
+  border-radius: 50%;
+}
+
+/* Adjust the height of the card body to make space for text */
+.ant-card-body {
+  flex: 1;
+}
+
+/* Optional: Add additional styling for the card titles and descriptions if needed */
+.ant-card-meta-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.ant-card-meta-description {
+  font-size: 14px;
+}
+
+/* Optional: Adjust spacing between cards */
+.ant-row {
+  margin-left: -16px;
+  margin-right: -16px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 0 150px;
+}
+
