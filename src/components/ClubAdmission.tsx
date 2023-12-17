@@ -3,23 +3,45 @@ import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
 import "./HomePage/Slider.css";
 import Cards from "./HomePage/Cards";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import { storage } from "../firebase";
+import { getStorage, ref } from "firebase/storage";
 
 const eventData = [
   {
-    id: 1,
+    id: "1",
     title: "Event 1",
     description: "Description for Event 1",
     image: "event1.jpg", // Replace with actual image path
   },
   {
-    id: 2,
+    id: "2",
     title: "Event 2",
     description: "Description for Event 2",
     image: "event2.jpg", // Replace with actual image path
   },
+  {
+    id: "3",
+    title: "Event 3",
+    description: "Description for Event 3",
+    image: "event3.jpg", // Replace with actual image path
+  },
   // Add more events as needed
 ];
+const handleLoad = async () => {
+  const docRef = collection(db, "Club");
+  const docSnap = await getDocs(docRef);
+  var i = 1;
 
+  docSnap.forEach((e) => {
+    eventData[i].id = e.id;
+    eventData[i].title = e.data().clubName;
+    eventData[i].description = e.data().clubDesc;
+    eventData[i].image = e.data().clubLogo;
+    i++;
+  });
+};
 // Club Admission Page Component
 const ClubAdmission = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -46,7 +68,7 @@ const ClubAdmission = () => {
 
   return (
     <>
-      <div>
+      <div onLoad={handleLoad}>
         <NavBar />
         <div
           className="carousel-background"
@@ -65,18 +87,18 @@ const ClubAdmission = () => {
             style={{ margin: "0 150px" }}
           >
             <Cards
-              image="public/L2YS Agenda Reveal.png"
-              title="AEISEC"
-              desc=""
+              image={eventData[1].image}
+              title={eventData[1].title}
+              desc={eventData[1].description}
               price=""
-              logo="public/aeisec logo.png"
+              logo={eventData[1].image}
             ></Cards>
             <Cards
-              image="public/ted.jpg"
-              title="TEDxUTM"
-              desc={""}
+              image={eventData[2].image}
+              title={eventData[2].title}
+              desc={eventData[2].description}
               price={""}
-              logo="public/TED logo.png"
+              logo={eventData[2].image}
             ></Cards>
             <Cards
               image="public/Compfair.jpg"
