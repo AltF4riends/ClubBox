@@ -1,14 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
-import { useState } from "react";
+import { useImageContext } from "../ImageContext"; // Import the context
+import { useState, useEffect } from "react";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const { signOut } = UserAuth();
+  const { imageUrl } = useImageContext();
   const [error, setError] = useState("");
 
+  // Use state to force a re-render when the image URL changes
+  const [, setForceRender] = useState({});
+
+  useEffect(() => {
+    // This effect will trigger a re-render when the imageUrl changes
+    setForceRender({});
+  }, [imageUrl]);
+
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent the default form submission behavior
     e.preventDefault();
     setError("");
     try {
@@ -20,9 +29,6 @@ const NavBar = () => {
         console.log(e.message);
       }
     }
-    // Perform any asynchronous tasks if needed
-
-    // Use the navigate function to redirect to the desired route
     navigate("/");
   };
 
@@ -69,11 +75,7 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <Link
-                to="/Club_Admission"
-                className="nav-link"
-                style={{ color: "white" }}
-              >
+              <Link to="/Clubs" className="nav-link" style={{ color: "white" }}>
                 Clubs
               </Link>
             </li>
@@ -133,7 +135,7 @@ const NavBar = () => {
                 className="rounded-circle"
                 height="27"
                 width="27"
-                src="public/profile.png"
+                src={imageUrl || "public/profile.png"}
                 alt="Profile"
               />
             </button>

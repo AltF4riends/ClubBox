@@ -10,19 +10,14 @@ import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "./ProfilePage.css"; // Import the CSS file
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  StorageReference, // Make sure to import StorageReference
-} from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
+import { useImageContext } from "./ImageContext";
 
 function ProfilePage() {
-  // State for user ID
+  const { imageUrl, image, setImageInfo } = useImageContext();
   const [userID, setUserID] = useState<string | null>(null);
 
   // State for profile information
@@ -33,16 +28,11 @@ function ProfilePage() {
     phoneNumber: "",
     address: "",
     forgetPasswordQuestion: "",
+    imageUrl: "", // Add imageUrl property to the state
   });
-
-  // State for image URL
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   // State for editing mode
   const [isEditing, setIsEditing] = useState(false);
-
-  // State for image file
-  const [image, setImage] = useState<File | null>(null);
 
   // State for uploading status
   const [isUploading, setIsUploading] = useState(false);
@@ -110,33 +100,45 @@ function ProfilePage() {
     const file = event.target.files?.[0];
 
     if (file) {
-      setImage(file);
+      setImageInfo(URL.createObjectURL(file), file);
     }
   };
 
   // Event handler for saving information
+  // Event handler for saving information
   const saveInfo = async () => {
     setIsEditing(!isEditing);
 
-    if (image) {
-      let storageRef = ref(
-        getStorage(),
-        `profile-images/${userID}/${image.name}`
-      );
+    try {
+      if (image) {
+        let storageRef = ref(
+          getStorage(),
+          `Profilepics/${userID}/${image.name}`
+        );
 
-      try {
+        // Upload the image
         await uploadBytes(storageRef, image);
+
+        // Get the download URL
         const downloadURL = await getDownloadURL(storageRef);
 
-        setImageUrl(downloadURL);
+        // Update the profileInfo state with the new image URL
+        setProfileInfo({ ...profileInfo, imageUrl: downloadURL });
 
-        await updateDoc(doc(db, "Student", userID!), { imageUrl: downloadURL });
-
-        setIsUploading(false);
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        setIsUploading(false);
+        // Update the Firestore document with the updated profileInfo
+        await updateDoc(doc(db, "Student", userID!), {
+          ...profileInfo,
+          imageUrl: downloadURL,
+        });
+      } else {
+        // If no new image is selected, update only the non-image fields
+        await updateDoc(doc(db, "Student", userID!), profileInfo);
       }
+
+      setIsUploading(false);
+    } catch (error) {
+      console.error("Error saving information:", error);
+      setIsUploading(false);
     }
   };
 
@@ -183,7 +185,7 @@ function ProfilePage() {
                       className="rounded-circle"
                       height="150vh"
                       width="160vw"
-                      src="public/profile.png"
+                      src={profileInfo.imageUrl || "public/profile.png"}
                       alt="Profile"
                     />
                   )}
