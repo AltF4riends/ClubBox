@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
 import "./HomePage/Slider.css";
 import { toast } from "react-toastify";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { useImageContext } from "./ImageContext";
 
 function CreateEvent() {
+  const { imageUrl, image, setImageInfo } = useImageContext();
+
   async function handleOnLoad(e: any) {
     e.preventDefault();
     const docRef = doc(db, "event", userID);
@@ -82,6 +85,18 @@ function CreateEvent() {
     };
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setImageInfo(URL.createObjectURL(file), file);
+    }
+  };
+  const handleImageClick = () => {
+    inputRef.current?.click();
+  };
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div
       style={{
@@ -92,6 +107,36 @@ function CreateEvent() {
       }}
     >
       <NavBar />
+      <div className="image-upload-container">
+        <div className="box-decoration">
+          <div onClick={handleImageClick} style={{ cursor: "pointer" }}>
+            {image ? (
+              <img
+                className="rounded-circle"
+                height="150vh"
+                width="160vw"
+                src={URL.createObjectURL(image)}
+                alt="Profile"
+              />
+            ) : (
+              <img
+                className="rounded-circle"
+                height="150vh"
+                width="160vw"
+                src={eventDetails.eventImage || "public/profile.png"}
+                alt="Profile"
+              />
+            )}
+
+            <input
+              type="file"
+              ref={inputRef}
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </div>
+        </div>
+      </div>
       <div className="container">
         <h1
           style={{ textAlign: "center", position: "absolute", left: "800px" }}
@@ -100,6 +145,7 @@ function CreateEvent() {
         </h1>
         <br />
         <br />
+
         <div className="row">
           <div className="col-md-6">
             <form onSubmit={handleSubmit}>

@@ -7,6 +7,7 @@ import { Card, Col, Row } from "antd";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { getStorage, ref } from "firebase/storage";
+import { useAuth } from "./RegisterPagePD/AuthContext";
 
 const eventData = [
   {

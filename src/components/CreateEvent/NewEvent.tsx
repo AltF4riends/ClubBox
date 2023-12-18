@@ -1,11 +1,18 @@
-import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import React, { useRef, useState } from "react";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./NewEvent.css";
 import TimePicker from "react-time-picker";
 import "react-time-picker/dist/TimePicker.css";
+import { useImageContext } from "../ImageContext";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "@firebase/storage";
 
 interface FormData {
   clubID: string;
@@ -15,9 +22,12 @@ interface FormData {
   eventDesc: string;
   eventCond: string;
   eventType: string;
+  eventImage: string;
 }
 
 const NewEvent: React.FC = () => {
+  const [eventtempid, setEventTempId] = useState("");
+  const { imageUrl, image, setImageInfo } = useImageContext();
   const [formData, setFormData] = useState<FormData>({
     clubID: "",
     eventName: "",
@@ -26,6 +36,7 @@ const NewEvent: React.FC = () => {
     eventDesc: "",
     eventCond: "",
     eventType: "",
+    eventImage: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +52,12 @@ const NewEvent: React.FC = () => {
 
     try {
       // Add the document to the "Event" collection without specifying a document ID
-      await addDoc(collection(db, "Event"), formData);
+      await addDoc(collection(db, "Event"), formData).then(function (docRef) {
+        setEventTempId(docRef.id);
+      });
+      console.log(eventtempid);
+      saveInfo(eventtempid);
+      console.log(eventtempid);
 
       // Clear form fields
       setFormData({
@@ -52,6 +68,7 @@ const NewEvent: React.FC = () => {
         eventDesc: "",
         eventCond: "",
         eventType: "",
+        eventImage: "",
       });
 
       // Show success message
@@ -67,6 +84,8 @@ const NewEvent: React.FC = () => {
     justifyContent: "center",
     alignItems: "center",
     height: "100vh",
+    marginTop: "80px",
+    marginBottom: "80px",
   };
 
   const formStyle: React.CSSProperties = {
@@ -112,11 +131,80 @@ const NewEvent: React.FC = () => {
     }));
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setImageInfo(URL.createObjectURL(file), file);
+    }
+  };
+  const handleImageClick = () => {
+    inputRef.current?.click();
+  };
+
+  const saveInfo = async (eventId: string) => {
+    try {
+      console.log("saveInfo");
+      console.log(eventtempid);
+      if (image) {
+        let storageRef = ref(getStorage(), `Event/${eventtempid}/picture`);
+        console.log("saveInfo2");
+        // Upload the image
+        await uploadBytes(storageRef, image);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Update the profileInfo state with the new image URL
+        setFormData({ ...formData, eventImage: downloadURL });
+
+        // Update the Firestore document with the updated profileInfo
+        await updateDoc(doc(db, "Event", eventId), {
+          ...formData,
+          imageUrl: downloadURL,
+        });
+      } else {
+        // If no new image is selected, update only the non-image fields
+      }
+    } catch (error) {
+      console.error("Error saving information:", error);
+    }
+  };
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   return (
     <div style={containerStyle}>
       <form style={formStyle} onSubmit={handleSubmit}>
         <h1>New Event Info</h1>
 
+        <div
+          onClick={handleImageClick}
+          style={{ cursor: "pointer", marginTop: "30px", marginBottom: "30px" }}
+        >
+          {image ? (
+            <img
+              height="150vh"
+              width="160vw"
+              src={URL.createObjectURL(image)}
+              alt="Profile"
+            />
+          ) : (
+            <img
+              height="150vh"
+              width="160vw"
+              src={formData.eventImage || "public/event.png"}
+              alt="Profile"
+            />
+          )}
+
+          <input
+            type="file"
+            ref={inputRef}
+            onChange={handleImageChange}
+            style={{ display: "none" }}
+          />
+        </div>
         <div style={inputStyle}>
           <h3>Event Name</h3>
           <input
