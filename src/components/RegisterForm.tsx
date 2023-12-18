@@ -1,16 +1,16 @@
-import { useRef, useState, useEffect } from "react";
-import NavBar from "./HomePage/NavBar";
-import Footer from "./HomePage/Footer";
+import { useState } from "react";
 import "./HomePage/Slider.css";
-import { Breadcrumb } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "./ProfilePage.css"; // Import the CSS file
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
+import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
+import LeftBoxRegP1 from "./RegisterPagePD/LeftBoxRegP1";
+import BackgroundLogin from "./RegisterPagePD/BackgroundLogin";
+import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
 
 const RegisterForm = () => {
   //const emailRef = useRef<HTMLInputElement>(null);
@@ -57,7 +57,7 @@ const RegisterForm = () => {
         navigate("/forget_password_qna");
       } catch {
         setError("Failed to create an account");
-        console.log(userID); //
+        console.log(userID); 
       }
       setLoading(false);
     }
@@ -80,7 +80,7 @@ const RegisterForm = () => {
 
   return (
     <BackgroundLogin>
-      <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
+      <LeftBoxRegP1/>
       <RightBoxRegP1>
         <div
           className="form-header"

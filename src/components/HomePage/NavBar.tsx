@@ -74,11 +74,19 @@ const NavBar = () => {
                 Shop
               </a>
             </li>
+
             <li className="nav-item">
               <Link to="/Clubs" className="nav-link" style={{ color: "white" }}>
                 Clubs
               </Link>
             </li>
+
+            <li className="nav-item">
+              <Link to="/manage_club" className="nav-link" style={{ color: "white" }}>
+                Manage Club
+              </Link>
+            </li>
+
             <li className="nav-item">
               <Link
                 className="nav-link"

@@ -21,8 +21,6 @@ const RightBoxRegP1 = ({children}:Props) => {
         alignItems: "center",
       }}>
 
-        
-
       <div
         className="container-sm"
         style={{

@@ -2,11 +2,7 @@ import { ReactNode } from "react";
 import smallClubBox from "../RegisterPagePD/SmallerClub.jpg";
 import custInterview from "../RegisterPagePD/customerInterview.png";
 
-interface Props {
-  children: ReactNode;
-}
-
-const LeftBoxRegP1 = ({children}:Props) => {
+const LeftBoxRegP1 = () => {
 
     return (
       <div
