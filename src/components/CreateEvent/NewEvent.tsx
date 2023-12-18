@@ -52,12 +52,12 @@ const NewEvent: React.FC = () => {
 
     try {
       // Add the document to the "Event" collection without specifying a document ID
-      await addDoc(collection(db, "Event"), formData).then(function (docRef) {
-        setEventTempId(docRef.id);
-      });
-      console.log(eventtempid);
-      saveInfo(eventtempid);
-      console.log(eventtempid);
+      const docRef = await addDoc(collection(db, "Event"), formData);
+
+      // Wait for the promise to resolve before calling saveInfo
+      await saveInfo(docRef.id);
+
+      setEventTempId(docRef.id); // Set eventtempid after saveInfo
 
       // Clear form fields
       setFormData({
@@ -144,27 +144,22 @@ const NewEvent: React.FC = () => {
 
   const saveInfo = async (eventId: string) => {
     try {
-      console.log("saveInfo");
-      console.log(eventtempid);
       if (image) {
-        let storageRef = ref(getStorage(), `Event/${eventtempid}/picture`);
-        console.log("saveInfo2");
+        const storageRef = ref(getStorage(), `Event/${eventId}/picture`);
+
         // Upload the image
         await uploadBytes(storageRef, image);
 
         // Get the download URL
         const downloadURL = await getDownloadURL(storageRef);
 
-        // Update the profileInfo state with the new image URL
-        setFormData({ ...formData, eventImage: downloadURL });
-
-        // Update the Firestore document with the updated profileInfo
+        // Update the Firestore document with the updated image URL
         await updateDoc(doc(db, "Event", eventId), {
           ...formData,
-          imageUrl: downloadURL,
+          eventImage: downloadURL,
         });
       } else {
-        // If no new image is selected, update only the non-image fields
+        console.log("No picture");
       }
     } catch (error) {
       console.error("Error saving information:", error);

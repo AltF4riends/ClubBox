@@ -1,10 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  background-image: url("./back.png"); /* Your base64-encoded image here */
-  background-size: 200vh;
+  background-image: url("./back.png");
+  background-size: contain; /* Change to 'contain' for full coverage */
   background-position: center;
   background-repeat: no-repeat;
-
   height: 100vh;
 }

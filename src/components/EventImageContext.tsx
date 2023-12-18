@@ -2,10 +2,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type ImageContextType = {
-  imageUrl: string | null;
-  image: File | null;
-  setImageInfo: (url: string, file: File) => void;
-  setImageUrl: (url: string) => void; // Renamed for generic use
+  eventImageUrl: string | null;
+  eventImage: File | null;
+  setEventImageInfo: (url: string, file: File) => void;
 };
 
 type ImageProviderProps = {
@@ -23,24 +22,17 @@ export const useImageContext = (): ImageContextType => {
 };
 
 export const ImageProvider: React.FC<ImageProviderProps> = ({ children }) => {
-  // State to track image URL and file
-  const [imageUrl, setImageUrlState] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
+  const [eventImageUrl, setEventImageUrl] = useState<string | null>(null);
+  const [eventImage, setEventImage] = useState<File | null>(null);
 
-  // Function to set both image URL and file
-  const setImageInfo = (url: string, file: File) => {
-    setImageUrlState(url);
-    setImage(file);
-  };
-
-  // Function to set only the image URL
-  const setImageUrl = (url: string) => {
-    setImageUrlState(url);
+  const setEventImageInfo = (url: string, file: File) => {
+    setEventImageUrl(url);
+    setEventImage(file);
   };
 
   return (
     <ImageContext.Provider
-      value={{ imageUrl, image, setImageInfo, setImageUrl }}
+      value={{ eventImageUrl, eventImage, setEventImageInfo }}
     >
       {children}
     </ImageContext.Provider>

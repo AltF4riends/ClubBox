@@ -1,3 +1,15 @@
+
+.carousel-background {
+  background-color : rgba(240, 255, 255, 0.6);
+  border-radius: "15px" ;
+  padding-Bottom: "15px";
+  padding-Top: "20px";
+  margin-Right: "30px";
+  margin-Left: "30px";
+
+}
+
+
 .image-upload-container {
   display: flex;
   justify-content: center;

@@ -153,7 +153,7 @@ function ProfilePage() {
         <div
           className="carousel-background"
           style={{
-            backgroundColor: "rgba(240, 255, 255, 0.6)", // Azure with alpha for transparency
+            backgroundColor: "rgba(240, 255, 255, 0.6)",
             borderRadius: "15px",
             paddingBottom: "15px",
             paddingTop: "20px",
