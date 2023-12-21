@@ -4,12 +4,15 @@ import LeftBoxRegP1 from "./LeftBoxRegP1";
 import RightBoxRegP1 from "./RightBoxRegP1";
 import { Link } from "react-router-dom";
 
-interface Props {
-  children: ReactNode;
+type UPData = {
+  photo: String,
 }
 
-const UploadPhoto = () => {
-  let heading1 = "Upload Photo";
+type UPProps = UPData & {
+  updateFields:(fields: Partial<UPData>) => void
+}
+
+const UploadPhoto = ({photo, updateFields}:UPProps) => {
 
   const dropArea = {
     display: "flex",
@@ -46,48 +49,13 @@ const UploadPhoto = () => {
 
   return (
     <div>
-      <BackgroundLogin>
-      <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
-      <RightBoxRegP1>
-          <h1
-            style={{
-              textAlign: "center",
-            }}
-          >
-            {heading1}
-          </h1>
-      <h6
-        style={{
-          textAlign: "center",
-        }}
-      >
+      <h6 style={{textAlign: "center",}}>
         Upload a maximum of 10MB size photo of your desired choice below
       </h6>
+
       <div style={dropArea}>
         <input style={fileInput} type="file" multiple />
       </div>
-
-      <div
-        style={{
-          display: "flex",
-          width: 665 + "px",
-          height: 275 + "px",
-          alignItems: "flex-end",
-          justifyContent: "right",
-        }}
-        >
-            <Link to={"/additional_info"}>
-              <button
-                type="button"
-                className="btn btn-light btn-lg"
-                style={buttonFormat}
-              >
-                Save
-              </button>
-            </Link>
-          </div>
-      </RightBoxRegP1>
-      </BackgroundLogin>
     </div>
   );
 };

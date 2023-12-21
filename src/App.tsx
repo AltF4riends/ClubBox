@@ -35,6 +35,7 @@ import ClubAdmission from "./components/ClubAdmission";
 import ViewEvent from "./components/ViewEvent";
 import CreateEvents from "./components/CreateEvents";
 import ClubPage from "./components/ClubPage";
+import AddInfoPage from "./components/AddInfoPage";
 
 function App() {
   return (
@@ -65,8 +66,10 @@ function App() {
               path="/forget_password_qna"
               element={<ForgotPasswordQNA />}
             />
-            <Route path="/additional_info" element={<AdditionalInfo />} />
-            <Route path="/about_me" element={<AboutMe />} />
+            <Route path="/additional_info" element={<AddInfoPage />} />
+            <Route path="/about_me" element={<AboutMe aboutMe="" updateFields={function (fields: Partial<{ aboutMe: String; }>): void {
+              throw new Error("Function not implemented.");
+            } } />} />
             <Route path="/upload_photo" element={<UploadPhoto />} />
             <Route path="/upload_video" element={<UploadVideo />} />
             <Route

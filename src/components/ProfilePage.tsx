@@ -6,7 +6,6 @@ import { Breadcrumb } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faLock } from "@fortawesome/free-solid-svg-icons";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import "./ProfilePage.css"; // Import the CSS file

@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import React from 'react'
 
 interface Props {
   children: ReactNode;
@@ -7,7 +6,7 @@ interface Props {
 
 const RightBoxRegP1 = ({children}:Props) => {
     return (
-            <div
+      <div
       style={{
         margin: 0,
         padding: 0,
@@ -36,11 +35,10 @@ const RightBoxRegP1 = ({children}:Props) => {
           justifyContent: "flex-start;", //center
           alignItems: "center",
           flexDirection: "column",
-        }}
-      >
-        {children}
-
-      </div>
+        }}>
+          {children}
+            
+        </div>
     </div>
     )
 }

@@ -22,7 +22,7 @@ function EditQuestion() {
   return (
     <div>
       <BackgroundLogin>
-        <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
+        <LeftBoxRegP1/>
         <RightBoxRegP1>
           <div
             className="form-header"

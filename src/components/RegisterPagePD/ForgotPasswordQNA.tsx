@@ -4,49 +4,25 @@ import BackgroundLogin from "./BackgroundLogin";
 import LeftBoxRegP1 from "./LeftBoxRegP1";
 import RightBoxRegP1 from "./RightBoxRegP1";
 
-function ForgotPasswordQNA() {
-  let heading1 = "Forgot Password QNA";
-  const buttonFormat = {
-    border: "2px solid maroon",
-    color: "maroon",
-    padding: "15px 32px",
-    textDecoration: "none",
-    fontSize: "16px",
-    margin: "4px 2px",
-    cursor: "pointer",
-    borderRadius: "50px",
-    width: "225px",
-    fontWeight: "bold",
-  };
+type FPQData = {
+  ans1: String,
+  ans2: String,
+  ans3: String,
+}
 
+type FPQProps = FPQData & {
+  updateFields:(fields: Partial<FPQData>) => void
+}
+
+function ForgotPasswordQNA({ans1, ans2, ans3, updateFields}:FPQProps) {
   return (
     <div>
-      <BackgroundLogin>
-      <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
-        <RightBoxRegP1>
-
-        <div
-          className="form-header"
-          style={{
-            width: 500 + "px",
-            height: 100 + "px",
-            marginBottom: "25px",
-          }}
-        >
-          <h1
-            style={{
-              textAlign: "center",
-            }}
-          >
-            {heading1}
-          </h1>
-        </div>
-
           <h6>
             Provide Answers For These Simple Questions For Additional Options When
             The Password Is Inaccessible{" "}
           </h6>
           <br />
+
           <label htmlFor="FfvNum" className="form-label">
             What Is Your Favourite Number?
           </label>
@@ -56,8 +32,10 @@ function ForgotPasswordQNA() {
             id="FfvNum"
             placeholder=""
             aria-label="Favourite Number"
+            onChange={(e) => updateFields({ans1: e.target.value})}
           />
           <br />
+
           <label htmlFor="occUncle" className="form-label">
             What is the Occupation of your Uncle?
           </label>
@@ -67,8 +45,10 @@ function ForgotPasswordQNA() {
             id="occUncle"
             placeholder=""
             aria-label="Occupation of Uncle"
+            onChange={(e) => updateFields({ans2: e.target.value})}
           />
           <br />
+
           <label htmlFor="bstF" className="form-label">
             What is the name of your best Friend?
           </label>
@@ -78,29 +58,8 @@ function ForgotPasswordQNA() {
             id="bstF"
             placeholder=""
             aria-label="Best Friend"
+            onChange={(e) => updateFields({ans3: e.target.value})}
           />
-        
-        <div
-        style={{
-          display: "flex",
-          width: 665 + "px",
-          height: 275 + "px",
-          alignItems: "flex-end",
-          justifyContent: "right",
-        }}
-        >
-            <Link to={"/additional_info"}>
-              <button
-                type="button"
-                className="btn btn-light btn-lg"
-                style={buttonFormat}
-              >
-                Proceed
-              </button>
-            </Link>
-          </div>
-      </RightBoxRegP1>
-    </BackgroundLogin>
     </div>
   );
 }
