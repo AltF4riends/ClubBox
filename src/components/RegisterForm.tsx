@@ -7,14 +7,13 @@ import BackgroundLogin from "./RegisterPagePD/BackgroundLogin";
 import RightBoxRegP1 from "./RegisterPagePD/RightBoxRegP1";
 import { multiStepForm } from "./RegisterPagePD/multiStepForm";
 import RegisterUserInfo from "./RegisterPagePD/RegisterUserInfo";
-import { FormEvent, ReactElement, useState } from "react";
+import { FormEvent, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { Alert } from "react-bootstrap";
-import AdditionalInfo from "./RegisterPagePD/AdditionalInfo";
 import ForgotPasswordQNA from "./RegisterPagePD/ForgotPasswordQNA";
 import { multiStepTitle } from "./RegisterPagePD/multiStepTitle";
 
@@ -34,8 +33,10 @@ const RegisterForm = () => {
     ans2: String,
     ans3: String,
     aboutMe: String,
-    //photo: null,
-    //videe: null,
+    photo: String,
+    videoURL: String,
+    accessLvl: number,
+    clubID: String
   }
   
   const initial_data: FormData = {
@@ -52,8 +53,10 @@ const RegisterForm = () => {
     ans2: "",
     ans3: "",
     aboutMe: "",
-    //photo: null,
-    //videe: null,
+    photo: "",
+    videoURL: "",
+    accessLvl: 1,
+    clubID: ""
   }
 
   const [data, setData] = useState(initial_data);
@@ -111,6 +114,7 @@ const RegisterForm = () => {
           address: data.curAddress,
           utmEmail: data.email,
           password: data.password,
+          
         });
         console.log("Signedup");
         navigate("/additional_info");//

@@ -4,10 +4,6 @@ import LeftBoxRegP1 from "./LeftBoxRegP1";
 import RightBoxRegP1 from "./RightBoxRegP1";
 import { Link } from "react-router-dom";
 
-interface Props {
-  children: ReactNode;
-}
-
 const dropArea = {
   display: "flex",
   alignItems: "center",
@@ -59,50 +55,31 @@ const buttonFormat = {
   fontWeight: "bold",
 };
 
-const UploadVideo = () => {
+type UVData = {
+  videoURL: String,
+}
+
+type UVProps = UVData & {
+  updateFields:(fields: Partial<UVData>) => void
+}
+
+const UploadVideo = ({videoURL, updateFields}:UVProps) => {
   let heading1 = "Upload Video of Introduction";
   return (
     <div>
-    <BackgroundLogin>
-    <LeftBoxRegP1 children={undefined}></LeftBoxRegP1>
-    <RightBoxRegP1>
-          <h1
-            style={{
-              textAlign: "center",
-            }}
-          >
-            {heading1}
-          </h1>
       <h6>
         Upload a maximum of 3000MB size video of your desired choice below
       </h6>
       <div style={dropArea}>
-        <input style={fileInput} type="file" multiple />
+      <input
+        type="text"
+        className="form-control"
+        id="vURL"
+        placeholder="eg. Video Link"
+        aria-label="Video Link"
+        onChange={(e) => updateFields({videoURL: e.target.value})}
+      />
       </div>
-
-      <div
-            style={{
-              display: "flex",
-              marginTop: "25px",
-              width: 520 + "px",
-              height: 100 + "px",
-              alignItems: "flex-end",
-              justifyContent: "right",
-            }}
-          >
-            <Link to={"/additional_info"}>
-              <button
-                type="button"
-                className="btn btn-light btn-lg"
-                style={buttonFormat}
-              >
-                Save
-              </button>
-            </Link>
-          </div>
-
-    </RightBoxRegP1>
-    </BackgroundLogin>
     </div>
   );
 };

@@ -13,34 +13,31 @@ import UploadPhoto from "./RegisterPagePD/UploadPhoto";
 import { FormEvent, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
-import { UserAuth } from "./RegisterPagePD/AuthContextAlpha";
-import { doc, setDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { Alert } from "react-bootstrap";
 import AdditionalInfo from "./RegisterPagePD/AdditionalInfo";
-import ForgotPasswordQNA from "./RegisterPagePD/ForgotPasswordQNA";
 import { multiStepTitle } from "./RegisterPagePD/multiStepTitle";
+import { useImageContext } from "./ImageContext";
 
 const AddInfoPage = () => {
   
   type FormData = {
-    pageAddOn1: boolean,
-    pageAddOn2: boolean,
-    pageAddOn3: boolean,
     aboutMe: String,
-    photo: null,
+    photo: String,
+    videoURL: String,
   }
   
   const initial_data: FormData = {
-    pageAddOn1: false,
-    pageAddOn2: false,
-    pageAddOn3: false,
     aboutMe: "",
-    photo: null,
+    photo: "",
+    videoURL: ""
   }
 
   const [data, setData] = useState(initial_data);
 
+  //Change initial_data as input comes
   function updateFields(fields: Partial<FormData>)
   {
     setData(prev => {
@@ -50,9 +47,10 @@ const AddInfoPage = () => {
 
   const {stepsAI, currentStepIndexAI, stepAI, isLastStepAI, goToAI, nextAI, backAI} 
   = multiStepFormAI([
-  <AdditionalInfo triggerAboutMe={triggerAboutMe}/>,
+  <AdditionalInfo triggerAboutMe={triggerAboutMe} triggerUploadPhoto={triggerUploadPhoto} triggerUploadVideo={triggerUploadVideo}/>,
   <AboutMe {...data} updateFields={updateFields}/>, 
-  //<UploadPhoto {...data} updateFields={updateFields}/>,
+  <UploadPhoto {...data} updateFields={updateFields}/>,
+  <UploadVideo {...data} updateFields={updateFields}/>,
   ])
 
   const {curStepIndex, title, titles, isFirstTitle, isLastTitle, goToTitle, nextTitle, backTitle}
@@ -60,6 +58,7 @@ const AddInfoPage = () => {
     "Add Your Details Now",
     "About Me",
     "Upload Photo",
+    "Upload CV Video URL"
   ])
 
   function triggerAboutMe()
@@ -68,59 +67,102 @@ const AddInfoPage = () => {
     goToAI(1);
   }
 
+  function triggerUploadPhoto()
+  {
+    goToTitle(2);
+    goToAI(2);
+  }
+
+  function triggerUploadVideo()
+  {
+    goToTitle(3);
+    goToAI(3);
+  }
+
   //Database
   const navigate = useNavigate();
-  const { createUser } = UserAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { imageUrl, image, setImageInfo } = useImageContext();
 
-  async function handleSubmit(e: any) {
+  // State for uploading status
+  const [isUploading, setIsUploading] = useState(false);
+
+  const updateDBInfo = async () => {
+    try {
+      if (image) {
+        let storageRef = ref(
+          getStorage(),
+          `Profilepics/${userID}/${image.name}`
+        );
+
+        // Upload the image
+        await uploadBytes(storageRef, image);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Update the data state with the new image URL
+        setData({ ...data, photo: downloadURL });
+
+        // Update the Firestore document with the updated data
+        await updateDoc(doc(db, "Student", userID!), {
+          ...data,
+          imageUrl: downloadURL,
+        });
+      } else {
+        // If no new image is selected, update only the non-image fields
+        await updateDoc(doc(db, "Student", userID!), data);
+      }
+
+      setIsUploading(false);
+    } catch (error) {
+      console.error("Error saving information:", error);
+      setIsUploading(false);
+    }
+  };
+
+  async function handleSubmitAI(e: any) {
     e.preventDefault();
     console.log("Clicked");
 
-    // if (data.email != null && data.password != null && data.cpassword != null) {
-    //   console.log("Checked");
-    //   if (data.password != data.cpassword) {
-    //     return setError("Passwords do not match!");
-    //   }
-    //   try {
+      try {
+        setError("");
+        setLoading(true);
+        console.log("Checked");
 
-    //     setError("");
-    //     setLoading(true);
-
-    //     await createUser(data.email, data.password);
-
-    //     const docRef = await setDoc(doc(db, "Student", userID), {
-    //       firstName: data.fName,
-    //       lastName: data.lName,
-    //       matricNo: data.matricNo,
-    //       yearCourse: data.yearCourse,
-    //       phoneNumber: data.phoneNum,
-    //       address: data.curAddress,
-    //       utmEmail: data.email,
-    //       password: data.password,
-    //     });
-    //     console.log("Signedup");
-    //     navigate("/additional_info");//
-    //   } catch {
-    //     setError("Failed to create an account");
-    //     console.log(userID); 
-    //   }
-    //   setLoading(false);
-    // }
+        const docRef = await setDoc(doc(db, "Student", userID), {
+          aboutMe: data.aboutMe,
+          photo: data.photo,
+          videoURL: data.videoURL
+        });
+        console.log("Updated Database");
+        navigate("/home");//
+      } catch {
+        setError("Failed to update");
+        console.log(userID); 
+      }
+      setLoading(false);
   }
 
-  function submitLogic(e: FormEvent)
+  function submitLogicAI(e: FormEvent)
   {
     e.preventDefault()
     console.log(currentStepIndexAI)
     console.log(data.aboutMe)
     console.log(data.photo)
+    console.log(data.videoURL)
 
-    if(currentStepIndexAI < 3)
+    if(currentStepIndexAI <= 2)
     {
       nextAI(); 
       nextTitle();
+    }
+
+    else if(currentStepIndexAI == 3){
+      console.log("why")
+      goToTitle(0);
+      goToAI(0);
     }
   }
 
@@ -164,7 +206,7 @@ const AddInfoPage = () => {
 
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <form onSubmit={isLastStepAI ? handleSubmit : submitLogic} 
+            <form onSubmit={isLastStepAI ? handleSubmitAI : submitLogicAI} 
             className="row g-3">
             
             {stepAI}

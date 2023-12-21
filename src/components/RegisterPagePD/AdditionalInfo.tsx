@@ -5,9 +5,11 @@ import { multiStepTitle } from "./multiStepTitle";
 
 type AndInfoProps = {
   triggerAboutMe:() => void
+  triggerUploadPhoto:() => void
+  triggerUploadVideo:() => void
 }
 
-function AdditionalInfo({triggerAboutMe}:AndInfoProps) {
+function AdditionalInfo({triggerAboutMe, triggerUploadPhoto, triggerUploadVideo}:AndInfoProps) {
 
   const buttonFormat = {
     border: "2px solid maroon",
@@ -59,7 +61,8 @@ function AdditionalInfo({triggerAboutMe}:AndInfoProps) {
               <button
                 type="button"
                 className="btn btn-light"
-                style={buttonFormat}>
+                style={buttonFormat}
+                onClick={triggerUploadPhoto}>
                 Upload Profile Picture
               </button>
             </div>
@@ -73,7 +76,8 @@ function AdditionalInfo({triggerAboutMe}:AndInfoProps) {
               <button
                 type="button"
                 className="btn btn-light"
-                style={buttonFormat}>
+                style={buttonFormat}
+                onClick={triggerUploadVideo}>
                 Upload Video of Introduction
               </button>
             </div>
