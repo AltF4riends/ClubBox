@@ -80,6 +80,7 @@ const AddInfoPage = () => {
   }
 
   //Database
+  //Why Am I Here
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
