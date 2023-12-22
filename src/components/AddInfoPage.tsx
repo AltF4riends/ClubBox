@@ -80,7 +80,6 @@ const AddInfoPage = () => {
   }
 
   //Database
-  //Why Am I Here
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -89,7 +88,10 @@ const AddInfoPage = () => {
   // State for uploading status
   const [isUploading, setIsUploading] = useState(false);
 
-  const updateDBInfo = async () => {
+  const updateDBInfo = async (e: any) => {
+    e.preventDefault();
+    console.log("Up Photo");
+    
     try {
       if (image) {
         let storageRef = ref(
