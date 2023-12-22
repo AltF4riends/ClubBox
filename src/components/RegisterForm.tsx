@@ -114,7 +114,8 @@ const RegisterForm = () => {
           address: data.curAddress,
           utmEmail: data.email,
           password: data.password,
-          
+          accessLvl: data.accessLvl,
+          clubID: data.clubID
         });
         console.log("Signedup");
         navigate("/additional_info");//
@@ -136,6 +137,12 @@ const RegisterForm = () => {
 
     next(); 
     nextTitle();
+  }
+
+  function backLogic()
+  {
+    back();
+    backTitle();
   }
 
   const buttonFormat = {
@@ -184,7 +191,7 @@ const RegisterForm = () => {
             {step}
 
               <div>
-                {!isFirstStep && (<button type="button" onClick={back}>Back</button>)}
+                {!isFirstStep && (<button type="button" onClick={backLogic}>Back</button>)}
 
                 <button 
                 type="submit" 

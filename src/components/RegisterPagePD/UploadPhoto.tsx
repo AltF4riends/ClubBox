@@ -5,14 +5,14 @@ import RightBoxRegP1 from "./RightBoxRegP1";
 import { Link } from "react-router-dom";
 
 type UPData = {
-  photo: String,
+  photoURL: String,
 }
 
 type UPProps = UPData & {
   updateFields:(fields: Partial<UPData>) => void
 }
 
-const UploadPhoto = ({photo, updateFields}:UPProps) => {
+const UploadPhoto = ({photoURL, updateFields}:UPProps) => {
 
   const dropArea = {
     display: "flex",

@@ -25,13 +25,13 @@ const AddInfoPage = () => {
   
   type FormData = {
     aboutMe: String,
-    photo: String,
+    photoURL: String,
     videoURL: String,
   }
   
   const initial_data: FormData = {
     aboutMe: "",
-    photo: "",
+    photoURL: "",
     videoURL: ""
   }
 
@@ -83,47 +83,9 @@ const AddInfoPage = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { imageUrl, image, setImageInfo } = useImageContext();
 
   // State for uploading status
   const [isUploading, setIsUploading] = useState(false);
-
-  const updateDBInfo = async (e: any) => {
-    e.preventDefault();
-    console.log("Up Photo");
-    
-    try {
-      if (image) {
-        let storageRef = ref(
-          getStorage(),
-          `Profilepics/${userID}/${image.name}`
-        );
-
-        // Upload the image
-        await uploadBytes(storageRef, image);
-
-        // Get the download URL
-        const downloadURL = await getDownloadURL(storageRef);
-
-        // Update the data state with the new image URL
-        setData({ ...data, photo: downloadURL });
-
-        // Update the Firestore document with the updated data
-        await updateDoc(doc(db, "Student", userID!), {
-          ...data,
-          imageUrl: downloadURL,
-        });
-      } else {
-        // If no new image is selected, update only the non-image fields
-        await updateDoc(doc(db, "Student", userID!), data);
-      }
-
-      setIsUploading(false);
-    } catch (error) {
-      console.error("Error saving information:", error);
-      setIsUploading(false);
-    }
-  };
 
   async function handleSubmitAI(e: any) {
     e.preventDefault();
@@ -136,9 +98,9 @@ const AddInfoPage = () => {
 
         const docRef = await setDoc(doc(db, "Student", userID), {
           aboutMe: data.aboutMe,
-          photo: data.photo,
+          photoURL: data.photoURL,
           videoURL: data.videoURL
-        });
+        }, { merge: true });
         console.log("Updated Database");
         navigate("/home");//
       } catch {
@@ -148,16 +110,62 @@ const AddInfoPage = () => {
       setLoading(false);
   }
 
-  function submitLogicAI(e: FormEvent)
+  async function submitLogicAI(e: any)
   {
     e.preventDefault()
     console.log(currentStepIndexAI)
     console.log(data.aboutMe)
-    console.log(data.photo)
+    console.log(data.photoURL)
     console.log(data.videoURL)
 
     if(currentStepIndexAI <= 2)
     {
+      if(currentStepIndexAI === 2)
+      {
+        console.log("Hello")
+        console.log(userID)
+        
+        //Import Photo Code
+        console.log("Up Photo");
+        const file = e.target[0]?.files[0]
+        try {
+          if (file) {
+            console.log("Uploading Photo");
+            let storageRef = ref(
+              getStorage(),
+              `Profilepics/${userID}/picture`
+            );
+    
+            // Upload the image
+            await uploadBytes(storageRef, file);
+    
+            // Get the download URL
+            const downloadURL = await getDownloadURL(storageRef);
+    
+            // Update the data state with the new image URL
+            setData({ ...data, photoURL: downloadURL });
+    
+            // Update the Firestore document with the updated data
+            await updateDoc(doc(db, "Student", userID!), {
+              ...data,
+              photoURL: downloadURL, //Just overwrites the one in the state when insert into DB
+            });
+    
+            console.log("In If Main");
+            
+          } else {
+            // If no new image is selected, update only the non-image fields
+            await updateDoc(doc(db, "Student", userID!), data);
+            console.log("In Else");
+          }
+    
+          setIsUploading(false);
+        } catch (error) {
+          console.error("Error saving information:", error);
+          setIsUploading(false);
+        }
+      }
+
       nextAI(); 
       nextTitle();
     }
