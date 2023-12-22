@@ -67,6 +67,7 @@ const CalendarMain: React.FC = () => {
             <li key={index}>
               <b>{item.eventName}</b>
             </li>
+            //updating calendar
           ))}
         </ul>
       </div>
