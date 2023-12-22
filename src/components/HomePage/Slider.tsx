@@ -3,8 +3,15 @@ import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "bootstrap/dist/js/bootstrap.bundle.min"; // Import Bootstrap JS
 import "./Slider.css"; // Import the CSS file
 import { Popover } from "antd";
-import { useState } from "react";
-import { collection, getDocs, query, where } from "@firebase/firestore";
+import { useState, useEffect } from "react";
+import {
+  collection,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+} from "@firebase/firestore";
 import { db } from "../../firebase";
 
 const eventData = [
@@ -12,9 +19,9 @@ const eventData = [
     id: "1",
     title: "Event 1",
     description: "Description for Event 1",
-    image: "event1.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -23,20 +30,20 @@ const eventData = [
     id: "2",
     title: "Event 2",
     description: "Description for Event 2",
-    image: "event2.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
   },
   {
     id: "3",
-    title: "Event 3",
+    title: "",
     description: "Description for Event 3",
     image: "event3.jpg", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -46,9 +53,9 @@ const eventData = [
     id: "4",
     title: "Event 4",
     description: "Description for Event 4",
-    image: "event4.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -57,9 +64,9 @@ const eventData = [
     id: "5",
     title: "Event 5",
     description: "Description for Event 5",
-    image: "event5.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -68,9 +75,9 @@ const eventData = [
     id: "6",
     title: "Event 6",
     description: "Description for Event 6",
-    image: "event6.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -80,9 +87,9 @@ const eventData = [
     id: "7",
     title: "Event 7",
     description: "Description for Event 7",
-    image: "event7.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -91,9 +98,9 @@ const eventData = [
     id: "8",
     title: "Event 8",
     description: "Description for Event 8",
-    image: "event8.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
@@ -102,33 +109,83 @@ const eventData = [
     id: "9",
     title: "Event 9",
     description: "Description for Event 9",
-    image: "event9.jpg", // Replace with actual image path
+    image: "", // Replace with actual image path
     clubId: "clubid1",
-    logo: "logo1.png",
+    logo: "",
     price: "RM",
     date: "date1",
     location: "location1",
   },
 ];
 
-const handleLoad = async () => {
-  const docRef = collection(db, "Event");
-  const docSnap = await getDocs(docRef);
-  var i = 1;
-  const q = query(collection(db, "Club"), where("capital", "==", true));
-  const querySnapshot = await getDocs(q);
-
-  docSnap.forEach((e) => {
-    eventData[i].id = e.id;
-    eventData[i].title = e.data().eventName;
-    eventData[i].description = e.data().eventDesc;
-    eventData[i].image = e.data().clubLogo;
-    i++;
-  });
-};
-
 function Slider() {
-  const [loading, setLoading] = useState(false);
+  function getCurrentDate(separator = "-") {
+    let newDate = new Date();
+    let date = newDate.getDate();
+    let month = newDate.getMonth() + 1;
+    let year = newDate.getFullYear();
+
+    return `${year}${separator}${
+      month < 10 ? `0${month}` : `${month}`
+    }${separator}${date}`;
+  }
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  async function handleLogo(i = 1) {
+    var docClubRef = doc(db, "Club", eventData[i].clubId);
+    const docClubSnap = await getDoc(docClubRef);
+    if (docClubSnap.exists()) {
+      const data = docClubSnap.data();
+      eventData[i].logo = data.clubLogo;
+    } else {
+      console.log("The Club Does not exist");
+    }
+  }
+  useEffect(() => {
+    const handleLoad = async () => {
+      try {
+        console.log("handleLoad");
+        const docRef = collection(db, "Event");
+        const docSnap = await getDocs(docRef);
+        var i = 0;
+        var date = getCurrentDate("-");
+        console.log(date);
+        const q = query(
+          collection(db, "Event"),
+          where("eventDate", ">=", date)
+        );
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((e) => {
+          eventData[i].id = e.id;
+          console.log(eventData[i].id);
+          eventData[i].title = e.data().eventName;
+          eventData[i].description = e.data().eventDesc;
+          eventData[i].clubId = e.data().clubID;
+          eventData[i].image = e.data().eventImage;
+          handleLogo(i);
+          console.log(eventData[i].image);
+
+          i++;
+        });
+      } catch (error) {
+        console.error("Error fetching event data:", error);
+        setError("Error fetching event data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    handleLoad();
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>; // You can replace this with a loading spinner or component
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div
       id="carouselExample"
@@ -157,28 +214,28 @@ function Slider() {
               style={{ margin: "0 150px" }}
             >
               <Cards
-                image="public/L2YS Agenda Reveal.png"
-                title="AEISEC"
-                desc="this event is very nice you should join please"
+                image={eventData[0].image}
+                title={eventData[0].title}
+                desc={eventData[0].description}
                 price="55RM"
-                logo="public/aeisec logo.png"
-                eventId={1}
+                logo={eventData[0].logo}
+                eventId={eventData[0].id}
               ></Cards>
               <Cards
-                image="public/ted.jpg"
-                title="TEDxUTM"
-                desc="this event is very nice you should join please"
-                price="25RM"
-                logo="public/TED logo.png"
-                eventId={2}
+                image={eventData[1].image}
+                title={eventData[1].title}
+                desc={eventData[1].description}
+                price="55RM"
+                logo={eventData[1].logo}
+                eventId={eventData[1].id}
               ></Cards>
               <Cards
-                image="public/Compfair.jpg"
-                title="PERSAKA"
-                desc="this event is very nice you should join please"
-                price="Free"
-                logo="public/PERSAKA logo.jpeg"
-                eventId={3}
+                image={eventData[2].image}
+                title={eventData[2].title}
+                desc={eventData[2].description}
+                price="55RM"
+                logo={eventData[2].logo}
+                eventId={eventData[2].id}
               ></Cards>
             </div>
           </div>
@@ -188,25 +245,28 @@ function Slider() {
               style={{ margin: "0 150px" }}
             >
               <Cards
-                image="public/L2YS Agenda Reveal.png"
-                title="AEISEC"
-                desc="this event is very nice you should join please"
+                image={eventData[3].image}
+                title={eventData[3].title}
+                desc={eventData[3].description}
                 price="55RM"
-                logo="public/aeisec logo.png"
+                logo={eventData[3].logo}
+                eventId={eventData[3].id}
               ></Cards>
               <Cards
-                image="public/ted.jpg"
-                title="TEDxUTM"
-                desc="this event is very nice you should join please"
-                price="25RM"
-                logo="public/TED logo.png"
+                image={eventData[4].image}
+                title={eventData[4].title}
+                desc={eventData[4].description}
+                price="55RM"
+                logo={eventData[4].logo}
+                eventId={eventData[4].id}
               ></Cards>
               <Cards
-                image="public/Compfair.jpg"
-                title="PERSAKA"
-                desc="this event is very nice you should join please"
-                price="Free"
-                logo="public/PERSAKA logo.jpeg"
+                image={eventData[5].image}
+                title={eventData[5].title}
+                desc={eventData[5].description}
+                price="55RM"
+                logo={eventData[5].logo}
+                eventId={eventData[5].id}
               ></Cards>
             </div>
           </div>
@@ -216,25 +276,28 @@ function Slider() {
               style={{ margin: "0 150px" }}
             >
               <Cards
-                image="public/L2YS Agenda Reveal.png"
-                title="AEISEC"
-                desc="this event is very nice you should join please"
+                image={eventData[6].image}
+                title={eventData[6].title}
+                desc={eventData[6].description}
                 price="55RM"
-                logo="public/aeisec logo.png"
+                logo={eventData[6].logo}
+                eventId={eventData[6].id}
               ></Cards>
               <Cards
-                image="public/ted.jpg"
-                title="TEDxUTM"
-                desc="this event is very nice you should join please"
-                price="25RM"
-                logo="public/TED logo.png"
+                image={eventData[7].image}
+                title={eventData[7].title}
+                desc={eventData[7].description}
+                price="55RM"
+                logo={eventData[7].logo}
+                eventId={eventData[7].id}
               ></Cards>
               <Cards
-                image="public/Compfair.jpg"
-                title="PERSAKA"
-                desc="this event is very nice you should join please"
-                price="Free"
-                logo="public/PERSAKA logo.jpeg"
+                image={eventData[8].image}
+                title={eventData[8].title}
+                desc={eventData[8].description}
+                price="55RM"
+                logo={eventData[8].logo}
+                eventId={eventData[8].id}
               ></Cards>
             </div>
           </div>
