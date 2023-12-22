@@ -8,6 +8,7 @@ import { db } from "../../firebase";
 interface EventData {
   eventName: string;
   type: BadgeProps["status"];
+  //
 }
 
 const fetchEventsFromFirestore = async (
