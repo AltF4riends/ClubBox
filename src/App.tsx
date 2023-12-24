@@ -55,7 +55,7 @@ function App() {
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 
-            <Route path="/event/:id" element={<ViewEvent />} />
+            <Route path="/event/:1" element={<ViewEvent />} />
             <Route
               path="/register_page"
               element={<RegisterForm></RegisterForm>}
