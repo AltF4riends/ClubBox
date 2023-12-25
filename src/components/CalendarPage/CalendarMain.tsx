@@ -4,9 +4,11 @@ import type { BadgeProps, CalendarProps } from "antd";
 import { Badge, Calendar } from "antd";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
+import { Link } from "react-router-dom";
 
 interface EventData {
   eventName: string;
+  eventId: string;
   type: BadgeProps["status"];
   //
 }
@@ -39,6 +41,7 @@ const fetchEventsFromFirestore = async (
 
       eventData[dateStr].push({
         eventName: data.eventName,
+        eventId: doc.id,
         type: "success",
       });
     });
@@ -65,9 +68,14 @@ const CalendarMain: React.FC = () => {
       <div className="events">
         <ul>
           {listData.map((item, index) => (
-            <li key={index}>
-              <b>{item.eventName}</b>
-            </li>
+            <Link
+              to={`/event/${item.eventId}`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <li key={index}>
+                <b>{item.eventName}</b>
+              </li>
+            </Link>
           ))}
         </ul>
       </div>
