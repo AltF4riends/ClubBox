@@ -2,16 +2,51 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
 import { useImageContext } from "../ImageContext"; // Import the context
 import { useState, useEffect } from "react";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const { signOut } = UserAuth();
   const { imageUrl } = useImageContext();
   const [error, setError] = useState("");
-
+  const [userAccess, setUserAccess] = useState<string | null>(null); // State to store user access level
+  const [userID, setUserID] = useState<string | null>(null);
   // Use state to force a re-render when the image URL changes
   const [, setForceRender] = useState({});
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserID(user.uid);
+      } else {
+        setUserID(null);
+      }
+    });
+
+    // Cleanup function to unsubscribe from the observer when the component unmounts
+    return () => unsubscribe();
+  }, []);
+  useEffect(() => {
+    const fetchUserAccess = async () => {
+      if (userID) {
+        const docRef = doc(db, "Student", userID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserAccess(userData.accessLevel);
+          console.log(userAccess); // Assuming access is a string, adjust accordingly
+        } else {
+          console.log("No document");
+        }
+      }
+    };
+
+    fetchUserAccess();
+  }, [userID]);
   useEffect(() => {
     // This effect will trigger a re-render when the imageUrl changes
     setForceRender({});
@@ -69,24 +104,30 @@ const NavBar = () => {
                 </a>
               </li>
             </Link>
-            <li className="nav-item">
-              <a className="nav-link" href="#" style={{ color: "white" }}>
-                Shop
-              </a>
-            </li>
+            {userAccess != "admin" && (
+              <li className="nav-item">
+                <a className="nav-link" href="#" style={{ color: "white" }}>
+                  Shop
+                </a>
+              </li>
+            )}
 
             <li className="nav-item">
               <Link to="/Clubs" className="nav-link" style={{ color: "white" }}>
                 Clubs
               </Link>
             </li>
-
-            <li className="nav-item">
-              <Link to="/manage_club" className="nav-link" style={{ color: "white" }}>
-                Manage Club
-              </Link>
-            </li>
-
+            {userAccess == "admin" && (
+              <li className="nav-item">
+                <Link
+                  to="/manage_club"
+                  className="nav-link"
+                  style={{ color: "white" }}
+                >
+                  Manage Club
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
               <Link
                 className="nav-link"
@@ -96,25 +137,29 @@ const NavBar = () => {
                 Calendar
               </Link>
             </li>
-            <Link to={"/faqpage"}>
-              <li className="nav-item">
-                <a
-                  className="nav-link disabled"
-                  aria-disabled="true"
-                  style={{ color: "white" }}
-                >
-                  FAQ
-                </a>
-              </li>
-            </Link>
+            {userAccess != "admin" && (
+              <Link to={"/faqpage"}>
+                <li className="nav-item">
+                  <a
+                    className="nav-link disabled"
+                    aria-disabled="true"
+                    style={{ color: "white" }}
+                  >
+                    FAQ
+                  </a>
+                </li>
+              </Link>
+            )}
 
-            <Link
-              className="nav-link"
-              to="/NewEventComp"
-              style={{ color: "white" }}
-            >
-              Add Event
-            </Link>
+            {userAccess == "admin" && (
+              <Link
+                className="nav-link"
+                to="/NewEventComp"
+                style={{ color: "white" }}
+              >
+                Add Event
+              </Link>
+            )}
           </ul>
           <div
             className="dropdown"
