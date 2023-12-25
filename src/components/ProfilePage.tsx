@@ -104,7 +104,7 @@ function ProfilePage() {
   };
 
   // Event handler for saving information
-  // Event handler for saving information
+  // Event handler for saving information 
   const saveInfo = async () => {
     setIsEditing(!isEditing);
 

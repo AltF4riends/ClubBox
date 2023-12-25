@@ -120,12 +120,6 @@ function EditInfoBody() {
     setClubInfo({ ...clubInfo, [e.target.name]: e.target.value });
   };
 
-  /*
-  await updateDoc(clubRef, {
-    capital: true
-  });
-*/
-
   return (
     <>
       <div

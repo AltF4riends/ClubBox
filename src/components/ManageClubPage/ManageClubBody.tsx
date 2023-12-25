@@ -107,14 +107,11 @@ const ManageClubBody = () => {
             width: " 40vw",
           }}
           >
-            <h1
-            style={{
-              color: "orange",
-            }}
-            >
+            <h1 style={{color: "orange",}}>
               ~   {headingIntro}
             </h1>
             <br/>
+
             <h2
             style={{
               color: 'white',
@@ -129,8 +126,7 @@ const ManageClubBody = () => {
             style={{
               height: "10vh",
               width: " 10vw",
-            }}
-            >
+            }}>
               <Link to={"/edit_club_info"}>
               <img src = {eButton}
                   style={{
@@ -145,13 +141,8 @@ const ManageClubBody = () => {
             style={{
               height: "30vh",
               width: " 50vw",
-            }}
-            >
-            <h4 style={{
-              color: 'white',
-              fontSize: "40px",
-            }}
-            >
+          }}>
+            <h4 style={{color: 'white', fontSize: "40px",}}>
             {introBody}
             </h4>
           </div>
@@ -183,9 +174,7 @@ const ManageClubBody = () => {
               height: "5vh",
               width: " 35vw",
             }}>
-              <h2 style={{
-                color: 'white',
-              }}>
+              <h2 style={{color: 'white',}}>
                 {smallTitle}
               </h2>
             </div>

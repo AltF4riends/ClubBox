@@ -18,7 +18,7 @@ import ForgotPasswordQNA from "./RegisterPagePD/ForgotPasswordQNA";
 import { multiStepTitle } from "./RegisterPagePD/multiStepTitle";
 
 const RegisterForm = () => {
-  
+  //
   type FormData = {
     fName: String,
     lName: String,
