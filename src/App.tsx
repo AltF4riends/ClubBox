@@ -21,7 +21,7 @@ import UploadVideo from "./components/RegisterPagePD/UploadVideo";
 import EditPersonalDetailsPage from "./components/EditPersonalDetailsPage";
 import ManageClub from "./components/ManageClub";
 import EditClubInfo from "./components/EditClubInfo";
-import ClubAnnouncement from "./components/ClubAnnouncement";
+import ClubAnnouncement from "./components/Club_Admission/ClubAnnouncement";
 import FaqPage from "./components/FaqPage/FaqMainPage";
 import FaqMainPage from "./components/FaqPage/FaqMainPage";
 
@@ -31,10 +31,10 @@ import NewEvent from "./components/CreateEvent/NewEvent";
 import NewEventComp from "./components/NewEventComp";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
-import ClubAdmission from "./components/ClubAdmission";
+import ClubAdmission from "./components/Club_Admission/ClubAdmission";
 import ViewEvent from "./components/ViewEvent";
 import CreateEvents from "./components/CreateEvents";
-import ClubPage from "./components/ClubPage";
+import ClubPage from "./components/Club_Admission/ClubPage";
 import AddInfoPage from "./components/AddInfoPage";
 
 function App() {
@@ -67,9 +67,19 @@ function App() {
               element={<ForgotPasswordQNA />}
             />
             <Route path="/additional_info" element={<AddInfoPage />} />
-            <Route path="/about_me" element={<AboutMe aboutMe="" updateFields={function (fields: Partial<{ aboutMe: String; }>): void {
-              throw new Error("Function not implemented.");
-            } } />} />
+            <Route
+              path="/about_me"
+              element={
+                <AboutMe
+                  aboutMe=""
+                  updateFields={function (
+                    fields: Partial<{ aboutMe: String }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
             <Route path="/upload_photo" element={<UploadPhoto />} />
             <Route path="/upload_video" element={<UploadVideo />} />
             <Route

@@ -1,12 +1,10 @@
-import { useState } from "react";
-
-import "./HomePage/Slider.css";
-import "./ClubAdmission.css";
-
+import { useState, useEffect } from "react";
 import { Card } from "antd";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { getStorage, ref } from "firebase/storage";
+import "./ClubAdmission.css";
+import { useNavigate } from "react-router-dom";
 
 const eventData = [
   {
@@ -47,9 +45,12 @@ const handleLoad = async () => {
 const ClubAdmission = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const navigate = useNavigate();
 
   const handleEventSelect = (event: any) => {
-    setSelectedEvent(event);
+    navigate(`../manage_club${event.id}`);
+    console.log("id: ", event.id);
+    console.log("Done");
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +73,7 @@ const ClubAdmission = () => {
       <div className="club-admission-container">
         <div onLoad={handleLoad}>
           <div>
-            <h1 color="white">Clubs</h1>
+            <h1 style={{ color: "white" }}>Clubs</h1>
 
             <div
               className="d-flex justify-content-between"
@@ -84,9 +85,13 @@ const ClubAdmission = () => {
                     <img alt={eventData[1].title} src={eventData[1].image} />
                   }
                   title={eventData[1].title}
+                  onClick={() => handleEventSelect(eventData[1])} // Pass the entire object
                 >
                   <p>{eventData[1].description}</p>
                 </Card>
+              </div>
+
+              <div className="card-grid">
                 <Card
                   cover={
                     <img alt={eventData[2].title} src={eventData[2].image} />
@@ -95,57 +100,8 @@ const ClubAdmission = () => {
                 >
                   <p>{eventData[2].description}</p>
                 </Card>
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
-                >
-                  {/* Description or any other content */}
-                </Card>
-              </div>
-
-              <div className="card-grid">
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
-                >
-                  {/* Description or any other content */}
-                </Card>
-
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
-                >
-                  {/* Description or any other content */}
-                </Card>
-
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
-                >
-                  {/* Description or any other content */}
-                </Card>
               </div>
               <div className="card-grid">
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
-                >
-                  {/* Description or any other content */}
-                </Card>
-
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
-                >
-                  {/* Description or any other content */}
-                </Card>
-
                 <Card
                   cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
                   title="PERSAKA"
