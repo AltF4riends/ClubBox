@@ -35,7 +35,7 @@ const RegisterForm = () => {
     aboutMe: String,
     photoURL: String,
     videoURL: String,
-    accessLvl: number,
+    accessLvl: String,
     clubID: String
   }
   
@@ -55,7 +55,7 @@ const RegisterForm = () => {
     aboutMe: "",
     photoURL: "",
     videoURL: "",
-    accessLvl: 1,
+    accessLvl: "",
     clubID: ""
   }
 
