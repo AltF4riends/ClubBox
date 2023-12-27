@@ -23,7 +23,7 @@ import { useImageContext } from "./ImageContext";
 
 const AddInfoPage = () => {
   
-  type FormData = {
+  type FormData = { 
     aboutMe: String,
     photoURL: String,
     videoURL: String,
@@ -96,8 +96,8 @@ const AddInfoPage = () => {
         setLoading(true);
         console.log("Checked");
 
-        const docRef = await setDoc(doc(db, "Student", userID), {
-          aboutMe: data.aboutMe,
+        const docRef = await updateDoc(doc(db, "Student", userID), {
+          aboutMe: data.aboutMe, //Ignore this error
           photoURL: data.photoURL,
           videoURL: data.videoURL
         }, { merge: true });
