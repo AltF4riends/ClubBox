@@ -48,7 +48,8 @@ const ClubAdmission = () => {
   const navigate = useNavigate();
 
   const handleEventSelect = (event: any) => {
-    navigate(`../manage_club${event.id}`);
+    console.log("id before: ", event.id);
+    navigate(`../manage_club/`);
     console.log("id: ", event.id);
     console.log("Done");
   };
@@ -68,10 +69,18 @@ const ClubAdmission = () => {
     );
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      await handleLoad();
+    };
+
+    fetchData();
+  }, []); // This useEffect runs once when the component mounts
+
   return (
     <>
       <div className="club-admission-container">
-        <div onLoad={handleLoad}>
+        <div>
           <div>
             <h1 style={{ color: "white" }}>Clubs</h1>
 
@@ -105,9 +114,8 @@ const ClubAdmission = () => {
                 <Card
                   cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
                   title="PERSAKA"
-                  extra={<div>{/* Price or any other extra content */}</div>}
                 >
-                  {/* Description or any other content */}
+                  <p>Provides best coding Experience</p>
                 </Card>
               </div>
             </div>
