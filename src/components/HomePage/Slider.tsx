@@ -14,10 +14,22 @@ import {
 } from "@firebase/firestore";
 import { db } from "../../firebase";
 
+interface EventInfo {
+  id: string;
+  title: string;
+  description: string;
+  image: string; // Replace with actual image path
+  clubId: string;
+  logo: string;
+  price: string;
+  date: string;
+  location: string;
+}
+
 const eventData = [
   {
     id: "1",
-    title: "Event 1",
+    title: "",
     description: "Description for Event 1",
     image: "", // Replace with actual image path
     clubId: "clubid1",
@@ -28,7 +40,7 @@ const eventData = [
   },
   {
     id: "2",
-    title: "Event 2",
+    title: "",
     description: "Description for Event 2",
     image: "", // Replace with actual image path
     clubId: "clubid1",
@@ -51,7 +63,7 @@ const eventData = [
   // Add more events as needed
   {
     id: "4",
-    title: "Event 4",
+    title: "",
     description: "Description for Event 4",
     image: "", // Replace with actual image path
     clubId: "clubid1",
@@ -62,7 +74,7 @@ const eventData = [
   },
   {
     id: "5",
-    title: "Event 5",
+    title: "",
     description: "Description for Event 5",
     image: "", // Replace with actual image path
     clubId: "clubid1",
@@ -73,7 +85,7 @@ const eventData = [
   },
   {
     id: "6",
-    title: "Event 6",
+    title: "",
     description: "Description for Event 6",
     image: "", // Replace with actual image path
     clubId: "clubid1",
@@ -85,8 +97,8 @@ const eventData = [
 
   {
     id: "7",
-    title: "Event 7",
-    description: "Description for Event 7",
+    title: "",
+    description: "",
     image: "", // Replace with actual image path
     clubId: "clubid1",
     logo: "",
@@ -96,8 +108,8 @@ const eventData = [
   },
   {
     id: "8",
-    title: "Event 8",
-    description: "Description for Event 8",
+    title: "",
+    description: "",
     image: "", // Replace with actual image path
     clubId: "clubid1",
     logo: "",
@@ -107,8 +119,8 @@ const eventData = [
   },
   {
     id: "9",
-    title: "Event 9",
-    description: "Description for Event 9",
+    title: "",
+    description: "",
     image: "", // Replace with actual image path
     clubId: "clubid1",
     logo: "",
@@ -119,6 +131,12 @@ const eventData = [
 ];
 
 function Slider() {
+  const [startIndex, setStartIndex] = useState(0);
+
+  const handleNext = () => {
+    const newIndex = startIndex + 3;
+    setStartIndex(newIndex >= eventData.length ? 0 : newIndex);
+  };
   function getCurrentDate(separator = "-") {
     let newDate = new Date();
     let date = newDate.getDate();
@@ -208,37 +226,35 @@ function Slider() {
         }}
       >
         <div className="carousel-inner">
-          <div className="carousel-item active">
-            <div
-              className="d-flex justify-content-between"
-              style={{ margin: "0 150px" }}
-            >
-              <Cards
-                image={eventData[0].image}
-                title={eventData[0].title}
-                desc={eventData[0].description}
-                price="55RM"
-                logo={eventData[0].logo}
-                eventId={eventData[0].id}
-              ></Cards>
-              <Cards
-                image={eventData[1].image}
-                title={eventData[1].title}
-                desc={eventData[1].description}
-                price="55RM"
-                logo={eventData[1].logo}
-                eventId={eventData[1].id}
-              ></Cards>
-              <Cards
-                image={eventData[2].image}
-                title={eventData[2].title}
-                desc={eventData[2].description}
-                price="55RM"
-                logo={eventData[2].logo}
-                eventId={eventData[2].id}
-              ></Cards>
-            </div>
-          </div>
+          {eventData.map((event, index) =>
+            event.title ? (
+              <div
+                key={index}
+                className={`carousel-item ${index === 0 ? "active" : ""}`}
+              >
+                <div
+                  className="d-flex justify-content-between"
+                  style={{ margin: "0 150px" }}
+                >
+                  {eventData
+                    .slice(startIndex, startIndex + 3)
+                    .map((event, cardIndex) => (
+                      <Cards
+                        key={cardIndex}
+                        image={event.image}
+                        title={event.title}
+                        desc={event.description}
+                        price="55RM"
+                        logo={event.logo}
+                        eventId={event.id}
+                      />
+                    ))}
+                </div>
+              </div>
+            ) : null
+          )}
+
+          {/*
           <div className="carousel-item">
             <div
               className="d-flex justify-content-between"
@@ -301,6 +317,7 @@ function Slider() {
               ></Cards>
             </div>
           </div>
+          */}
         </div>
       </div>
       <button
@@ -321,6 +338,7 @@ function Slider() {
         type="button"
         data-bs-target="#carouselExample"
         data-bs-slide="next"
+        onClick={handleNext}
       >
         <span
           style={{ backgroundColor: "black", borderRadius: "50%" }}
