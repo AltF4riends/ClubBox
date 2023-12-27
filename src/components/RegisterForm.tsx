@@ -33,7 +33,7 @@ const RegisterForm = () => {
     ans2: String,
     ans3: String,
     aboutMe: String,
-    photo: String,
+    photoURL: String,
     videoURL: String,
     accessLvl: number,
     clubID: String
@@ -53,7 +53,7 @@ const RegisterForm = () => {
     ans2: "",
     ans3: "",
     aboutMe: "",
-    photo: "",
+    photoURL: "",
     videoURL: "",
     accessLvl: 1,
     clubID: ""
@@ -115,7 +115,10 @@ const RegisterForm = () => {
           utmEmail: data.email,
           password: data.password,
           accessLvl: data.accessLvl,
-          clubID: data.clubID
+          clubID: data.clubID,
+          aboutMe: data.aboutMe,
+          photoURL: data.photoURL,
+          videoURL: data.videoURL,
         });
         console.log("Signedup");
         navigate("/additional_info");//
