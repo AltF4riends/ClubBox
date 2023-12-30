@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { db } from "../../firebase";
 
@@ -42,70 +42,76 @@ function EditInfoBody() {
     backgroundColor: "rgba(255,255,255,0.0)",
   };
 
-  const [isInputEnabled, setIsInputEnabled] = useState(false);
+  const [isInputEnabled, setIsInputEnabled] = useState(true);
 
   const toggleInputEnabled = () => {
     setIsInputEnabled((prevEnabled) => !prevEnabled);
   };
 
-  const [isInputEnabled1, setIsInputEnabled1] = useState(true);
+  // const [isInputEnabled1, setIsInputEnabled1] = useState(true);
 
-  const toggleInputEnabled1 = () => {
-    setIsInputEnabled1((prevEnabled1) => !prevEnabled1);
-  };
+  // const toggleInputEnabled1 = () => {
+  //   setIsInputEnabled1((prevEnabled1) => !prevEnabled1);
+  // };
 
-  const [isInputEnabled2, setIsInputEnabled2] = useState(true);
+  // const [isInputEnabled2, setIsInputEnabled2] = useState(true);
 
-  const toggleInputEnabled2 = () => {
-    setIsInputEnabled2((prevEnabled2) => !prevEnabled2);
-  };
+  // const toggleInputEnabled2 = () => {
+  //   setIsInputEnabled2((prevEnabled2) => !prevEnabled2);
+  // };
 
-  const [isInputEnabled3, setIsInputEnabled3] = useState(true);
+  // const [isInputEnabled3, setIsInputEnabled3] = useState(true);
 
-  const toggleInputEnabled3 = () => {
-    setIsInputEnabled3((prevEnabled3) => !prevEnabled3);
-  };
+  // const toggleInputEnabled3 = () => {
+  //   setIsInputEnabled3((prevEnabled3) => !prevEnabled3);
+  // };
 
-  const [isInputEnabled4, setIsInputEnabled4] = useState(true);
+  // const [isInputEnabled4, setIsInputEnabled4] = useState(true);
 
-  const toggleInputEnabled4 = () => {
-    setIsInputEnabled4((prevEnabled4) => !prevEnabled4);
-  };
+  // const toggleInputEnabled4 = () => {
+  //   setIsInputEnabled4((prevEnabled4) => !prevEnabled4);
+  // };
 
-  const [isInputEnabled5, setIsInputEnabled5] = useState(true);
+  // const [isInputEnabled5, setIsInputEnabled5] = useState(true);
 
-  const toggleInputEnabled5 = () => {
-    setIsInputEnabled5((prevEnabled5) => !prevEnabled5);
-  };
+  // const toggleInputEnabled5 = () => {
+  //   setIsInputEnabled5((prevEnabled5) => !prevEnabled5);
+  // };
 
+  // State for Club Info information and database
   const [clubInfo, setClubInfo] = useState({
     clubName: "",
-    clubLI: "",
-    clubTwitter: "",
-    clubFB: "",
+    clubStatus: "",
+    clubLinkedIn: "",
+    clubTelegram: "",
+    clubFacebook: "",
     clubAppReq: "",
     clubDesc: "",
+    clubType: "",
+    clubLogo: ""
   });
 
-  async function handleOnLoads(e: any) {
-    setIsInputEnabled(false);
-    e.preventDefault();
+  useEffect(() => {
+  async function handleOnLoad() {
 
     const docRef = doc(db, "Club", "cl001");
     const docSnap = await getDoc(docRef);
-    console.log("why");
+    console.log("Change Handling");
 
     if (docSnap.exists()) {
+      const data = docSnap.data();
       console.log("Document data:", docSnap.data());
-      console.log(docSnap.data().clubName);
+      console.log(data.clubName);
       setClubInfo({
-        ...clubInfo,
-        clubName: docSnap.data().clubName,
-        clubLI: docSnap.data().clubLinkedIn,
-        clubTwitter: docSnap.data().clubTwitter,
-        clubFB: docSnap.data().clubFacebook,
-        clubAppReq: docSnap.data().address,
-        clubDesc: docSnap.data().clubDesc,
+        clubName: data.clubName,
+        clubStatus: data.clubStatus,
+        clubLinkedIn: data.clubLinkedIn,
+        clubTelegram: data.clubTelegram,
+        clubFacebook: data.clubFacebook,
+        clubAppReq: data.clubAppReq,
+        clubDesc: data.clubDesc,
+        clubType: data.clubType,
+        clubLogo: data.clubLogo,
       });
       setIsInputEnabled(true);
     } else {
@@ -114,16 +120,24 @@ function EditInfoBody() {
       console.log("No such document!");
       setIsInputEnabled(true);
     }
-  }
+  };
+
+  handleOnLoad();
+}, [userID]);
 
   const handleChange = (e: { target: { name: any; value: any } }) => {
     setClubInfo({ ...clubInfo, [e.target.name]: e.target.value });
   };
 
+  async function handleDBUpdate(e: any)
+  {
+
+    //await updateDoc(docRef, clubInfo);
+  }
+
   return (
     <>
       <div
-        onLoad={handleOnLoads}
         style={{
           display: "flex",
           height: "89vh",
@@ -182,7 +196,7 @@ function EditInfoBody() {
                         fontSize: "24px",
                       }}
                     >
-                      {isInputEnabled ? "" : "Save "}
+                      {isInputEnabled ? "" : "Save "}//
                       Edit
                     </h6>
                   </button>
@@ -197,19 +211,20 @@ function EditInfoBody() {
                     readOnly={isInputEnabled}
                     value={clubInfo.clubName}
                     onChange={handleChange}
+                    disabled={isInputEnabled}//
                   />
                 </div>
               </div>
 
               <div style={editBlockFormat}>
                 <div style={smallTitleBox}>
-                  <h2>LinkedIn</h2>
+                  <h2>LinkedIn Link</h2>
                 </div>
 
                 <div style={smallEditBox}>
                   <button
                     type="button"
-                    onClick={toggleInputEnabled1}
+                    onClick={toggleInputEnabled}//1
                     style={buttonFormatEdit}
                   >
                     <h6
@@ -219,7 +234,7 @@ function EditInfoBody() {
                         fontSize: "24px",
                       }}
                     >
-                      {isInputEnabled1 ? "" : "Save "}
+                      {isInputEnabled ? "" : "Save "}//1
                       Edit
                     </h6>
                   </button>
@@ -231,20 +246,22 @@ function EditInfoBody() {
                     className="form-control"
                     id=""
                     placeholder="LinkedIn Account Link"
-                    disabled={isInputEnabled1}
+                    value={clubInfo.clubLinkedIn}
+                    onChange={handleChange}
+                    disabled={isInputEnabled}//1
                   />
                 </div>
               </div>
 
               <div style={editBlockFormat}>
                 <div style={smallTitleBox}>
-                  <h2>Twitter</h2>
+                  <h2>Telegram Link</h2>
                 </div>
 
                 <div style={smallEditBox}>
                   <button
                     type="button"
-                    onClick={toggleInputEnabled2}
+                    onClick={toggleInputEnabled}//2
                     style={buttonFormatEdit}
                   >
                     <h6
@@ -254,7 +271,7 @@ function EditInfoBody() {
                         fontSize: "24px",
                       }}
                     >
-                      {isInputEnabled2 ? "" : "Save "}
+                      {isInputEnabled ? "" : "Save "}//2
                       Edit
                     </h6>
                   </button>
@@ -265,21 +282,23 @@ function EditInfoBody() {
                     type="text"
                     className="form-control"
                     id=""
-                    placeholder="Twitter Link"
-                    disabled={isInputEnabled2}
+                    placeholder="Telegram Link"
+                    value={clubInfo.clubTelegram}
+                    onChange={handleChange}
+                    disabled={isInputEnabled}//2
                   />
                 </div>
               </div>
 
               <div style={editBlockFormat}>
                 <div style={smallTitleBox}>
-                  <h2>Facebook</h2>
+                  <h2>Facebook Link</h2>
                 </div>
 
                 <div style={smallEditBox}>
                   <button
                     type="button"
-                    onClick={toggleInputEnabled3}
+                    onClick={toggleInputEnabled}
                     style={buttonFormatEdit}
                   >
                     <h6
@@ -289,7 +308,7 @@ function EditInfoBody() {
                         fontSize: "24px",
                       }}
                     >
-                      {isInputEnabled3 ? "" : "Save "}
+                      {isInputEnabled ? "" : "Save "}//3
                       Edit
                     </h6>
                   </button>
@@ -301,7 +320,9 @@ function EditInfoBody() {
                     className="form-control"
                     id=""
                     placeholder="Facebook Link"
-                    disabled={isInputEnabled3}
+                    value={clubInfo.clubLinkedIn}
+                    onChange={handleChange}
+                    disabled={isInputEnabled}//3
                   />
                 </div>
               </div>
@@ -314,7 +335,7 @@ function EditInfoBody() {
                 <div style={smallEditBox}>
                   <button
                     type="button"
-                    onClick={toggleInputEnabled4}
+                    onClick={toggleInputEnabled}//4
                     style={buttonFormatEdit}
                   >
                     <h6
@@ -324,7 +345,7 @@ function EditInfoBody() {
                         fontSize: "24px",
                       }}
                     >
-                      {isInputEnabled4 ? "" : "Save "}
+                      {isInputEnabled ? "" : "Save "}//4
                       Edit
                     </h6>
                   </button>
@@ -336,7 +357,9 @@ function EditInfoBody() {
                     className="form-control"
                     id=""
                     placeholder="Not Provided"
-                    disabled={isInputEnabled4}
+                    value={clubInfo.clubAppReq}
+                    onChange={handleChange}
+                    disabled={isInputEnabled}//4
                   />
                 </div>
               </div>
@@ -349,7 +372,7 @@ function EditInfoBody() {
                 <div style={smallEditBox}>
                   <button
                     type="button"
-                    onClick={toggleInputEnabled5}
+                    onClick={toggleInputEnabled}//5
                     style={buttonFormatEdit}
                   >
                     <h6
@@ -359,7 +382,7 @@ function EditInfoBody() {
                         fontSize: "24px",
                       }}
                     >
-                      {isInputEnabled5 ? "" : "Save "}
+                      {isInputEnabled ? "" : "Save "}//5
                       Edit
                     </h6>
                   </button>
@@ -371,7 +394,9 @@ function EditInfoBody() {
                     className="form-control"
                     id=""
                     placeholder="Not Provided"
-                    disabled={isInputEnabled5}
+                    value={clubInfo.clubDesc}
+                    onChange={handleChange}
+                    disabled={isInputEnabled}//5
                   />
                 </div>
               </div>
