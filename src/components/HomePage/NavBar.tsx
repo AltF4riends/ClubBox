@@ -6,6 +6,7 @@ import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
+import { Avatar, Badge, Space } from "antd";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -106,9 +107,19 @@ const NavBar = () => {
             </Link>
             {userAccess != "admin" && (
               <li className="nav-item">
-                <a className="nav-link" href="#" style={{ color: "white" }}>
-                  Shop
-                </a>
+                <Link
+                  to="/Cart"
+                  className="nav-link"
+                  style={{ color: "white" }}
+                >
+                  Cart
+                  <Badge
+                    count={1000}
+                    overflowCount={99}
+                    offset={[2, -20]}
+                    size="small"
+                  ></Badge>
+                </Link>
               </li>
             )}
 

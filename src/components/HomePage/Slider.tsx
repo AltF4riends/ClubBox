@@ -4,6 +4,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min"; // Import Bootstrap JS
 import "./Slider.css"; // Import the CSS file
 import { Popover } from "antd";
 import { useState, useEffect } from "react";
+import { Flex, Spin } from "antd";
 import {
   collection,
   getDoc,
@@ -14,11 +15,12 @@ import {
 } from "@firebase/firestore";
 import { db } from "../../firebase";
 
+// Updated EventInfo interface
 interface EventInfo {
   id: string;
   title: string;
   description: string;
-  image: string; // Replace with actual image path
+  image: string;
   clubId: string;
   logo: string;
   price: string;
@@ -26,108 +28,20 @@ interface EventInfo {
   location: string;
 }
 
-const eventData = [
+// Updated eventData array
+const eventData: EventInfo[] = [
   {
     id: "1",
     title: "",
-    description: "Description for Event 1",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
+    description: "",
+    image: "",
+    clubId: "",
     logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-  {
-    id: "2",
-    title: "",
-    description: "Description for Event 2",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-  {
-    id: "3",
-    title: "",
-    description: "Description for Event 3",
-    image: "event3.jpg", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
+    price: "",
+    date: "",
+    location: "",
   },
   // Add more events as needed
-  {
-    id: "4",
-    title: "",
-    description: "Description for Event 4",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-  {
-    id: "5",
-    title: "",
-    description: "Description for Event 5",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-  {
-    id: "6",
-    title: "",
-    description: "Description for Event 6",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-
-  {
-    id: "7",
-    title: "",
-    description: "",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-  {
-    id: "8",
-    title: "",
-    description: "",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
-  {
-    id: "9",
-    title: "",
-    description: "",
-    image: "", // Replace with actual image path
-    clubId: "clubid1",
-    logo: "",
-    price: "RM",
-    date: "date1",
-    location: "location1",
-  },
 ];
 
 function Slider() {
@@ -137,6 +51,12 @@ function Slider() {
     const newIndex = startIndex + 3;
     setStartIndex(newIndex >= eventData.length ? 0 : newIndex);
   };
+
+  const handlePrev = () => {
+    const newIndex = startIndex - 3;
+    setStartIndex(newIndex >= eventData.length ? 0 : newIndex);
+  };
+
   function getCurrentDate(separator = "-") {
     let newDate = new Date();
     let date = newDate.getDate();
@@ -147,18 +67,22 @@ function Slider() {
       month < 10 ? `0${month}` : `${month}`
     }${separator}${date}`;
   }
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [logos, setLogos] = useState("");
+
   async function handleLogo(i = 1) {
     var docClubRef = doc(db, "Club", eventData[i].clubId);
     const docClubSnap = await getDoc(docClubRef);
     if (docClubSnap.exists()) {
       const data = docClubSnap.data();
-      eventData[i].logo = data.clubLogo;
+      setLogos(data.clubLogo);
     } else {
       console.log("The Club Does not exist");
     }
   }
+
   useEffect(() => {
     const handleLoad = async () => {
       try {
@@ -175,14 +99,18 @@ function Slider() {
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((e) => {
-          eventData[i].id = e.id;
-          console.log(eventData[i].id);
-          eventData[i].title = e.data().eventName;
-          eventData[i].description = e.data().eventDesc;
-          eventData[i].clubId = e.data().clubID;
-          eventData[i].image = e.data().eventImage;
-          handleLogo(i);
-          console.log(eventData[i].image);
+          const newEvent: EventInfo = {
+            id: e.id,
+            title: e.data().eventName,
+            description: e.data().eventDesc,
+            clubId: e.data().clubID,
+            image: e.data().eventImage,
+            logo: logos,
+            price: e.data().eventFee,
+            date: e.data().eventDate,
+            location: e.data().eventLocation,
+          };
+          eventData.push(newEvent);
 
           i++;
         });
@@ -197,11 +125,11 @@ function Slider() {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>; // You can replace this with a loading spinner or component
+    return <Spin size="large" fullscreen />;
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <p style={{ color: "white" }}>Error: {error}</p>;
   }
 
   return (
@@ -226,33 +154,34 @@ function Slider() {
         }}
       >
         <div className="carousel-inner">
-          {eventData.map((event, index) =>
-            event.title ? (
+          {[0, 1, 2].map((item, index) => (
+            <div
+              key={index}
+              className={`carousel-item ${index === 0 ? "active" : ""}`}
+            >
               <div
-                key={index}
-                className={`carousel-item ${index === 0 ? "active" : ""}`}
+                className="d-flex justify-content-between"
+                style={{ margin: "0 150px" }}
               >
-                <div
-                  className="d-flex justify-content-between"
-                  style={{ margin: "0 150px" }}
-                >
-                  {eventData
-                    .slice(startIndex, startIndex + 3)
-                    .map((event, cardIndex) => (
-                      <Cards
-                        key={cardIndex}
-                        image={event.image}
-                        title={event.title}
-                        desc={event.description}
-                        price="55RM"
-                        logo={event.logo}
-                        eventId={event.id}
-                      />
-                    ))}
-                </div>
+                {eventData
+                  .slice(startIndex, startIndex + 3)
+                  .map(
+                    (event, subIndex) =>
+                      event.title && (
+                        <Cards
+                          key={subIndex}
+                          image={event.image}
+                          title={event.title}
+                          desc={event.description}
+                          price="55RM"
+                          logo={event.logo}
+                          eventId={event.id}
+                        />
+                      )
+                  )}
               </div>
-            ) : null
-          )}
+            </div>
+          ))}
 
           {/*
           <div className="carousel-item">
@@ -325,6 +254,7 @@ function Slider() {
         type="button"
         data-bs-target="#carouselExample"
         data-bs-slide="prev"
+        onClick={handlePrev}
       >
         <span
           className="carousel-control-prev-icon"
