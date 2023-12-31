@@ -8,19 +8,19 @@ import { useNavigate } from "react-router-dom";
 
 const eventData = [
   {
-    id: "1",
+    id: "0",
     title: "Event 1",
     description: "Description for Event 1",
     image: "event1.jpg", // Replace with actual image path
   },
   {
-    id: "2",
+    id: "1",
     title: "Event 2",
     description: "Description for Event 2",
     image: "event2.jpg", // Replace with actual image path
   },
   {
-    id: "3",
+    id: "2",
     title: "Event 3",
     description: "Description for Event 3",
     image: "event3.jpg", // Replace with actual image path
@@ -31,12 +31,12 @@ const eventData = [
 const handleLoad = async () => {
   const docRef = collection(db, "Club");
   const docSnap = await getDocs(docRef);
-  var i = 1;
+  var i = 0;
 
   docSnap.forEach((e) => {
     eventData[i].id = e.id;
     eventData[i].title = e.data().clubName;
-    eventData[i].description = e.data().clubDesc;
+    eventData[i].description = e.data().B_Desc;
     eventData[i].image = e.data().clubLogo;
     i++;
   });
@@ -48,8 +48,7 @@ const ClubAdmission = () => {
   const navigate = useNavigate();
 
   const handleEventSelect = (event: any) => {
-    console.log("id before: ", event.id);
-    navigate(`../manage_club/`);
+    navigate(`/manage_club/${event.id}`);
     console.log("id: ", event.id);
     console.log("Done");
   };
@@ -91,6 +90,18 @@ const ClubAdmission = () => {
               <div className="card-grid">
                 <Card
                   cover={
+                    <img alt={eventData[0].title} src={eventData[0].image} />
+                  }
+                  title={eventData[0].title}
+                  onClick={() => handleEventSelect(eventData[0])} // Pass the entire object
+                >
+                  <p>{eventData[0].description}</p>
+                </Card>
+              </div>
+
+              <div className="card-grid">
+                <Card
+                  cover={
                     <img alt={eventData[1].title} src={eventData[1].image} />
                   }
                   title={eventData[1].title}
@@ -99,23 +110,15 @@ const ClubAdmission = () => {
                   <p>{eventData[1].description}</p>
                 </Card>
               </div>
-
               <div className="card-grid">
                 <Card
                   cover={
                     <img alt={eventData[2].title} src={eventData[2].image} />
                   }
                   title={eventData[2].title}
+                  onClick={() => handleEventSelect(eventData[2])} // Pass the entire object
                 >
                   <p>{eventData[2].description}</p>
-                </Card>
-              </div>
-              <div className="card-grid">
-                <Card
-                  cover={<img alt="PERSAKA" src="public/Compfair.jpg" />}
-                  title="PERSAKA"
-                >
-                  <p>Provides best coding Experience</p>
                 </Card>
               </div>
             </div>

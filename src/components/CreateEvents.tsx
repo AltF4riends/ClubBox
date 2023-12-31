@@ -8,7 +8,7 @@ import { db } from "../firebase";
 import { useImageContext } from "./ImageContext";
 
 function CreateEvent() {
-  const { imageUrl, image, setImageInfo } = useImageContext();
+  const [image, setImage] = useState<File | null>(null);
 
   async function handleOnLoad(e: any) {
     e.preventDefault();
@@ -89,7 +89,11 @@ function CreateEvent() {
     const file = event.target.files?.[0];
 
     if (file) {
-      setImageInfo(URL.createObjectURL(file), file);
+      setImage(file);
+      setEventDetails({
+        ...eventDetails,
+        eventImage: URL.createObjectURL(file),
+      });
     }
   };
   const handleImageClick = () => {

@@ -22,59 +22,73 @@ import { multiStepTitle } from "./RegisterPagePD/multiStepTitle";
 import { useImageContext } from "./ImageContext";
 
 const AddInfoPage = () => {
-  
-  type FormData = { 
-    aboutMe: String,
-    photoURL: String,
-    videoURL: String,
-  }
-  
+  type FormData = {
+    aboutMe: String;
+    photoURL: String;
+    videoURL: String;
+  };
+
   const initial_data: FormData = {
     aboutMe: "",
     photoURL: "",
-    videoURL: ""
-  }
+    videoURL: "",
+  };
 
   const [data, setData] = useState(initial_data);
 
   //Change initial_data as input comes
-  function updateFields(fields: Partial<FormData>)
-  {
-    setData(prev => {
-      return {...prev, ...fields}
-    })
+  function updateFields(fields: Partial<FormData>) {
+    setData((prev) => {
+      return { ...prev, ...fields };
+    });
   }
 
-  const {stepsAI, currentStepIndexAI, stepAI, isLastStepAI, goToAI, nextAI, backAI} 
-  = multiStepFormAI([
-  <AdditionalInfo triggerAboutMe={triggerAboutMe} triggerUploadPhoto={triggerUploadPhoto} triggerUploadVideo={triggerUploadVideo}/>,
-  <AboutMe {...data} updateFields={updateFields}/>, 
-  <UploadPhoto {...data} updateFields={updateFields}/>,
-  <UploadVideo {...data} updateFields={updateFields}/>,
-  ])
+  const {
+    stepsAI,
+    currentStepIndexAI,
+    stepAI,
+    isLastStepAI,
+    goToAI,
+    nextAI,
+    backAI,
+  } = multiStepFormAI([
+    <AdditionalInfo
+      triggerAboutMe={triggerAboutMe}
+      triggerUploadPhoto={triggerUploadPhoto}
+      triggerUploadVideo={triggerUploadVideo}
+    />,
+    <AboutMe {...data} updateFields={updateFields} />,
+    <UploadPhoto {...data} updateFields={updateFields} />,
+    <UploadVideo {...data} updateFields={updateFields} />,
+  ]);
 
-  const {curStepIndex, title, titles, isFirstTitle, isLastTitle, goToTitle, nextTitle, backTitle}
-  = multiStepTitle([
+  const {
+    curStepIndex,
+    title,
+    titles,
+    isFirstTitle,
+    isLastTitle,
+    goToTitle,
+    nextTitle,
+    backTitle,
+  } = multiStepTitle([
     "Add Your Details Now",
     "About Me",
     "Upload Photo",
-    "Upload CV Video URL"
-  ])
+    "Upload CV Video URL",
+  ]);
 
-  function triggerAboutMe()
-  {
+  function triggerAboutMe() {
     goToTitle(1);
     goToAI(1);
   }
 
-  function triggerUploadPhoto()
-  {
+  function triggerUploadPhoto() {
     goToTitle(2);
     goToAI(2);
   }
 
-  function triggerUploadVideo()
-  {
+  function triggerUploadVideo() {
     goToTitle(3);
     goToAI(3);
   }
@@ -91,74 +105,71 @@ const AddInfoPage = () => {
     e.preventDefault();
     console.log("Clicked");
 
-      try {
-        setError("");
-        setLoading(true);
-        console.log("Checked");
+    try {
+      setError("");
+      setLoading(true);
+      console.log("Checked");
 
-        const docRef = await updateDoc(doc(db, "Student", userID), {
+      const docRef = await updateDoc(
+        doc(db, "Student", userID),
+        {
           aboutMe: data.aboutMe, //Ignore this error
           photoURL: data.photoURL,
-          videoURL: data.videoURL
-        }, { merge: true });
-        console.log("Updated Database");
-        navigate("/home");//
-      } catch {
-        setError("Failed to update");
-        console.log(userID); 
-      }
-      setLoading(false);
+          videoURL: data.videoURL,
+        },
+        { merge: true }
+      );
+      console.log("Updated Database");
+      navigate("/home"); //
+    } catch {
+      setError("Failed to update");
+      console.log(userID);
+    }
+    setLoading(false);
   }
 
-  async function submitLogicAI(e: any)
-  {
-    e.preventDefault()
-    console.log(currentStepIndexAI)
-    console.log(data.aboutMe)
-    console.log(data.photoURL)
-    console.log(data.videoURL)
+  async function submitLogicAI(e: any) {
+    e.preventDefault();
+    console.log(currentStepIndexAI);
+    console.log(data.aboutMe);
+    console.log(data.photoURL);
+    console.log(data.videoURL);
 
-    if(currentStepIndexAI <= 2)
-    {
-      if(currentStepIndexAI === 2)
-      {
-        console.log("Hello")
-        console.log(userID)
-        
+    if (currentStepIndexAI <= 2) {
+      if (currentStepIndexAI === 2) {
+        console.log("Hello");
+        console.log(userID);
+
         //Import Photo Code
         console.log("Up Photo");
-        const file = e.target[0]?.files[0]
+        const file = e.target[0]?.files[0];
         try {
           if (file) {
             console.log("Uploading Photo");
-            let storageRef = ref(
-              getStorage(),
-              `Profilepics/${userID}/picture`
-            );
-    
+            let storageRef = ref(getStorage(), `Profilepics/${userID}/picture`);
+
             // Upload the image
             await uploadBytes(storageRef, file);
-    
+
             // Get the download URL
             const downloadURL = await getDownloadURL(storageRef);
-    
+
             // Update the data state with the new image URL
             setData({ ...data, photoURL: downloadURL });
-    
+
             // Update the Firestore document with the updated data
             await updateDoc(doc(db, "Student", userID!), {
               ...data,
               photoURL: downloadURL, //Just overwrites the one in the state when insert into DB
             });
-    
+
             console.log("In If Main");
-            
           } else {
             // If no new image is selected, update only the non-image fields
             await updateDoc(doc(db, "Student", userID!), data);
             console.log("In Else");
           }
-    
+
           setIsUploading(false);
         } catch (error) {
           console.error("Error saving information:", error);
@@ -166,12 +177,10 @@ const AddInfoPage = () => {
         }
       }
 
-      nextAI(); 
+      nextAI();
       nextTitle();
-    }
-
-    else if(currentStepIndexAI == 3){
-      console.log("why")
+    } else if (currentStepIndexAI == 3) {
+      console.log("why");
       goToTitle(0);
       goToAI(0);
     }
@@ -192,7 +201,7 @@ const AddInfoPage = () => {
 
   return (
     <BackgroundLogin>
-      <LeftBoxRegP1/>
+      <LeftBoxRegP1 />
       <RightBoxRegP1>
         <div>
           <div
@@ -201,37 +210,40 @@ const AddInfoPage = () => {
               width: 500 + "px",
               height: 100 + "px",
               marginBottom: "25px",
-            }}>
-
-            <h1 style={{textAlign: "center",}}>
-                {title}
-            </h1>
+            }}
+          >
+            <h1 style={{ textAlign: "center" }}>{title}</h1>
           </div>
-            
-          <div
-          className="form-body"
-          style={{
-            width: 575 + "px",
-            height: 425 + "px",
-          }}>
 
+          <div
+            className="form-body"
+            style={{
+              width: 575 + "px",
+              height: 425 + "px",
+            }}
+          >
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <form onSubmit={isLastStepAI ? handleSubmitAI : submitLogicAI} 
-            className="row g-3">
-            
-            {stepAI}
+            <form
+              onSubmit={isLastStepAI ? handleSubmitAI : submitLogicAI}
+              className="row g-3"
+            >
+              {stepAI}
 
               <div>
-                {!isLastStepAI && (<button type="button" onClick={backAI}>Back</button>)}
+                {!isLastStepAI && (
+                  <button type="button" onClick={backAI}>
+                    Back
+                  </button>
+                )}
 
-                <button 
-                type="submit" 
-                className="btn btn-light btn-lg"
-                style={buttonFormat}
-                disabled={loading}
+                <button
+                  type="submit"
+                  className="btn btn-light btn-lg"
+                  style={buttonFormat}
+                  disabled={loading}
                 >
-                {isLastStepAI ? "Finish" : "Next"}
+                  {isLastStepAI ? "Finish" : "Next"}
                 </button>
               </div>
             </form>

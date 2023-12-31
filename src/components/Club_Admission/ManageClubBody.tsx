@@ -3,9 +3,10 @@ import aeisecLogo from "./ECImages/AIESEC-Human-Blue 1.png";
 import eButton from "./ECImages/editButton.png";
 import joinButton from "./ECImages/JoinUs.png";
 import rocketIcon from "./ECImages/rocketIcon.png";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const ManageClubBody = () => {
+  const { id } = useParams();
   let headingIntro = "WHO WE ARE";
   let headingDesc = "We Help To Get Solutions";
   let introBody =

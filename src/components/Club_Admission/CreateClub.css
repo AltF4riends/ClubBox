@@ -1,0 +1,62 @@
+
+body,
+html,
+#root,
+.club-admission-container {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-image: url("./back.png");
+  background-size: 100% 100%; /* Cover the entire viewport */
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+/* Add additional styles as needed */
+.club-admission-container {
+  padding: 20px;
+  /* Add any other styles you want for the container */
+}
+
+/* Center the text and set its color to white */
+h1 {
+  text-align: center;
+  color: white;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(300%), 1fr)); /* Adjust the column width */
+  gap: 10px;
+  margin: 0 16px; /* Adjust the margin as needed */
+}
+
+.ant-card {
+  background-color: black;
+  width: 70%; /* Adjust the width as needed */
+  max-width: 200px; /* Set a maximum width if needed */
+  max-height: 250px; /* Set a maximum height if needed */
+  margin: 20px; /* Adjust the margin as needed */
+}
+
+.ant-card-head-title {
+  color: white;
+}
+
+.ant-card-body {
+  color: white;
+  margin-top: 50px;
+}
+
+.ant-card-cover {
+  width: 12vw;
+  height: 10vh;
+  object-fit: contain;
+  border-radius: 60%;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 55px;
+}
