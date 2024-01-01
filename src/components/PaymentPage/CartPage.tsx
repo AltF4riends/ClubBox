@@ -51,6 +51,7 @@ const CartPage: React.FC = () => {
   const [indeterminate, setIndeterminate] = useState(false);
   const [checkAll, setCheckAll] = useState(false);
   const [userID, setUserID] = useState<string | null>(null);
+  const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
 
   const handleEvent = async (eventId: string, newEventData: EventInfo[]) => {
@@ -155,24 +156,28 @@ const CartPage: React.FC = () => {
   }, [checkedList, cartData]);
 
   const onCheckAllChange = (e: CheckboxChangeEvent) => {
-    const allEventIds = cartData.map((item) => item.eventId);
+    const allEventIds = cartData.map((item) => item.id);
 
     setCheckedList(e.target.checked ? allEventIds : []);
+    calculate();
   };
 
   const onChange = (eventId: string) => {
-    const newCheckedList = [...checkedList];
-    const index = newCheckedList.indexOf(eventId);
+    setCheckedList((prevCheckedList) => {
+      const newCheckedList = [...prevCheckedList];
+      const index = newCheckedList.indexOf(eventId);
 
-    if (index === -1) {
-      newCheckedList.push(eventId);
-    } else {
-      newCheckedList.splice(index, 1);
-    }
+      if (index === -1) {
+        newCheckedList.push(eventId);
+      } else {
+        newCheckedList.splice(index, 1);
+      }
 
-    setCheckedList(newCheckedList);
+      return newCheckedList;
+    });
+
+    calculate();
   };
-
   const content = (cartItem: CartInfo) => (
     <div
       className="card"
@@ -222,6 +227,33 @@ const CartPage: React.FC = () => {
       setError("Error deleting data");
     }
   };
+
+  const calculate = () => {
+    let tempAmount: number = 0.0;
+    checkedList.forEach((e) => {
+      const tempCart = cartData.find((item) => item.id === e);
+      tempAmount += parseInt(tempCart?.paymentAmount || "0", 10);
+    });
+
+    console.log("Temp Amount:", tempAmount);
+
+    setTotalAmount((prevTotalAmount) => {
+      console.log("Previous Total Amount:", prevTotalAmount);
+
+      // Use the previous state to update the totalAmount
+      if (tempAmount !== prevTotalAmount) {
+        console.log("Updating Total Amount:", tempAmount);
+        return tempAmount;
+      }
+
+      console.log("No Update to Total Amount");
+      return prevTotalAmount;
+    });
+  };
+
+  useEffect(() => {
+    calculate();
+  }, [checkedList]);
 
   if (loading) {
     return <Spin size="large" fullscreen />;
@@ -287,8 +319,8 @@ const CartPage: React.FC = () => {
                 <Popover placement="right" content={content(cartItem)}>
                   <Button style={{ width: "25vw", height: "7vh" }}>
                     <Checkbox
-                      onChange={() => onChange(cartItem.eventId)}
-                      checked={checkedList.includes(cartItem.eventId)}
+                      onChange={() => onChange(cartItem.id)}
+                      checked={checkedList.includes(cartItem.id)}
                       style={{
                         width: "25vw",
                         display: "flex",
@@ -337,6 +369,10 @@ const CartPage: React.FC = () => {
                 <Divider />
               </div>
             ))}
+            <h3>
+              <b>Total Amount : RM{totalAmount}</b>
+            </h3>
+            <Divider />
             <Button
               type="primary"
               style={{
