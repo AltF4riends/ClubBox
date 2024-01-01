@@ -6,11 +6,13 @@ import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { Spinner } from "react-bootstrap";
 import { onAuthStateChanged } from "@firebase/auth";
+import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
+import { useNavigate } from "react-router-dom";
 
 interface CartInfo {
   eventID: string;
   clubID: string;
-  studentID: string;
+  studentID: string | null;
   paymentAmount: string;
   paymentDate: string;
   paymentStatus: string;
@@ -19,22 +21,10 @@ interface CartInfo {
 }
 
 function ViewEvent() {
-  const [userID, setUserID] = useState<string | null>(null);
-  const [useName, setuserName] = useState("");
+  const { user } = UserAuth();
+  const [userID, setUserID] = useState<string | null>(user.uid);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUserID(user.uid);
-        console.log(user.uid);
-      } else {
-        setUserID(null);
-      }
-    });
-
-    // Cleanup function to unsubscribe from the observer when the component unmounts
-    return () => unsubscribe();
-  }, []); // Empty dependency array to run the effect only once on mount
   const { id: eventId } = useParams();
   const [eventData, setEventData] = useState({
     id: "9",
@@ -60,6 +50,7 @@ function ViewEvent() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [addingToCart, setAddingToCart] = useState(false);
 
   async function handleLogo() {
     try {
@@ -100,6 +91,8 @@ function ViewEvent() {
             price: "RM" + e.data().eventFee,
           }));
 
+          console.log("bonkers " + userID);
+
           setCartData((prevCartData) => ({
             ...prevCartData,
             eventID: e.id,
@@ -128,23 +121,28 @@ function ViewEvent() {
     handleLoad();
   }, [eventId]);
 
+  const onAddCart = async () => {
+    try {
+      setAddingToCart(true);
+      const docClubRef = collection(db, "Payment");
+      await addDoc(docClubRef, cartData);
+      console.log("Item added to the cart successfully!");
+    } catch (error) {
+      console.error("Error adding item to the cart:", error);
+      setError("Error adding item to the cart");
+    } finally {
+      setAddingToCart(false);
+      navigate("/home");
+    }
+  };
+
   if (loading) {
-    return <Spinner />; // Replace with your loading spinner component
+    return <Spinner animation="border" />;
   }
 
   if (error) {
     return <p>Error: {error}</p>;
   }
-
-  const onAddCart = async () => {
-    try {
-      const docClubRef = collection(db, "Payment");
-      const docClubSnap = await addDoc(docClubRef, cartData);
-    } catch (error) {
-      console.error("Error fetching club data:", error);
-      setError("Error fetching club data");
-    }
-  };
 
   return (
     <div>
@@ -189,8 +187,12 @@ function ViewEvent() {
                 style={{ margin: "150 0px" }}
               >
                 <p>{eventData.price}</p>
-                <button className="btn btn-primary ms-3" onClick={onAddCart}>
-                  Add To Cart
+                <button
+                  className="btn btn-primary ms-3"
+                  onClick={onAddCart}
+                  disabled={addingToCart}
+                >
+                  {addingToCart ? "Adding..." : "Add To Cart"}
                 </button>
               </div>
             </div>
