@@ -2,11 +2,31 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
 import { useImageContext } from "../ImageContext"; // Import the context
 import { useState, useEffect } from "react";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  getDocs,
+  query,
+  collection,
+  where,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../firebase";
 import { Avatar, Badge, Space } from "antd";
+
+interface CartInfo {
+  id: string;
+  eventId: string;
+  clubId: string;
+  studentId: string;
+  paymentAmount: string;
+  paymentDate: string;
+  paymentStatus: string;
+  paymentDue: string;
+  paymentMethod: string;
+}
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -15,6 +35,12 @@ const NavBar = () => {
   const [error, setError] = useState("");
   const [userAccess, setUserAccess] = useState<string | null>(null); // State to store user access level
   const [userID, setUserID] = useState<string | null>(null);
+  const [cartData, setCartData] = useState<CartInfo[]>([]);
+  const [checkedList, setCheckedList] = useState<string[]>([]);
+  const [indeterminate, setIndeterminate] = useState(false);
+  const [checkAll, setCheckAll] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [cartNumber, setcartNumber] = useState(0);
   // Use state to force a re-render when the image URL changes
   const [, setForceRender] = useState({});
 
@@ -31,6 +57,46 @@ const NavBar = () => {
     return () => unsubscribe();
   }, []);
   useEffect(() => {
+    let i = 0;
+    const handleLoad = async () => {
+      try {
+        console.log("handleLoad");
+        console.log(userID);
+        const q = query(
+          collection(db, "Payment"),
+          where("paymentStatus", "==", "unpaid"),
+          where("studentID", "==", userID)
+        );
+        const querySnapshot = await getDocs(q);
+
+        const newCartData: CartInfo[] = [];
+
+        querySnapshot.forEach((e) => {
+          const cart: CartInfo = {
+            id: e.id,
+            eventId: e.data().eventID,
+            clubId: e.data().clubID,
+            studentId: e.data().studentID,
+            paymentAmount: e.data().paymentAmount,
+            paymentDate: e.data().paymentDate,
+            paymentStatus: e.data().paymentStatus,
+            paymentDue: e.data().paymentDue,
+            paymentMethod: e.data().paymentMethod,
+          };
+          newCartData.push(cart);
+          i++;
+          setcartNumber(i);
+        });
+
+        setCartData(newCartData);
+      } catch (error) {
+        console.error("Error fetching event data:", error);
+        setError("Error fetching event data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    handleLoad();
     const fetchUserAccess = async () => {
       if (userID) {
         const docRef = doc(db, "Student", userID);
@@ -114,7 +180,7 @@ const NavBar = () => {
                 >
                   Cart
                   <Badge
-                    count={1000}
+                    count={cartNumber}
                     overflowCount={99}
                     offset={[2, -20]}
                     size="small"

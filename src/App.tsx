@@ -32,12 +32,13 @@ import NewEventComp from "./components/NewEventComp";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/ClubAdmission";
-import ViewEvent from "./components/ViewEvent";
+
 import CreateEvents from "./components/CreateEvents";
 import ClubPage from "./components/ClubPage";
 import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
 
+import ViewEvent from "./components/EventPage/ViewEvent";
 function App() {
   return (
     <AuthContextProvider>
@@ -57,7 +58,7 @@ function App() {
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 
-            <Route path="/event/:1" element={<ViewEvent />} />
+            <Route path="/event/:id" element={<ViewEvent />} />
             <Route
               path="/register_page"
               element={<RegisterForm></RegisterForm>}

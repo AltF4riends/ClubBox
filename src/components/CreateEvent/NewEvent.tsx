@@ -22,6 +22,7 @@ interface FormData {
   eventDesc: string;
   eventCond: string;
   eventType: string;
+  eventFee: string;
   eventImage: string;
 }
 
@@ -36,6 +37,7 @@ const NewEvent: React.FC = () => {
     eventDesc: "",
     eventCond: "",
     eventType: "",
+    eventFee: "",
     eventImage: "",
   });
 
@@ -53,7 +55,7 @@ const NewEvent: React.FC = () => {
     try {
       // Add the document to the "Event" collection without specifying a document ID
       const docRef = await addDoc(collection(db, "Event"), formData);
-
+      console.log(formData.eventFee);
       // Wait for the promise to resolve before calling saveInfo
       await saveInfo(docRef.id);
 
@@ -68,6 +70,7 @@ const NewEvent: React.FC = () => {
         eventDesc: "",
         eventCond: "",
         eventType: "",
+        eventFee: "",
         eventImage: "",
       });
 
@@ -251,6 +254,17 @@ const NewEvent: React.FC = () => {
             <option value="Online">Online</option>
             <option value="Face-to-face">Face-to-face</option>
           </select>
+        </div>
+
+        <div style={inputStyle}>
+          <h3>Event Price</h3>
+          <input
+            type="text"
+            className="inputField"
+            name="eventFee"
+            value={formData.eventFee}
+            onChange={handleChange}
+          />
         </div>
 
         <button type="submit" style={submitButtonStyle}>

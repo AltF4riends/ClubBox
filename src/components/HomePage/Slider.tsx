@@ -28,6 +28,10 @@ interface EventInfo {
   location: string;
 }
 
+interface Number {
+  num: number;
+}
+
 // Updated eventData array
 const eventData: EventInfo[] = [
   {
@@ -71,6 +75,7 @@ function Slider() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [logos, setLogos] = useState("");
+  const cartNumber: number[] = [];
 
   async function handleLogo(i = 1) {
     var docClubRef = doc(db, "Club", eventData[i].clubId);
@@ -111,7 +116,7 @@ function Slider() {
             location: e.data().eventLocation,
           };
           eventData.push(newEvent);
-
+          cartNumber.push(i);
           i++;
         });
       } catch (error) {
@@ -173,7 +178,7 @@ function Slider() {
                           image={event.image}
                           title={event.title}
                           desc={event.description}
-                          price="55RM"
+                          price={event.price}
                           logo={event.logo}
                           eventId={event.id}
                         />
