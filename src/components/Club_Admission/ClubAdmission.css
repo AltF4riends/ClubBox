@@ -39,7 +39,7 @@ h1 {
   width: 70%; /* Adjust the width as needed */
   max-width: 200px; /* Set a maximum width if needed */
   max-height: 250px; /* Set a maximum height if needed */
-  margin: 20px; /* Adjust the margin as needed */
+  margin: 7vw; /* Adjust the margin as needed */
 }
 
 .ant-card-head-title {

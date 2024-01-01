@@ -1,5 +1,12 @@
-import React, { useRef, useState } from "react";
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import React, { useRef, useState, ChangeEvent } from "react";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  setDoc,
+  doc,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,15 +21,44 @@ import {
   getDownloadURL,
 } from "@firebase/storage";
 
+const getNextDocumentId = async (): Promise<string> => {
+  const q = collection(db, "Club");
+  const querySnapshot = await getDocs(q);
+
+  let maxNumericPart = 0;
+
+  querySnapshot.forEach((doc) => {
+    // Assuming your document IDs follow the pattern "cl001", "cl002", etc.
+    const match = doc.id.match(/^cl(\d+)$/);
+    if (match) {
+      const numericPart = parseInt(match[1], 10);
+      maxNumericPart = Math.max(maxNumericPart, numericPart);
+    }
+  });
+
+  const nextNumericPart = maxNumericPart + 1;
+  const nextDocumentId = `cl${nextNumericPart.toString().padStart(3, "0")}`;
+
+  return nextDocumentId;
+};
+
+// Usage
+const nextDocumentId = await getNextDocumentId();
+console.log("Next Document ID:", nextDocumentId);
+
 interface FormData {
   clubID: string;
-  ClubName: string;
-  ClubTime: string;
-  ClubDate: string;
-  ClubDesc: string;
-  ClubCond: string;
-  ClubType: string;
-  ClubImage: string;
+  clubName: string;
+  pNumber: string;
+  clubP: string;
+  B_Desc: string;
+  cluB_Desc: string;
+  clubAppReq: string[];
+  clubFacebook: string;
+  clubLinkedIn: string;
+  clubStatus: string;
+  clubTelegram: string;
+  clubLogoURL: string;
 }
 
 const CreateClub: React.FC = () => {
@@ -30,21 +66,41 @@ const CreateClub: React.FC = () => {
   const { imageUrl, image, setImageInfo } = useImageContext();
   const [formData, setFormData] = useState<FormData>({
     clubID: "",
-    ClubName: "",
-    ClubTime: "",
-    ClubDate: new Date().toISOString().split("T")[0],
-    ClubDesc: "",
-    ClubCond: "",
-    ClubType: "",
-    ClubImage: "",
+    clubName: "",
+    pNumber: "",
+    clubP: "",
+    B_Desc: "",
+    cluB_Desc: "",
+    clubAppReq: [],
+    clubFacebook: "",
+    clubLinkedIn: "",
+    clubStatus: "",
+    clubTelegram: "",
+    clubLogoURL: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  const handleChange = (
+    e: ChangeEvent<
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement
+      | { name: string; value: unknown }
+    >
+  ) => {
+    const { name, value, type } = e.target as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | HTMLSelectElement;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]:
+        type === "checkbox"
+          ? (e.target as HTMLInputElement).checked
+          : type === "select-one"
+          ? (value as string)
+          : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,23 +108,30 @@ const CreateClub: React.FC = () => {
 
     try {
       // Add the document to the "Club" collection without specifying a document ID
-      const docRef = await addDoc(collection(db, "Club"), formData);
+      const docRef = await setDoc(
+        doc(collection(db, "Club"), nextDocumentId),
+        formData
+      );
 
       // Wait for the promise to resolve before calling saveInfo
-      await saveInfo(docRef.id);
+      await saveInfo(nextDocumentId);
 
-      setClubTempId(docRef.id); // Set Clubtempid after saveInfo
+      setClubTempId(nextDocumentId); // Set Clubtempid after saveInfo
 
       // Clear form fields
       setFormData({
         clubID: "",
-        ClubName: "",
-        ClubTime: "",
-        ClubDate: new Date().toISOString().split("T")[0],
-        ClubDesc: "",
-        ClubCond: "",
-        ClubType: "",
-        ClubImage: "",
+        clubName: "",
+        pNumber: "",
+        clubP: "",
+        B_Desc: "",
+        cluB_Desc: "",
+        clubAppReq: [],
+        clubFacebook: "",
+        clubLinkedIn: "",
+        clubStatus: "",
+        clubTelegram: "",
+        clubLogoURL: "",
       });
 
       // Show success message
@@ -81,54 +144,42 @@ const CreateClub: React.FC = () => {
 
   const containerStyle: React.CSSProperties = {
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "top",
     alignItems: "center",
-    height: "100vh",
-    marginTop: "80px",
-    marginBottom: "80px",
+    height: "99vh",
+    marginLeft: "5vh",
+    marginRight: "5vh",
   };
 
-  const formStyle: React.CSSProperties = {
-    textAlign: "center",
-    padding: "20px",
+  const formContainerStyle: React.CSSProperties = {
+    display: "flex", // Set display to flex to make children flex items
+    gap: "10px", // Add gap between the two halves
+    textAlign: "center", // Set text alignment to center within the form container
+    padding: "10px", // Add padding to the form container
     border: "1px solid #ccc",
     borderRadius: "8px",
     backgroundColor: "#f4f4f4",
-    width: "50vh",
+    width: "100%", // Set width to 50% to make each half take half of the screen
+    height: "90%",
   };
 
-  const inputStyle: React.CSSProperties = {
-    marginBottom: "15px",
+  const formStyle: React.CSSProperties = {
+    width: "100%", // Set width to 100% to make each half take full width within the container
+    fontSize: "1vw", // Set the font size for the elements inside the form
+    gap: "10px",
   };
 
   const submitButtonStyle: React.CSSProperties = {
     backgroundColor: "#4CAF50",
     color: "white",
-    padding: "10px 20px",
+    padding: "5px 10px",
     borderRadius: "5px",
     cursor: "pointer",
+    width: "50%", // Set width to 100% to make it take the full width
   };
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date(formData.ClubDate) // Convert string to Date
-  );
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-
-    if (date) {
-      setFormData((prevData) => ({
-        ...prevData,
-        ClubDate: date.toISOString().split("T")[0], // Convert Date to string
-      }));
-    }
-  };
-  const [selectedTime, setSelectedTime] = useState<Date | null>(null);
-  const handleTimeChange = (time: string | null) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      ClubTime: time || "00:00", // Set a default time if time is null
-    }));
+  const inputStyle: React.CSSProperties = {
+    marginBottom: "10px",
   };
 
   const handleImageChange = (Club: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,92 +221,146 @@ const CreateClub: React.FC = () => {
 
   return (
     <div style={containerStyle}>
-      <form style={formStyle} onSubmit={handleSubmit}>
-        <h1>New Club Info</h1>
+      <form style={formContainerStyle} onSubmit={handleSubmit}>
+        <div style={formStyle}>
+          <h1>New Club Info</h1>
+          <div
+            onClick={handleImageClick}
+            style={{
+              cursor: "pointer",
+              marginTop: "30px",
+              marginBottom: "30px",
+            }}
+          >
+            {image ? (
+              <img
+                height="150vh"
+                width="160vw"
+                src={URL.createObjectURL(image)}
+                alt="Profile"
+              />
+            ) : (
+              <img
+                height="150vh"
+                width="160vw"
+                src={formData.clubLogoURL || "public/profile.png"}
+                alt="Profile"
+              />
+            )}
 
-        <div
-          onClick={handleImageClick}
-          style={{ cursor: "pointer", marginTop: "30px", marginBottom: "30px" }}
-        >
-          {image ? (
-            <img
-              height="150vh"
-              width="160vw"
-              src={URL.createObjectURL(image)}
-              alt="Profile"
+            <input
+              type="file"
+              ref={inputRef}
+              onChange={handleImageChange}
+              style={{ display: "none" }}
             />
-          ) : (
-            <img
-              height="150vh"
-              width="160vw"
-              src={formData.ClubImage || "public/Club.png"}
-              alt="Profile"
+          </div>
+          <div style={inputStyle}>
+            <h3>Club Name</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubName"
+              value={formData.clubName}
+              onChange={handleChange}
             />
-          )}
+          </div>
+          <div style={inputStyle}>
+            <h3>President name</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubP"
+              value={formData.clubP}
+              onChange={handleChange}
+            />
+          </div>
 
-          <input
-            type="file"
-            ref={inputRef}
-            onChange={handleImageChange}
-            style={{ display: "none" }}
-          />
-        </div>
-        <div style={inputStyle}>
-          <h3>Club Name</h3>
-          <input
-            type="text"
-            className="inputField"
-            name="ClubName"
-            value={formData.ClubName}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div>
-          <h3>Club Time</h3>
-          <TimePicker onChange={handleTimeChange} value={formData.ClubTime} />
-        </div>
-
-        <div style={inputStyle}>
-          <h3>Club Date</h3>
-          <label htmlFor="ClubDate"></label>
-          <DatePicker
-            selected={selectedDate}
-            onChange={handleDateChange}
-            dateFormat="yyyy-MM-dd"
-            id="ClubDate"
-          />
+          <div style={inputStyle}>
+            <h3>Phone Number</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="pNumber"
+              value={formData.pNumber}
+              onChange={handleChange}
+            />
+          </div>
         </div>
 
-        <div style={inputStyle}>
-          <h3>Club Description</h3>
-          <textarea className="inputField" name="ClubDesc"></textarea>
+        <div style={formStyle}>
+          <div style={inputStyle}>
+            <h3>Brief Description</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="B_Desc"
+              value={formData.B_Desc}
+              onChange={handleChange}
+            />
+          </div>
+          <div style={inputStyle}>
+            <h3>Facebook Link</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubFacebook"
+              value={formData.clubFacebook}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>LinkedIn Link</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubLinkedIn"
+              value={formData.clubLinkedIn}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Telegram Link</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubTelegram"
+              value={formData.clubTelegram}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Club Description</h3>
+            <textarea
+              className="inputField"
+              name="cluB_Desc"
+              value={formData.cluB_Desc} // You might want to use a value if you want to control the textarea content
+              onChange={handleChange}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Club Type</h3>
+            <label></label>
+
+            <select
+              name="clubStatus"
+              id="ClubType"
+              value={formData.clubStatus}
+              onChange={handleChange}
+            >
+              <option value=""></option>
+              <option value="Active">Active</option>
+              <option value="In-Active">In-Active</option>
+            </select>
+          </div>
+          <button type="submit" style={submitButtonStyle}>
+            Submit
+          </button>
         </div>
-
-        <div style={inputStyle}>
-          <h3>Club Conditions</h3>
-          <input
-            type="text"
-            className="inputField"
-            name="ClubCond"
-            value={formData.ClubCond}
-            onChange={handleChange}
-          />
-        </div>
-
-        <div style={inputStyle}>
-          <h3>Club Type</h3>
-          <label></label>
-
-          <select name="ClubType" id="ClubType">
-            <option value="Online">Online</option>
-            <option value="Face-to-face">Face-to-face</option>
-          </select>
-        </div>
-
-        <button type="submit" style={submitButtonStyle}>
-          Submit
-        </button>
       </form>
     </div>
   );

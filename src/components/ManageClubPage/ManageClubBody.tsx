@@ -70,7 +70,7 @@ const ManageClubBody = () => {
     handleOnLoad();
   }, [userID]);
   const storage = getStorage();
-  const [file, setFiles] = useState<FileList | null>(null);
+  const [files, setFiles] = useState<FileList | null>(null); // Change from file to files
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageClick = () => {
@@ -82,6 +82,7 @@ const ManageClubBody = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const selectedFiles: FileList | null = event.target.files;
+
     if (selectedFiles) {
       setFiles(selectedFiles);
       const storageRef = ref(storage, `Club/${id}/Req`);
@@ -341,7 +342,7 @@ const ManageClubBody = () => {
                 width: " 15vw",
               }}
             >
-              {file ? (
+              {files ? (
                 <Alert
                   severity="success"
                   style={{
@@ -365,8 +366,8 @@ const ManageClubBody = () => {
                 <img
                   src={joinButton}
                   style={{
-                    maxHeight: "100%",
-                    maxWidth: "100%",
+                    maxHeight: "200%",
+                    maxWidth: "200%",
                   }}
                   alt="Join Button"
                 />
@@ -377,6 +378,7 @@ const ManageClubBody = () => {
                 ref={inputRef}
                 onChange={handleImageChange}
                 style={{ display: "none" }}
+                multiple
               />
             </div>
           </div>

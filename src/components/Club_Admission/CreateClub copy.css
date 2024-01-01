@@ -1,4 +1,15 @@
-
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 79vh;
+  margin-top: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: beige;
+  width: 50%;
+}
 
 .form-container {
   display: flex;
