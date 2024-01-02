@@ -52,31 +52,34 @@ interface FormData {
   pNumber: string;
   clubP: string;
   B_Desc: string;
-  cluB_Desc: string;
+  clubDesc: string;
   clubAppReq: string[];
   clubFacebook: string;
   clubLinkedIn: string;
   clubStatus: string;
   clubTelegram: string;
-  clubLogoURL: string;
+  clubLogo: string;
 }
 
 const CreateClub: React.FC = () => {
   const [Clubtempid, setClubTempId] = useState("");
-  const { imageUrl, image, setImageInfo } = useImageContext();
+
+  const [image, setImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<FormData>({
     clubID: "",
     clubName: "",
     pNumber: "",
     clubP: "",
     B_Desc: "",
-    cluB_Desc: "",
+    clubDesc: "",
     clubAppReq: [],
     clubFacebook: "",
     clubLinkedIn: "",
     clubStatus: "",
     clubTelegram: "",
-    clubLogoURL: "",
+    clubLogo: "",
   });
 
   const handleChange = (
@@ -92,15 +95,35 @@ const CreateClub: React.FC = () => {
       | HTMLTextAreaElement
       | HTMLSelectElement;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]:
-        type === "checkbox"
-          ? (e.target as HTMLInputElement).checked
-          : type === "select-one"
-          ? (value as string)
-          : value,
-    }));
+    if (name === "clubDesc" && type === "textarea") {
+      const inputValue = value as string;
+      const words = inputValue.split(" ");
+      const limitedWords = words.slice(0, 40).join(" ");
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: limitedWords,
+      }));
+    } else if (name === "B_Desc") {
+      const inputValue = value as string;
+      const words = inputValue.split(" ");
+      const limitedWords = words.slice(0, 4).join(" ");
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: limitedWords,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]:
+          type === "checkbox"
+            ? (e.target as HTMLInputElement).checked
+            : type === "select-one"
+            ? (value as string)
+            : value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -125,13 +148,13 @@ const CreateClub: React.FC = () => {
         pNumber: "",
         clubP: "",
         B_Desc: "",
-        cluB_Desc: "",
+        clubDesc: "",
         clubAppReq: [],
         clubFacebook: "",
         clubLinkedIn: "",
         clubStatus: "",
         clubTelegram: "",
-        clubLogoURL: "",
+        clubLogo: "",
       });
 
       // Show success message
@@ -182,21 +205,27 @@ const CreateClub: React.FC = () => {
     marginBottom: "10px",
   };
 
-  const handleImageChange = (Club: React.ChangeEvent<HTMLInputElement>) => {
-    const file = Club.target.files?.[0];
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files?.[0];
+    console.log("In change function");
 
-    if (file) {
-      setImageInfo(URL.createObjectURL(file), file);
+    if (image) {
+      console.log("Inside if change function");
+      setImage(image);
+      setImageUrl(URL.createObjectURL(image));
     }
   };
+
   const handleImageClick = () => {
+    console.log("In click function");
     inputRef.current?.click();
   };
 
   const saveInfo = async (ClubId: string) => {
     try {
       if (image) {
-        const storageRef = ref(getStorage(), `Club/${ClubId}/picture`);
+        console.log("inside save image: ", image);
+        const storageRef = ref(getStorage(), `Club/${ClubId}/logo`);
 
         // Upload the image
         await uploadBytes(storageRef, image);
@@ -207,7 +236,7 @@ const CreateClub: React.FC = () => {
         // Update the Firestore document with the updated image URL
         await updateDoc(doc(db, "Club", ClubId), {
           ...formData,
-          ClubImage: downloadURL,
+          clubLogo: downloadURL,
         });
       } else {
         console.log("No picture");
@@ -243,7 +272,7 @@ const CreateClub: React.FC = () => {
               <img
                 height="150vh"
                 width="160vw"
-                src={formData.clubLogoURL || "public/profile.png"}
+                src={formData.clubLogo || "public/profile.png"}
                 alt="Profile"
               />
             )}
@@ -336,8 +365,8 @@ const CreateClub: React.FC = () => {
             <h3>Club Description</h3>
             <textarea
               className="inputField"
-              name="cluB_Desc"
-              value={formData.cluB_Desc} // You might want to use a value if you want to control the textarea content
+              name="clubDesc"
+              value={formData.clubDesc} // You might want to use a value if you want to control the textarea content
               onChange={handleChange}
             />
           </div>
