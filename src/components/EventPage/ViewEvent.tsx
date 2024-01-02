@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../HomePage/NavBar";
 import Footer from "../HomePage/Footer";
+import PieChart from "../Statistics/PieChart";
+import { Pie } from "recharts";
+import LineChart from "../Statistics/LineChart";
 import { useParams } from "react-router-dom";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
@@ -8,6 +11,9 @@ import { Spinner } from "react-bootstrap";
 import { onAuthStateChanged } from "@firebase/auth";
 import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
 import { useNavigate } from "react-router-dom";
+
+//npm install @mui/x-charts
+//npm install @emotion/styled latest
 
 interface CartInfo {
   eventID: string;
@@ -88,6 +94,7 @@ function ViewEvent() {
             description: e.data().eventDesc,
             clubId: e.data().clubID,
             image: e.data().eventImage,
+
             price: "RM" + e.data().eventFee,
           }));
 
@@ -148,56 +155,170 @@ function ViewEvent() {
     <div>
       <NavBar />
       <div
-        className="carousel-background"
+        id="carouselExample"
+        className="carousel slide"
+        data-bs-ride="carousel"
         style={{
-          backgroundColor: "rgba(240, 255, 255, 0.6)",
-          borderRadius: "15px",
-          paddingBottom: "15px",
-          paddingTop: "30px",
-          marginRight: "10px",
-          marginLeft: "10px",
+          paddingTop: "10px",
+          paddingBottom: "70px",
         }}
       >
-        <div className="container" style={{ margin: "0 150px" }}>
-          <div className="row">
-            <div className="col-12">
-              <h1>{eventData.title}</h1>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6">
-              <img
-                src={eventData.image}
-                alt="Event Image"
-                className="img-fluid"
-              />
-            </div>
-            <div className="col-md-1 border-right"></div>
-            <div className="col-md-5" style={{ margin: "100 150px" }}>
-              <h2>About Event</h2>
-              <p>{eventData.description}</p>
-              <p>{eventData.location}</p>
-              <img
-                src={eventData.image}
-                alt="Event Map"
-                className="img-fluid"
-              />
-              <div
-                className="d-flex justify-content-end"
-                style={{ margin: "150 0px" }}
-              >
-                <p>{eventData.price}</p>
-                <button
-                  className="btn btn-primary ms-3"
-                  onClick={onAddCart}
-                  disabled={addingToCart}
-                >
-                  {addingToCart ? "Adding..." : "Add To Cart"}
-                </button>
+        <div
+          className="carousel-background"
+          style={{
+            backgroundColor: "rgba(240, 255, 255, 0.6)", // Azure with alpha for transparency
+            borderRadius: "15px",
+            paddingBottom: "15px",
+            paddingTop: "30px",
+            marginRight: "10px",
+            marginLeft: "10px",
+          }}
+        >
+          <div id="carouselExample" className="carousel slide">
+            <div className="carousel-inner">
+              <div className="carousel-item active">
+                <div className="container" style={{ margin: "0 150px" }}>
+                  <div className="row">
+                    {/* Event Title */}
+                    <div className="col-12">
+                      <h1 style={{ position: "absolute", left: "20px" }}>
+                        {eventData.title}
+                      </h1>
+                    </div>
+
+                    <br />
+                    <br />
+                    <br />
+                    <div className="row">
+                      {/* Event Image */}
+                      <div className="col-md-6">
+                        <img
+                          src={eventData.image}
+                          alt=""
+                          className="img-fluid"
+                          style={{ width: "70%", height: "auto" }}
+                        />
+                      </div>
+                      {/* Vertical Line */}
+                      <div className="col-md-1 border-right"></div>
+                      {/* About Event */}
+                      <div className="col-md-5" style={{ margin: "100 150px" }}>
+                        <h2 style={{ position: "absolute", left: "700px" }}>
+                          About Event
+                        </h2>
+                        <br />
+                        <br />
+
+                        <p style={{ position: "absolute", left: "700px" }}>
+                          {eventData.description}
+                        </p>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        {/* Event Location */}
+                        <p style={{ position: "absolute", left: "700px" }}>
+                          {eventData.location}
+                        </p>
+
+                        <div
+                          className="d-flex justify-content-end"
+                          style={{ margin: "150 0px" }}
+                        >
+                          <p>{eventData.price}</p>
+                          <button
+                            className="btn btn-primary ms-3"
+                            onClick={onAddCart}
+                            disabled={addingToCart}
+                          >
+                            {addingToCart ? "Adding..." : "Add To Cart"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="carousel-item">
+                <div className="container" style={{ margin: "0 150px" }}>
+                  <div className="row">
+                    {/* Event Title */}
+                    <div className="col-12">
+                      <h1
+                        style={{
+                          position: "absolute",
+                          left: "20px",
+                          top: "20px",
+                        }}
+                      >
+                        {eventData.title}
+                      </h1>
+                    </div>
+
+                    <br />
+                    <br />
+                    <br />
+                    <div className="row">
+                      {/* Event Image */}
+                      <div className="col-md-6">
+                        <img
+                          src={eventData.image}
+                          alt="L2YS Agenda Reveal"
+                          className="img-fluid"
+                          style={{
+                            width: "70%",
+                            height: "auto",
+                          }}
+                        />
+                      </div>
+
+                      {/* About Event */}
+                      <div className="col-md-5" style={{ margin: "100 150px" }}>
+                        <h2
+                          style={{
+                            position: "absolute",
+                            left: "700px",
+                          }}
+                        >
+                          Event Statistics
+                        </h2>
+                      </div>
+                      <br />
+                      <LineChart />
+                      <br />
+                      <PieChart />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        <button
+          className="carousel-control-prev"
+          type="button"
+          data-bs-target="#carouselExample"
+          data-bs-slide="prev"
+        >
+          <span
+            className="carousel-control-prev-icon"
+            aria-hidden="true"
+          ></span>
+          <span className="visually-hidden">Previous</span>
+        </button>
+        <button
+          className="carousel-control-next"
+          type="button"
+          data-bs-target="#carouselExample"
+          data-bs-slide="next"
+        >
+          <span
+            className="carousel-control-next-icon"
+            aria-hidden="true"
+          ></span>
+          <span className="visually-hidden">Next</span>
+        </button>
       </div>
       <Footer />
     </div>
