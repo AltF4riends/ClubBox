@@ -3,6 +3,8 @@ import { UserAuth } from "../RegisterPagePD/AuthContextAlpha";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
 
+import google from "../../../public/google.png";
+
 interface Props {
   heading1: string;
   heading2: string;
@@ -14,12 +16,27 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { signIn } = UserAuth();
+  const { signInGoogle } = UserAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     setError("");
     try {
       await signIn(email, password);
+      navigate("/home");
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+        console.log(e.message);
+      }
+    }
+  };
+
+  const handleGoogle = async (e: any) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await signInGoogle();
       navigate("/home");
     } catch (e) {
       if (e instanceof Error) {
@@ -93,11 +110,37 @@ const InputTextLogin = ({ heading1, heading2 }: Props) => {
           </Link>
         </p>
 
+        <button
+          onClick={handleGoogle}
+          style={{
+            height: 6.0 + "vh",
+            width: 2.81 + "vw",
+            border: "2px solid black",
+            borderRadius: "100%",
+            backgroundColor: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: "9.25vw",
+          }}
+        >
+          <img
+            src={google}
+            style={{
+              height: 4.5 + "vh",
+              width: 2.41 + "vw",
+              border: "2px solid white",
+              borderRadius: "100%",
+            }}
+            alt="UTM Logo"
+          ></img>
+        </button>
+
         <p
           style={{
             textAlign: "center",
             fontSize: "0.875em",
-            marginTop: "6.633vh",
+            marginTop: "3vh",
             marginBottom: "0.829vh",
           }}
         >

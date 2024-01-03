@@ -69,7 +69,7 @@ function Slider() {
 
     return `${year}${separator}${
       month < 10 ? `0${month}` : `${month}`
-    }${separator}${date}`;
+    }${separator}${date < 10 ? `0${date}` : `${date}`}`;
   }
 
   const [error, setError] = useState("");
@@ -116,6 +116,7 @@ function Slider() {
             location: e.data().eventLocation,
           };
           eventData.push(newEvent);
+          console.log(e.id);
           cartNumber.push(i);
           i++;
         });
