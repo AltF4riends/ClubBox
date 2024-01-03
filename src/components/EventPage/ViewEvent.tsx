@@ -285,9 +285,8 @@ function ViewEvent() {
                         </h2>
                       </div>
                       <br />
-                      <LineChart />
+
                       <br />
-                      <PieChart />
                     </div>
                   </div>
                 </div>
