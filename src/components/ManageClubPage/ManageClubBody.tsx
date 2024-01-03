@@ -11,6 +11,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
+import { useNavigate } from "react-router-dom";
 
 const ManageClubBody = () => {
   const { id } = useParams();
@@ -73,6 +74,8 @@ const ManageClubBody = () => {
   const [files, setFiles] = useState<FileList | null>(null); // Change from file to files
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  // Function to send WhatsApp message
+
   const handleImageClick = () => {
     inputRef.current?.click();
     console.log(`Club/${id}/Req`);
@@ -89,10 +92,16 @@ const ManageClubBody = () => {
 
       // Iterate through the selected files and upload each one
       for (let i = 0; i < selectedFiles.length; i++) {
+        console.log("We are here");
         const selectedFile = selectedFiles[i];
         await uploadBytes(ref(storageRef, selectedFile.name), selectedFile);
       }
     }
+  };
+
+  const navigate = useNavigate();
+  const handleEventSelect = () => {
+    navigate(`/edit_club_info/${id}`);
   };
 
   //End Database Info
@@ -239,16 +248,15 @@ const ManageClubBody = () => {
             width: " 10vw",
           }}
         >
-          <Link to={"/edit_club_info"}>
-            <img
-              src={eButton}
-              style={{
-                maxHeight: "100%",
-                maxWidth: "100%",
-              }}
-              alt="Edit Button"
-            />
-          </Link>
+          <img
+            src={eButton}
+            onClick={handleEventSelect}
+            style={{
+              maxHeight: "100%",
+              maxWidth: "100%",
+            }}
+            alt="Edit Button"
+          />
         </div>
 
         <div

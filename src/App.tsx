@@ -93,7 +93,7 @@ function App() {
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 
-            <Route path="/edit_club_info" element={<EditClubInfo />} />
+            <Route path="/edit_club_info/:id" element={<EditClubInfo />} />
             <Route
               path="/make_club_announcement"
               element={<ClubAnnouncement />}

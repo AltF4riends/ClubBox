@@ -1,50 +1,31 @@
-const wbm = require("./wbm");
-const express = require("express");
-const app = express();
-const cors = require("cors");
-const path = require("path");
+const sendWhatsAppMessage = async () => {
+  const accountSid = "ACcc18256591c95ab8a2d72a53baaf3fa1";
+  const authToken = "538283108a6d7f5bfdfeeee7e0a8b229";
+  const twilioPhoneNumber = "+14155238886";
+  const toPhoneNumber = "+967777406062"; // The recipient's WhatsApp number
+  const twilio = require("twilio");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+  // Create a Twilio client
+  const client = twilio(accountSid, authToken);
 
-app.post("/api", (req, res) => {
-  const { phone, msg } = req.body;
+  if (!client) {
+      console.error("Failed to create Twilio client");
+      return;
+  }
 
-  wbm
-    .start({ qrCodeData: true, session: false, showBrowser: false })
-    .then(async (qrCodeData) => {
-      console.log(qrCodeData); // show data used to generate QR Code
-      res.send(qrCodeData);
-      await wbm.waitQRCode();
+  try {
+      // Send a WhatsApp message
+      const message = await client.messages.create({
+          body: "This is done through Twilio",
+          from: `whatsapp:${twilioPhoneNumber}`,
+          to: `whatsapp:${toPhoneNumber}`,
+      });
 
-      const phones = [phone];
-      const message = msg;
+      console.log("WhatsApp message sent:", message.sid);
+  } catch (error) {
+      console.error("Error sending WhatsApp message:", error.message);
+  }
+};
 
-      await wbm.send(phones, message);
-      await wbm.end();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-// Loading frontend
-app.use(express.static(path.join(__dirname, "./client/build")));
-
-app.get("*", function (_, res) {
-  res.sendFile(
-    path.join(__dirname, "./client/build/index.html"),
-    function (err) {
-      if (err) {
-        res.status(500).send(err);
-      }
-    }
-  );
-});
-
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT: ${PORT}`);
-});
+// Call the function
+sendWhatsAppMessage();

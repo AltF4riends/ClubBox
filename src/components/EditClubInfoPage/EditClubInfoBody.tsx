@@ -13,7 +13,7 @@ function EditInfoBody() {
     borderBottom: "1px solid light-grey",
   };
 
-  const editBlockFormat = {
+  const editBlockFormat: React.CSSProperties = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -88,7 +88,7 @@ function EditInfoBody() {
     clubAppReq: "",
     clubDesc: "",
     clubType: "",
-    clubLogo: ""
+    clubLogo: "",
   });
 
   async function handleOnLoads(e: any) {
@@ -111,7 +111,7 @@ function EditInfoBody() {
         clubAppReq: "",
         clubDesc: "",
         clubType: "",
-        clubLogo: ""
+        clubLogo: "",
       });
       setIsInputEnabled(true);
     } else {
@@ -126,8 +126,7 @@ function EditInfoBody() {
     setClubInfo({ ...clubInfo, [e.target.name]: e.target.value });
   };
 
-  async function handleDBUpdate(e: any)
-  {
+  async function handleDBUpdate(e: any) {
     //await updateDoc(docRef, clubInfo);
   }
 
@@ -165,16 +164,6 @@ function EditInfoBody() {
                 alignItems: "center",
               }}
             >
-              <div
-                style={{
-                  height: "8vh",
-                  width: "52vw",
-                }}
-              >
-                <h5>Edit</h5>
-                <h1>Club Info</h1>
-              </div>
-
               <div style={editBlockFormat}>
                 <div style={smallTitleBox}>
                   <h2>Club Name</h2>
