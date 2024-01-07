@@ -196,7 +196,14 @@ function ViewEvent() {
                           src={eventData.image}
                           alt=""
                           className="img-fluid"
-                          style={{ width: "70%", height: "auto" }}
+                          style={{
+                            width: "70%",
+                            height: "auto",
+                            maxWidth: "30vw",
+                            maxHeight: "60vh",
+                            minWidth: "25vw",
+                            minHeight: "50vh",
+                          }}
                         />
                       </div>
                       {/* Vertical Line */}
@@ -300,6 +307,7 @@ function ViewEvent() {
           type="button"
           data-bs-target="#carouselExample"
           data-bs-slide="prev"
+          style={{ width: "7%" }}
         >
           <span
             className="carousel-control-prev-icon"
@@ -312,6 +320,7 @@ function ViewEvent() {
           type="button"
           data-bs-target="#carouselExample"
           data-bs-slide="next"
+          style={{ width: "7%" }}
         >
           <span
             className="carousel-control-next-icon"
