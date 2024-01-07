@@ -13,6 +13,12 @@ interface ChartData {
 export default function PieActiveArc() {
   const [dataFromDB, setDataFromDB] = useState<ChartData[]>([]);
 
+  const [ChartData, setChartData] = useState({
+    id: "",
+    Value: "",
+    Label: "",
+  });
+
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
       try {

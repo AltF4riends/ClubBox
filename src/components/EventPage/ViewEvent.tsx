@@ -264,7 +264,7 @@ function ViewEvent() {
                       <div className="col-md-6">
                         <img
                           src={eventData.image}
-                          alt="L2YS Agenda Reveal"
+                          alt=""
                           className="img-fluid"
                           style={{
                             width: "70%",
@@ -285,6 +285,7 @@ function ViewEvent() {
                         </h2>
                       </div>
                       <br />
+                      <PieChart />
 
                       <br />
                     </div>

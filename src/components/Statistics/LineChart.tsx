@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import "./SimpleLineChart.css"; // Import CSS file for styling
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { db } from "../../firebase"; // Replace "./firebase" with the correct path to your Firebase configuration
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase"; // Replace with your Firebase configuration
 
 interface SimpleLineChartData {
-  data: number[]; // Adjust this based on your data structure
+  data: number[];
   label: string;
 }
 
-const SimpleLineChart = () => {
-  const [linechartData, setChartData] = useState<SimpleLineChartData[]>([]);
+export default function SimpleLineChart() {
+  const [simpleLineChartData, setSimpleLineChartData] = useState<
+    SimpleLineChartData[]
+  >([]);
 
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
@@ -25,7 +27,7 @@ const SimpleLineChart = () => {
           });
         });
 
-        setChartData(data);
+        setSimpleLineChartData(data);
       } catch (error) {
         console.error("Error fetching data from Firebase:", error);
       }
@@ -39,15 +41,14 @@ const SimpleLineChart = () => {
       <LineChart
         width={500}
         height={300}
-        series={linechartData}
-        // Assuming you have labels to display on the X-axis
-        // Ensure labels is an array of strings corresponding to each data point
+        series={simpleLineChartData}
         xAxis={[
-          { scaleType: "point", data: linechartData.map((data) => data.label) },
+          {
+            scaleType: "point",
+            data: simpleLineChartData.map((data) => data.label),
+          },
         ]}
       />
     </div>
   );
-};
-
-export default SimpleLineChart;
+}

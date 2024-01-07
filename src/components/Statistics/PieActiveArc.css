@@ -1,6 +1,11 @@
 .pie-chart-container {
     position: absolute;
-    top: 50px;
-    left: 20px;
+    top: 200px;
+    left: 600px;
   }
   
+ 
+.pie-chart-container .MuiSvgText-root {
+  
+  transform: translate(500px, 500px); 
+}
