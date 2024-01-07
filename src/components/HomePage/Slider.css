@@ -2,8 +2,9 @@ body {
   margin: 0;
   padding: 0;
   background-image: url("./back.png");
-  background-size: contain; /* Change to 'contain' for full coverage */
+  background-size: cover; /* Change to 'contain' for full coverage */
   background-position: center;
   background-repeat: no-repeat;
-  height: 100vh;
+  height: 100%;
 }
+

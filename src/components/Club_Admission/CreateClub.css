@@ -1,0 +1,24 @@
+
+
+.form-container {
+  display: flex;
+  gap: 100px;
+}
+
+.form {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: beige; /* Set the background color to beige */
+  width: 50%;
+}
+
+.form-left {
+  width: 40%; /* Set the width of the left form */
+}
+
+.form-right {
+  width: 60%; /* Set the width of the right form */
+}
+

@@ -20,8 +20,9 @@ import UploadPhoto from "./components/RegisterPagePD/UploadPhoto";
 import UploadVideo from "./components/RegisterPagePD/UploadVideo";
 import EditPersonalDetailsPage from "./components/EditPersonalDetailsPage";
 import ManageClub from "./components/ManageClub";
+
 import EditClubInfo from "./components/EditClubInfo";
-import ClubAnnouncement from "./components/ClubAnnouncement";
+import ClubAnnouncement from "./components/Club_Admission/ClubAnnouncement";
 import FaqPage from "./components/FaqPage/FaqMainPage";
 import FaqMainPage from "./components/FaqPage/FaqMainPage";
 
@@ -29,12 +30,13 @@ import Calendar from "./components/CalendarComp";
 import CalendarMain from "./components/CalendarPage/CalendarMain";
 import NewEvent from "./components/CreateEvent/NewEvent";
 import NewEventComp from "./components/NewEventComp";
+import NewClubComp from "./components/NewClubComp";
+
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
-import ClubAdmission from "./components/ClubAdmission";
-
+import ClubAdmission from "./components/Club_Admission/ClubAdmission";
 import CreateEvents from "./components/CreateEvents";
-import ClubPage from "./components/ClubPage";
+import ClubPage from "./components/Club_Admission/ClubPage";
 import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
 
@@ -93,8 +95,9 @@ function App() {
             <Route path="/Cart" element={<CartPage />} />
             <Route path="/payment_page" element={<PaymentPage/>}/>
 
-            <Route path="/manage_club" element={<ManageClub />} />
-            <Route path="/edit_club_info" element={<EditClubInfo />} />
+            <Route path="/manage_club/:id" element={<ManageClub />} />
+
+            <Route path="/edit_club_info/:id" element={<EditClubInfo />} />
             <Route
               path="/make_club_announcement"
               element={<ClubAnnouncement />}
@@ -102,6 +105,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
             <Route path="/CalendarMain" element={<CalendarComp />} />
             <Route path="/NewEventComp" element={<NewEventComp />} />
+            <Route path="/NewClubComp" element={<NewClubComp />} />
 
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>

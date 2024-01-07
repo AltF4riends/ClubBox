@@ -1,20 +1,14 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import aeisecLogo from "./ECImages/AIESEC-Human-Blue 1.png";
 import eButton from "./ECImages/editButton.png";
 import joinButton from "./ECImages/JoinUs.png";
 import rocketIcon from "./ECImages/rocketIcon.png";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import ClubAnnouncement from "../Club_Admission/ClubAnnouncement";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
-import Stack from "@mui/material/Stack";
-import { useNavigate } from "react-router-dom";
 
 const ManageClubBody = () => {
-  const { id } = useParams();
   // State for profile information
   const [clubInfo, setClubInfo] = useState({
     clubName: "",
@@ -40,7 +34,7 @@ const ManageClubBody = () => {
       // if (docSnap.exists()) {
       //   const data = docSnap.data();
       console.log("Student Access 2");
-      const docClubRef = doc(db, "Club", `${id}`); //change it to clubID later
+      const docClubRef = doc(db, "Club", "cl001"); //change it to clubID later
       const docClubSnap = await getDoc(docClubRef);
       console.log("Student Access 3");
 
@@ -70,39 +64,6 @@ const ManageClubBody = () => {
 
     handleOnLoad();
   }, [userID]);
-  const storage = getStorage();
-  const [files, setFiles] = useState<FileList | null>(null); // Change from file to files
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  // Function to send WhatsApp message
-
-  const handleImageClick = () => {
-    inputRef.current?.click();
-    console.log(`Club/${id}/Req`);
-  };
-
-  const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const selectedFiles: FileList | null = event.target.files;
-
-    if (selectedFiles) {
-      setFiles(selectedFiles);
-      const storageRef = ref(storage, `Club/${id}/Req`);
-
-      // Iterate through the selected files and upload each one
-      for (let i = 0; i < selectedFiles.length; i++) {
-        console.log("We are here");
-        const selectedFile = selectedFiles[i];
-        await uploadBytes(ref(storageRef, selectedFile.name), selectedFile);
-      }
-    }
-  };
-
-  const navigate = useNavigate();
-  const handleEventSelect = () => {
-    navigate(`/edit_club_info/${id}`);
-  };
 
   //End Database Info
   let headingIntro = "WHO WE ARE";
@@ -110,7 +71,8 @@ const ManageClubBody = () => {
   let introBody = clubInfo.clubDesc;
 
   let smallTitle = "Club Requirememnt";
-  let smallDesc = clubInfo.clubAppReq || [];
+  let smallDesc = clubInfo.clubAppReq;
+
   return (
     <div
       style={{
@@ -248,15 +210,16 @@ const ManageClubBody = () => {
             width: " 10vw",
           }}
         >
-          <img
-            src={eButton}
-            onClick={handleEventSelect}
-            style={{
-              maxHeight: "100%",
-              maxWidth: "100%",
-            }}
-            alt="Edit Button"
-          />
+          <Link to={"/edit_club_info"}>
+            <img
+              src={eButton}
+              style={{
+                maxHeight: "100%",
+                maxWidth: "100%",
+              }}
+              alt="Edit Button"
+            />
+          </Link>
         </div>
 
         <div
@@ -304,93 +267,66 @@ const ManageClubBody = () => {
 
           <div
             style={{
-              display: "flex",
+              height: "15vh",
               width: " 35vw",
-              flexDirection: "column",
-              flexWrap: "wrap",
             }}
           >
-            {Array.isArray(smallDesc) ? (
-              <ul
-                style={{
-                  listStyleType: "disc",
-                  color: "white",
-                  fontSize: "24px",
-                  margin: 0,
-                  paddingInlineStart: "",
-                }}
-              >
-                {smallDesc.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            ) : (
-              <p style={{ color: "white", fontSize: "24px", margin: 0 }}>
-                {smallDesc}
-              </p>
-            )}
-          </div>
-        </div>
-        <Stack sx={{ width: "100%" }} spacing={2}>
-          <div
-            style={{
-              display: "flex",
-              height: "10vh",
-              width: " 50vw",
-              justifyContent: "flex-end",
-              alignItems: "space-between",
-              flexDirection: "row",
-            }}
-          >
-            <div
-              onClick={handleImageClick}
+            <p
               style={{
-                cursor: "pointer",
-                height: "5vh",
-                width: " 15vw",
+                color: "white",
+                fontSize: "24px",
               }}
             >
-              {files ? (
-                <Alert
-                  severity="success"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center", // Center the content vertically
-                    justifyContent: "center", // Center the content horizontally
-                    width: "30%",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    height: "20%",
-                    fontSize: "130%",
-                  }}
-                >
-                  <AlertTitle>Success</AlertTitle>
-                  This is a success alert — <strong>Documents uploaded!</strong>
-                </Alert>
-              ) : (
-                <img
-                  src={joinButton}
-                  style={{
-                    maxHeight: "200%",
-                    maxWidth: "200%",
-                  }}
-                  alt="Join Button"
-                />
-              )}
-
-              <input
-                type="file"
-                ref={inputRef}
-                onChange={handleImageChange}
-                style={{ display: "none" }}
-                multiple
-              />
-            </div>
+              {smallDesc}
+            </p>
           </div>
-        </Stack>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            height: "10vh",
+            width: " 50vw",
+            justifyContent: "flex-end",
+            alignItems: "space-between",
+            flexDirection: "row",
+          }}
+        >
+          <div
+            style={{
+              height: "5vh",
+              width: " 20vw",
+            }}
+          >
+            <Link to={"/make_club_announcement"}>
+              <button
+                type="button"
+                className="btn btn-primary btn-lg"
+                style={{
+                  width: "300px",
+                }}
+              >
+                Make Club Announcement
+              </button>
+            </Link>
+          </div>
+
+          <div
+            style={{
+              height: "5vh",
+              width: " 15vw",
+            }}
+          >
+            <img
+              src={joinButton}
+              style={{
+                maxHeight: "100%",
+                maxWidth: "100%",
+              }}
+              alt="Join Button"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

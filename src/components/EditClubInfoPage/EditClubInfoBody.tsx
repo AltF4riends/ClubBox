@@ -13,7 +13,7 @@ function EditInfoBody() {
     borderBottom: "1px solid light-grey",
   };
 
-  const editBlockFormat = {
+  const editBlockFormat: React.CSSProperties = {
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -42,7 +42,7 @@ function EditInfoBody() {
     backgroundColor: "rgba(255,255,255,0.0)",
   };
 
-  const [isInputEnabled, setIsInputEnabled] = useState(false);
+  const [isInputEnabled, setIsInputEnabled] = useState(true);
 
   const toggleInputEnabled = () => {
     setIsInputEnabled((prevEnabled) => !prevEnabled);
@@ -78,13 +78,17 @@ function EditInfoBody() {
     setIsInputEnabled5((prevEnabled5) => !prevEnabled5);
   };
 
+  // State for Club Info information and database
   const [clubInfo, setClubInfo] = useState({
     clubName: "",
-    clubLI: "",
-    clubTwitter: "",
-    clubFB: "",
+    clubStatus: "",
+    clubLinkedIn: "",
+    clubTelegram: "",
+    clubFacebook: "",
     clubAppReq: "",
     clubDesc: "",
+    clubType: "",
+    clubLogo: "",
   });
 
   async function handleOnLoads(e: any) {
@@ -99,13 +103,15 @@ function EditInfoBody() {
       console.log("Document data:", docSnap.data());
       console.log(docSnap.data().clubName);
       setClubInfo({
-        ...clubInfo,
-        clubName: docSnap.data().clubName,
-        clubLI: docSnap.data().clubLinkedIn,
-        clubTwitter: docSnap.data().clubTwitter,
-        clubFB: docSnap.data().clubFacebook,
-        clubAppReq: docSnap.data().address,
-        clubDesc: docSnap.data().clubDesc,
+        clubName: "",
+        clubStatus: "",
+        clubLinkedIn: "",
+        clubTelegram: "",
+        clubFacebook: "",
+        clubAppReq: "",
+        clubDesc: "",
+        clubType: "",
+        clubLogo: "",
       });
       setIsInputEnabled(true);
     } else {
@@ -119,6 +125,10 @@ function EditInfoBody() {
   const handleChange = (e: { target: { name: any; value: any } }) => {
     setClubInfo({ ...clubInfo, [e.target.name]: e.target.value });
   };
+
+  async function handleDBUpdate(e: any) {
+    //await updateDoc(docRef, clubInfo);
+  }
 
   return (
     <>
@@ -154,16 +164,6 @@ function EditInfoBody() {
                 alignItems: "center",
               }}
             >
-              <div
-                style={{
-                  height: "8vh",
-                  width: "52vw",
-                }}
-              >
-                <h5>Edit</h5>
-                <h1>Club Info</h1>
-              </div>
-
               <div style={editBlockFormat}>
                 <div style={smallTitleBox}>
                   <h2>Club Name</h2>
@@ -197,6 +197,7 @@ function EditInfoBody() {
                     readOnly={isInputEnabled}
                     value={clubInfo.clubName}
                     onChange={handleChange}
+                    disabled={isInputEnabled}
                   />
                 </div>
               </div>

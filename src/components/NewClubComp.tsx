@@ -1,19 +1,18 @@
+// Dashboard.js
+
 import React from "react";
 import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
-import ClubinfoPage from "./ClubinfoPage";
 import Search from "./HomePage/Search";
-import ClubAdmission from "./ClubAdmission";
-
-function ClubPage() {
+import NewClub from "./Club_Admission/CreateClub";
+function NewClubComp() {
   return (
     <div>
       <NavBar />
-      <Search />
-      <ClubAdmission />
+      <NewClub />
       <Footer />
     </div>
   );
 }
 
-export default ClubPage;
+export default NewClubComp;
