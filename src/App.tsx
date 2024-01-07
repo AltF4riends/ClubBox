@@ -39,6 +39,7 @@ import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
 
 import ViewEvent from "./components/EventPage/ViewEvent";
+import PaymentPage from "./components/PaymentPage/PaymentPage";
 function App() {
   return (
     <AuthContextProvider>
@@ -90,6 +91,7 @@ function App() {
             />
             <Route path="/Clubs" element={<ClubPage />} />
             <Route path="/Cart" element={<CartPage />} />
+            <Route path="/payment_page" element={<PaymentPage/>}/>
 
             <Route path="/manage_club" element={<ManageClub />} />
             <Route path="/edit_club_info" element={<EditClubInfo />} />
