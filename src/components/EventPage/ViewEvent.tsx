@@ -26,6 +26,8 @@ interface CartInfo {
   paymentMethod: string;
 }
 
+//Adding comments to see the network
+
 function ViewEvent() {
   const { user } = UserAuth();
   const [userID, setUserID] = useState<string | null>(user.uid);
