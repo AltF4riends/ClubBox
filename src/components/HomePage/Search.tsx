@@ -1,4 +1,5 @@
-import "./Search.css"; // Import the CSS file
+// Import necessary modules and components
+import "./Search.css";
 import React, { useState, useEffect } from "react";
 import { AutoComplete, Input, Spin } from "antd";
 import {
@@ -10,7 +11,9 @@ import {
   getDoc,
 } from "@firebase/firestore";
 import { db } from "../../firebase";
+import Cards from "./Cards";
 
+// Define the EventInfo interface
 interface EventInfo {
   id: string;
   title: string;
@@ -23,6 +26,7 @@ interface EventInfo {
   location: string;
 }
 
+// Initialize the eventData array
 const eventData: EventInfo[] = [
   {
     id: "1",
@@ -38,7 +42,24 @@ const eventData: EventInfo[] = [
   // Add more events as needed
 ];
 
+const eventSearch: EventInfo[] = [
+  {
+    id: "1",
+    title: "",
+    description: "",
+    image: "",
+    clubId: "",
+    logo: "",
+    price: "",
+    date: "",
+    location: "",
+  },
+  // Add more events as needed
+];
+
+// Define the Search component
 function Search() {
+  // Define the getCurrentDate function
   function getCurrentDate(separator = "-") {
     let newDate = new Date();
     let date = newDate.getDate();
@@ -50,23 +71,41 @@ function Search() {
     }${separator}${date < 10 ? `0${date}` : `${date}`}`;
   }
 
+  // Define state variables
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [logos, setLogos] = useState("");
-  const eventNames: string[] = [];
+  const [eventNames, setEventNames] = useState<string[]>([]);
   const [options, setOptions] = useState<{ value: string }[]>([]);
   const [count, setCount] = useState(0);
+  const startIndex = 0;
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
+  // Define the handleSearch function
   const handleSearch = (value: string) => {
-    console.log("**Handles**");
+    setSearchQuery(value);
     const filteredOptions = eventNames
-      .filter((eventName) =>
-        eventName.toLowerCase().includes(value.toLowerCase())
-      )
+      .filter((eventName) => eventName.includes(value.toLowerCase()))
       .map((eventName) => ({ value: eventName }));
     setOptions(filteredOptions);
   };
 
+  const handleClickSearch = (value: string) => {
+    eventSearch.length = 0;
+    eventSearch.splice(0, eventSearch.length);
+
+    options.forEach((option) => {
+      const matchingEvent = eventData.find(
+        (event) => event.title.toLowerCase() === option.value.toLowerCase()
+      );
+      if (matchingEvent) {
+        eventSearch.push(matchingEvent);
+      }
+    });
+
+    console.log("eventSearch:", eventSearch);
+  };
+
+  // Define the handleLogo function
   async function handleLogo(clubId: string) {
     try {
       const docClubRef = doc(db, "Club", clubId);
@@ -84,6 +123,7 @@ function Search() {
     }
   }
 
+  // Define the useEffect hook
   useEffect(() => {
     const handleLoad = async () => {
       try {
@@ -110,9 +150,8 @@ function Search() {
             location: e.data().eventLocation,
           };
           var tempname: string = e.data().eventName;
-          newEventNames.push(tempname);
+          newEventNames.push(tempname.toLowerCase());
 
-          eventNames.push(tempname.toLowerCase());
           eventData.push(newEvent);
 
           const logo = await handleLogo(e.data().clubID);
@@ -120,6 +159,7 @@ function Search() {
         }
 
         setOptions(newEventNames.map((eventName) => ({ value: eventName })));
+        setEventNames(newEventNames);
         setCount(newEventNames.length);
       } catch (error) {
         console.error("Error fetching event data:", error);
@@ -132,102 +172,74 @@ function Search() {
     handleLoad();
   }, []);
 
-  if (loading) {
-    return <Spin size="large" />;
-  }
-
-  if (error) {
-    return <p style={{ color: "white" }}>Error: {error}</p>;
-  }
-
+  // Return the JSX structure
   return (
     <div className="search-container">
       <div className="contact">
         <form>
           <AutoComplete
-            style={{ width: 300 }}
+            style={{ width: 500 }}
             autoFocus={true}
             options={options}
-            onSearch={handleSearch}
+            onChange={handleSearch}
             size="large"
           >
-            <Input.Search size="middle" placeholder="input here" enterButton />
+            <Input.Search
+              size="large"
+              placeholder="input here"
+              enterButton
+              onChange={() => handleClickSearch()}
+            />
           </AutoComplete>
         </form>
       </div>
-      <div className="dropdown">
-        <button
-          className="btn"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        ></button>
-        <button
-          className="btn btn-secondary dropdown-toggle details"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
+
+      {searchQuery && ( // Render results only if there is a search query
+        <div
+          style={{
+            margin: "50px 150px",
+            background: "rgba(255,255,255, 0.6)",
+            borderRadius: "20px",
+          }}
         >
-          Filters
-        </button>
-        <ul className="dropdown-menu dropdown-menu-end">
-          <li>
-            <a className="dropdown-item" href="#">
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="flexSwitchCheckDefault"
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="flexSwitchCheckDefault"
+          <p style={{ marginLeft: "30px" }}>Search Result:</p>
+          {[0, 1, 2].map((index) => {
+            const startIndex = index * 3;
+            const endIndex = startIndex + 3;
+
+            return (
+              <div key={index} className={` ${index === 0 ? "active" : ""}`}>
+                <div
+                  className="d-flex justify-content-between"
+                  style={{
+                    margin: "30px 150px",
+                  }}
                 >
-                  Social Science{" "}
-                </label>
+                  {eventSearch
+                    .slice(startIndex, endIndex)
+                    .map(
+                      (event, subIndex) =>
+                        event.title && (
+                          <Cards
+                            key={`${index}-${subIndex}`}
+                            image={event.image}
+                            title={event.title}
+                            desc={event.description}
+                            price={event.price}
+                            logo={event.logo}
+                            eventId={event.id}
+                          />
+                        )
+                    )}
+                </div>
               </div>
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="flexSwitchCheckDefault"
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="flexSwitchCheckDefault"
-                >
-                  Electrical{" "}
-                </label>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              <div className="form-check form-switch">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="flexSwitchCheckDefault"
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="flexSwitchCheckDefault"
-                >
-                  Computing{" "}
-                </label>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
+// Export the Search component
 export default Search;
