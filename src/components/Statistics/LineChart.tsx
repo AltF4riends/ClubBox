@@ -1,15 +1,22 @@
 import { useState, useEffect } from "react";
+
 import { LineChart } from "@mui/x-charts/LineChart";
+
 import "./SimpleLineChart.css"; // Import CSS file for styling
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase"; // Replace with your Firebase configuration
+
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+
+import { db } from "../../firebase";
 
 interface SimpleLineChartData {
   data: number[];
-  label: string;
+
+  xlabel: string[];
+
+  ylabel: number[];
 }
 
-export default function SimpleLineChart() {
+const SimpleLineChart = () => {
   const [simpleLineChartData, setSimpleLineChartData] = useState<
     SimpleLineChartData[]
   >([]);
@@ -17,20 +24,26 @@ export default function SimpleLineChart() {
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "Statistic"));
+        const querySnapshot = await getDocs(collection(db, "statistic2"));
+
         const data: SimpleLineChartData[] = [];
 
-        querySnapshot.forEach((doc) => {
-          data.push({
-            data: doc.data().data || [],
-            label: doc.data().label || "No Label",
-          });
+        querySnapshot.forEach((docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const fetchedData = docSnapshot.data();
+
+            data.push({
+              data: fetchedData.xdata,
+
+              xlabel: fetchedData.xlabel,
+
+              ylabel: fetchedData.ydata,
+            });
+          }
         });
 
         setSimpleLineChartData(data);
-      } catch (error) {
-        console.error("Error fetching data from Firebase:", error);
-      }
+      } catch (error) {}
     };
 
     fetchDataFromFirebase();
@@ -41,14 +54,24 @@ export default function SimpleLineChart() {
       <LineChart
         width={500}
         height={300}
-        series={simpleLineChartData}
+        series={simpleLineChartData.map((data, index) => ({
+          data: data.data,
+
+          key: `line-${index}`, // Unique key for each line series
+        }))}
         xAxis={[
           {
             scaleType: "point",
-            data: simpleLineChartData.map((data) => data.label),
+
+            data:
+              simpleLineChartData.length > 0
+                ? simpleLineChartData[0].xlabel
+                : [],
           },
         ]}
       />
     </div>
   );
-}
+};
+
+export default SimpleLineChart;

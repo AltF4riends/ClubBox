@@ -39,7 +39,7 @@ import CreateEvents from "./components/CreateEvents";
 import ClubPage from "./components/Club_Admission/ClubPage";
 import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
-
+import NewStatistic from "./components/Statistics/NewStatistic";
 import ViewEvent from "./components/EventPage/ViewEvent";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 function App() {
@@ -57,7 +57,7 @@ function App() {
               element={<PasswordQuestionPage />}
             />
             <Route path="/faqpage" element={<FaqMainPage />} />
-
+            <Route path="/newstatistic" element={<NewStatistic />} />
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 
@@ -93,7 +93,7 @@ function App() {
             />
             <Route path="/Clubs" element={<ClubPage />} />
             <Route path="/Cart" element={<CartPage />} />
-            <Route path="/payment_page" element={<PaymentPage/>}/>
+            <Route path="/payment_page" element={<PaymentPage />} />
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 
