@@ -9,7 +9,7 @@ html,
 
 body {
   background-image: url("./back.png");
-  background-size: 100% 100%; /* Cover the entire viewport */
+  background-size: 100% 300%; /* Cover the entire viewport */
   background-position: center;
   background-repeat: no-repeat;
   height: 100%;
