@@ -38,6 +38,8 @@ import ClubAdmission from "./components/Club_Admission/ClubAdmission";
 import ViewEvent from "./components/ViewEvent";
 import CreateEvents from "./components/CreateEvents";
 import ClubPage from "./components/Club_Admission/ClubPage";
+import Admissionlist from "./components/Club_Admission/Admissionlist";
+
 import AddInfoPage from "./components/AddInfoPage";
 
 function App() {
@@ -90,6 +92,7 @@ function App() {
               element={<EditPersonalDetailsPage />}
             />
             <Route path="/Clubs" element={<ClubPage />} />
+            <Route path="/Admissionlist" element={<Admissionlist />} />
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 

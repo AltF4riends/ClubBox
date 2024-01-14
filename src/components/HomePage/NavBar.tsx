@@ -160,6 +160,16 @@ const NavBar = () => {
                 Add Event
               </Link>
             )}
+
+            {userAccess == "admin" && (
+              <Link
+                className="nav-link"
+                to="/NewEventComp"
+                style={{ color: "white" }}
+              >
+                Admissions
+              </Link>
+            )}
           </ul>
           <div
             className="dropdown"
