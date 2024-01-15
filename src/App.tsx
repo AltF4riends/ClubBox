@@ -41,7 +41,7 @@ import Admissionlist from "./components/Club_Admission/Admissionlist";
 
 import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
-
+import NewStatistic from "./components/Statistics/NewStatistic";
 import ViewEvent from "./components/EventPage/ViewEvent";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 function App() {
@@ -60,6 +60,7 @@ function App() {
             />
             <Route path="/faqpage" element={<FaqMainPage />} />
             <Route path="/clubstatistic" element={<ClubStatisticPage />} />
+            <Route path="/newstatistic" element={<NewStatistic />} />
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 

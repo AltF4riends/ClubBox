@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
+
 import { LineChart } from "@mui/x-charts/LineChart";
+
 import "./SimpleLineChart.css"; // Import CSS file for styling
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase"; // Replace with your Firebase configuration
+
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+
+import { db } from "../../firebase";
 
 
 interface SimpleLineChartData {
   data: number[];
-  label: string;
+
+  xlabel: string[];
+
+  ylabel: number[];
 }
 
 export default function SimpleLineChart() {
