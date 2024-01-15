@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { trace } from "firebase/performance";
 import Footer from "../HomePage/Footer";
-import { app, perf } from "../../../firebase";
 import {
   collection,
   addDoc,
@@ -149,10 +148,6 @@ const Admission: React.FC = () => {
         where("PID", "==", userID)
       );
 
-      const traceName = "FirestoreQuery";
-      const perfTrace = trace(perf, traceName);
-      perfTrace.start();
-
       try {
         const querySnapshot = await getDocs(userQuery);
         if (querySnapshot.docs.length > 0) {
@@ -195,8 +190,6 @@ const Admission: React.FC = () => {
           } else {
             console.log("Applist is empty!");
           }
-
-          perfTrace.stop();
         } else {
           console.log("No document found for the given userID");
         }
