@@ -31,7 +31,7 @@ import CalendarMain from "./components/CalendarPage/CalendarMain";
 import NewEvent from "./components/CreateEvent/NewEvent";
 import NewEventComp from "./components/NewEventComp";
 import NewClubComp from "./components/NewClubComp";
-
+import ClubStatisticPage from "./components/ClubStatisticPage";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/Club_Admission/ClubAdmission";
@@ -57,7 +57,7 @@ function App() {
               element={<PasswordQuestionPage />}
             />
             <Route path="/faqpage" element={<FaqMainPage />} />
-
+            <Route path="/clubstatistic" element={<ClubStatisticPage />} />
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 

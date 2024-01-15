@@ -1,10 +1,10 @@
 import NavBar from "./HomePage/NavBar";
 import Footer from "./HomePage/Footer";
 import "./HomePage/Slider.css";
-import PieChart from "./Statitstics/PieChart";
+import PieChart from "./Statistics/PieChart";
 import { useParams } from "react-router-dom";
 import { Pie } from "recharts";
-import LineChart from "./Statitstics/LineChart";
+import LineChart from "./Statistics/LineChart";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
