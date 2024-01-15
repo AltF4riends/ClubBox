@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { trace } from "firebase/performance";
 import Footer from "../HomePage/Footer";
-
+import { app, perf } from "../../../firebase";
 import {
   collection,
   addDoc,
@@ -66,13 +67,22 @@ const Admission: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("BEfore: ", user);
+      console.log("Before: ", user);
       if (user) {
         setUserID(user.uid);
       } else {
         setUserID(null);
       }
     });
+
+    // Load data when the component mounts
+    const loadData = async () => {
+      if (userID) {
+        await handleLoad(); // Call handleLoad when the component mounts
+      }
+    };
+
+    loadData();
 
     // Cleanup function to unsubscribe from the observer when the component unmounts
     return () => unsubscribe();
@@ -132,67 +142,69 @@ const Admission: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const handleLoad = async () => {
-      if (userID) {
-        const userQuery = query(
-          collection(db, "Club"),
-          where("PID", "==", userID)
-        );
-        const querySnapshot = await getDocs(userQuery);
+  const handleLoad = async () => {
+    if (userID) {
+      const userQuery = query(
+        collection(db, "Club"),
+        where("PID", "==", userID)
+      );
 
-        try {
-          if (querySnapshot.docs.length > 0) {
-            const eventsData = querySnapshot.docs[0].data();
-            setEventData({
-              Applist: eventsData.Applist,
+      const traceName = "FirestoreQuery";
+      const perfTrace = trace(perf, traceName);
+      perfTrace.start();
+
+      try {
+        const querySnapshot = await getDocs(userQuery);
+        if (querySnapshot.docs.length > 0) {
+          const eventsData = querySnapshot.docs[0].data();
+          setEventData({
+            Applist: eventsData.Applist,
+          });
+
+          if (eventData.Applist.length >= 0) {
+            // Fetch documents for each item in the Applist array
+            const promises = eventData.Applist.map(async (appId: string) => {
+              const docRef = doc(db, "Student", appId);
+              const docSnap = await getDoc(docRef);
+
+              if (docSnap.exists()) {
+                const data = docSnap.data();
+                return {
+                  id: docSnap.id,
+                  firstName: data.firstName,
+                  lastName: data.lastName,
+                  email: data.utmEmail,
+                  phoneNumber: data.phoneNumber,
+                  address: data.address,
+                };
+              } else {
+                console.log(`No such document for appId: ${appId}`);
+                return null;
+              }
             });
 
-            if (eventData.Applist.length >= 0) {
-              // Fetch documents for each item in the Applist array
-              const promises = eventData.Applist.map(async (appId: string) => {
-                const docRef = doc(db, "Student", appId);
-                const docSnap = await getDoc(docRef);
+            // Wait for all promises to resolve
+            const resolvedProfiles = await Promise.all(promises);
 
-                if (docSnap.exists()) {
-                  const data = docSnap.data();
-                  return {
-                    id: docSnap.id,
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    email: data.utmEmail,
-                    phoneNumber: data.phoneNumber,
-                    address: data.address,
-                  };
-                } else {
-                  console.log(`No such document for appId: ${appId}`);
-                  return null;
-                }
-              });
-
-              // Wait for all promises to resolve
-              const resolvedProfiles = await Promise.all(promises);
-
-              // Update profiles with the fetched data
-              setProfiles(
-                resolvedProfiles.filter(
-                  (profile): profile is ProfileInfo => profile !== null
-                )
-              );
-            } else {
-              console.log("Applist is empty!");
-            }
+            // Update profiles with the fetched data
+            setProfiles(
+              resolvedProfiles.filter(
+                (profile): profile is ProfileInfo => profile !== null
+              )
+            );
           } else {
-            console.log("No document found for the given userID");
+            console.log("Applist is empty!");
           }
-        } catch (error) {
-          console.error("Error fetching documents:", error);
-        }
-      }
-    };
 
-    handleLoad();
-  }, [eventData.Applist, userID]);
+          perfTrace.stop();
+        } else {
+          console.log("No document found for the given userID");
+        }
+      } catch (error) {
+        console.error("Error fetching documents:", error);
+      }
+    }
+  };
 
   const handleToggle = (value: number, profile: ProfileInfo) => () => {
     const currentIndex = checked.indexOf(value);
