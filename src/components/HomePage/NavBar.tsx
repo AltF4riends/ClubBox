@@ -101,10 +101,11 @@ const NavBar = () => {
       if (userID) {
         const docRef = doc(db, "Student", userID);
         const docSnap = await getDoc(docRef);
+        console.log("Why");
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          setUserAccess(userData.accessLevel);
+          setUserAccess(userData.accessLevel); //Damn it its accessLvl
           console.log(userAccess); // Assuming access is a string, adjust accordingly
         } else {
           console.log("No document");
