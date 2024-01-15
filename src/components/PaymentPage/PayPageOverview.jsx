@@ -56,41 +56,62 @@ const PayPageOverview = () => {
   //   });
   // }, [stripe]);
 
-  const handleSubmit = async (e) => {
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!stripe || !elements) {
+  //     // Stripe.js hasn't yet loaded.
+  //     // Make sure to disable form submission until Stripe.js has loaded.
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+
+  //   const { error } = await stripe.confirmPayment({
+  //     elements,
+  //     confirmParams: {
+  //       // Make sure to change this to your payment completion page
+  //       return_url: "http://localhost:3000",
+  //     },
+  //   });
+
+  //   // This point will only be reached if there is an immediate error when
+  //   // confirming the payment. Otherwise, your customer will be redirected to
+  //   // your `return_url`. For some payment methods like iDEAL, your customer will
+  //   // be redirected to an intermediate site first to authorize the payment, then
+  //   // redirected to the `return_url`.
+  //   if (error.type === "card_error" || error.type === "validation_error") {
+  //     setMessage(error.message);
+  //   } else {
+  //     setMessage("An unexpected error occurred.");
+  //   }
+
+  //   setIsLoading(false);
+  // };
+
+  const handleCheckOut = (e) => {
     e.preventDefault();
-
-    if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
-
-    setIsLoading(true);
-
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
-      },
-    });
-
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
-    } else {
-      setMessage("An unexpected error occurred.");
-    }
-
-    setIsLoading(false);
-  };
-
-  const paymentElementOptions = {
-    layout: "tabs"
+    fetch("http://localhost:3000/create-checkout-session", {
+      method: "POST",
+      mode: 'cors',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        items: [
+          {id: 1, quantity: 3},
+          {id: 2, quantity: 1},
+    ]
+    }),
+      })
+      .then((res) => {
+          if(res.ok) return res.json()
+          return res.json().then(json => Promise.reject(json))
+      })
+      .then(({url}) => {
+          window.location = url; //maybe some sort of redirect
+      })
+      .catch(e => {
+          console.error(e.error)
+      });
   }
 
   return (
@@ -104,7 +125,7 @@ const PayPageOverview = () => {
           alignItems: "center",
         }}>
 
-          <form id="payment-form" onSubmit={handleSubmit}>
+          <form onSubmit={handleCheckOut}>
           <div style={{
               display: "flex",
               height: "80vh",
@@ -151,7 +172,7 @@ const PayPageOverview = () => {
                 </div>
 
                 <div style={{display: "flex", height: "20vh", width:"28vw", justifyContent: "center", alignItems: "center",}}> {/*Inner Submit Button*/}
-                <button  id="submit">Pay</button> {/*disabled={isLoading || !stripe || !elements}*/}
+                <button type="submit">Pay</button> {/*disabled={isLoading || !stripe || !elements}*/}
                 </div>
               </div>
             

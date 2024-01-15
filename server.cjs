@@ -13,7 +13,7 @@ const calculateOrderAmount = (items) => {
   return 1400;
 };
 
-app.post("/payment_page", async (req, res) => {
+app.post("/create-checkout-session", async (req, res) => {
   try{
   const { items } = req.body;
 

@@ -263,6 +263,31 @@ const CartPage: React.FC = () => {
     return <p style={{ color: "white" }}>Error: {error}</p>;
   }
 
+  const handleCheckOut = (e:any) => {
+    e.preventDefault();
+    fetch("http://localhost:3000/create-checkout-session", {
+      method: "POST",
+      mode: 'cors',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ 
+        items: [
+          {id: 1, quantity: 3},
+          {id: 2, quantity: 1},
+    ]
+    }),
+      })
+      .then((res) => {
+          if(res.ok) return res.json()
+          return res.json().then(json => Promise.reject(json))
+      })
+      .then(({url}) => {
+          window.location = url; //maybe some sort of redirect
+      })
+      .catch(e => {
+          console.error(e.error)
+      });
+  }
+
   return (
     <div>
       <NavBar />
@@ -380,6 +405,7 @@ const CartPage: React.FC = () => {
                 height: "7vh",
                 backgroundColor: "maroon",
               }}
+              onClick={handleCheckOut}
             >
               Proceed To Pay
             </Button>

@@ -11,18 +11,18 @@ const PaymentPage = () => {
 
   const [clientSecret, setClientSecret] = useState("");
 
-  //Maybe use this as a function to create the session
-  useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    console.log("Getting Client Sercet");
-    fetch("/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, []);
+  // Maybe use this as a function to create the session
+  // useEffect(() => {
+  //   // Create PaymentIntent as soon as the page loads
+  //   console.log("Getting Client Sercet");
+  //   fetch("/create-checkout-session", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ items: [{ id: "xl-tshirt" }] }),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => setClientSecret(data.clientSecret));
+  // }, []);
 
   const appearance = {
     theme: 'stripe',
@@ -39,7 +39,7 @@ const PaymentPage = () => {
         <NavBar/>
         <PayPageOverview/>
         <Footer/>
-      
+       
     </div>
   )
 }
