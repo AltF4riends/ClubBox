@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "proxy": "<http://localhost:4242>",
+    "devStart": "nodemon serverStripe.js"
   },
   "dependencies": {
     "@adyen/api-library": "^15.1.0",
