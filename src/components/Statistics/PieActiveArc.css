@@ -8,4 +8,7 @@
 .pie-chart-container .MuiSvgText-root {
   
   transform: translate(500px, 500px); 
+
+    left: 200px;
 }
+  

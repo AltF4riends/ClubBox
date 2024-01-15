@@ -23,6 +23,7 @@ export default function PieActiveArc() {
     const fetchDataFromFirebase = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "Statistic"));
+        console.log("length", querySnapshot.docs.length);
         const data: ChartData[] = [];
         querySnapshot.forEach((doc) => {
           data.push({

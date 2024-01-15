@@ -5,15 +5,69 @@ import joinButton from "./ECImages/JoinUs.png";
 import rocketIcon from "./ECImages/rocketIcon.png";
 import { Link, useParams } from "react-router-dom";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import ClubAnnouncement from "../Club_Admission/ClubAnnouncement";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
 import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
 
 const ManageClubBody = () => {
+  const [userID, setUserID] = useState<string | null>(null);
+
+  // State for profile information
+  const [profileInfo, setProfileInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    address: "",
+    forgetPasswordQuestion: "",
+    imageUrl: "", // Add imageUrl property to the state
+  });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Before: ", userID);
+      if (user) {
+        setUserID(user.uid);
+        console.log("Insider: ", userID);
+      } else {
+        setUserID(null);
+      }
+    });
+
+    // Cleanup function to unsubscribe from the observer when the component unmounts
+    return () => unsubscribe();
+  }, []); // Empty dependency array to run the effect only once on mount
+
+  useEffect(() => {
+    const handleOnLoad = async () => {
+      if (userID) {
+        const docRef = doc(db, "Student", userID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setProfileInfo({
+            ...profileInfo,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.utmEmail,
+            phoneNumber: data.phoneNumber,
+            address: data.address,
+          });
+        } else {
+          console.log("No such document!");
+        }
+      }
+    };
+
+    handleOnLoad();
+  }, [userID]); // Dependency array to rerun the effect when userID changes
+
   const { id } = useParams();
   // State for profile information
   const [clubInfo, setClubInfo] = useState({
@@ -26,6 +80,7 @@ const ManageClubBody = () => {
     clubDesc: "",
     clubType: "",
     clubLogo: "",
+    Applist: [] as string[],
   });
 
   useEffect(() => {
@@ -57,6 +112,7 @@ const ManageClubBody = () => {
           clubDesc: clubData.clubDesc,
           clubType: clubData.clubType,
           clubLogo: clubData.clubLogo,
+          Applist: clubData.Applist,
         });
       } else {
         console.log("No such club documents!");
@@ -88,13 +144,45 @@ const ManageClubBody = () => {
 
     if (selectedFiles) {
       setFiles(selectedFiles);
-      const storageRef = ref(storage, `Club/${id}/Req`);
+      const storageRef = ref(
+        storage,
+        `Club/${id}/Req/${profileInfo.firstName}`
+      );
 
       // Iterate through the selected files and upload each one
       for (let i = 0; i < selectedFiles.length; i++) {
         console.log("We are here");
         const selectedFile = selectedFiles[i];
         await uploadBytes(ref(storageRef, selectedFile.name), selectedFile);
+      }
+
+      if (userID) {
+        const docClubRef = doc(db, "Club", `${id}`);
+        const docClubSnap = await getDoc(docClubRef);
+
+        if (docClubSnap.exists()) {
+          const clubData = docClubSnap.data();
+
+          // Ensure the Applist array is an array of strings
+          const currentMembers = clubData.Applist.map(String);
+
+          // Update Applist array with user ID
+          if (!currentMembers.includes(userID)) {
+            const updatedMembers = [...currentMembers, userID];
+            // Assuming you want to update the Applist array in the database as well
+            await updateDoc(docClubRef, { Applist: updatedMembers });
+
+            setClubInfo((prevClubInfo) => ({
+              ...prevClubInfo,
+              Applist: updatedMembers,
+            }));
+          } else {
+            // User is already a member
+            console.log("User is already a member of this club");
+          }
+        } else {
+          console.log("No such club documents!");
+        }
       }
     }
   };

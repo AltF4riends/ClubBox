@@ -1,4 +1,4 @@
-import React, { useRef, useState, ChangeEvent } from "react";
+import React, { useEffect, useRef, useState, ChangeEvent } from "react";
 import {
   collection,
   addDoc,
@@ -6,8 +6,9 @@ import {
   setDoc,
   doc,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TimePicker from "react-time-picker";
@@ -20,6 +21,7 @@ import {
   uploadBytes,
   getDownloadURL,
 } from "@firebase/storage";
+import { onAuthStateChanged } from "firebase/auth";
 
 const getNextDocumentId = async (): Promise<string> => {
   const q = collection(db, "Club");
@@ -59,6 +61,7 @@ interface FormData {
   clubStatus: string;
   clubTelegram: string;
   clubLogo: string;
+  Members: String[];
 }
 
 const CreateClub: React.FC = () => {
@@ -80,6 +83,7 @@ const CreateClub: React.FC = () => {
     clubStatus: "",
     clubTelegram: "",
     clubLogo: "",
+    Members: [],
   });
 
   const handleChange = (
@@ -155,6 +159,7 @@ const CreateClub: React.FC = () => {
         clubStatus: "",
         clubTelegram: "",
         clubLogo: "",
+        Members: [],
       });
 
       // Show success message
@@ -272,7 +277,7 @@ const CreateClub: React.FC = () => {
               <img
                 height="150vh"
                 width="160vw"
-                src={formData.clubLogo || "public/profile.png"}
+                src={formData.clubLogo || "profile.png"}
                 alt="Profile"
               />
             )}
