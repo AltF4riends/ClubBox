@@ -228,7 +228,7 @@ const NavBar = () => {
               </Link>
             )}
 
-            {userAccess == "admin" && (
+            {(userAccess == "admin" || userAccess == "clubP") && (
               <Link
                 className="nav-link"
                 to="/NewEventComp"

@@ -1,10 +1,13 @@
-import React, { useRef, useState } from "react";
-import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
+import React, { useRef, useState, useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
+import { collection, addDoc, updateDoc, doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./NewEvent.css";
 import TimePicker from "react-time-picker";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../firebase";
 import "react-time-picker/dist/TimePicker.css";
 import { useImageContext } from "../ImageContext";
 import {
@@ -22,12 +25,15 @@ interface FormData {
   eventDesc: string;
   eventCond: string;
   eventType: string;
-  eventFee: string;
   eventImage: string;
+  eventPrice: number;
 }
 
 const NewEvent: React.FC = () => {
   const [eventtempid, setEventTempId] = useState("");
+
+  const [userClub, setUserClub] = useState<string | null>(null); // State to store user access level
+  const [userID, setUserID] = useState<string | null>(null);
   const { imageUrl, image, setImageInfo } = useImageContext();
   const [formData, setFormData] = useState<FormData>({
     clubID: "",
@@ -36,32 +42,92 @@ const NewEvent: React.FC = () => {
     eventDate: new Date().toISOString().split("T")[0],
     eventDesc: "",
     eventCond: "",
-    eventType: "",
-    eventFee: "",
+    eventType: "Online",
     eventImage: "",
+    eventPrice: 0,
   });
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserID(user.uid);
+      } else {
+        setUserID(null);
+      }
+    });
+
+    // Cleanup function to unsubscribe from the observer when the component unmounts
+    return () => unsubscribe();
+  }, []);
+  useEffect(() => {
+    const fetchUserClub = async () => {
+      if (userID) {
+        const docRef = doc(db, "Student", userID);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserClub(userData.clubID);
+          console.log(userClub); // This might not log the updated value
+        } else {
+          console.log("No document");
+        }
+      }
+    };
+
+    fetchUserClub();
+  }, [userID]);
+
+  useEffect(() => {
+    console.log(userClub);
+  }, [userClub]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "eventPrice" && !/^\d*\.?\d*$/.test(value)) {
+      alert("Please insert the price in numbers or decimals only.");
+      return;
+    }
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  const handletextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
   };
-
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+  useEffect(() => {
+    console.log(userClub);
+  }, [userClub]);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      // Add the document to the "Event" collection without specifying a document ID
-      const docRef = await addDoc(collection(db, "Event"), formData);
-      console.log(formData.eventFee);
-      // Wait for the promise to resolve before calling saveInfo
-      await saveInfo(docRef.id);
+      // Include clubID in formData
+      const formDataWithClubID: FormData = {
+        ...formData,
+        clubID: userClub || "cl001", // Assuming userClub is a string or providing a default value
+      };
 
-      setEventTempId(docRef.id); // Set eventtempid after saveInfo
+      // Add document to Firestore
+      const docRef = await addDoc(collection(db, "Event"), formDataWithClubID);
+      setEventTempId(docRef.id);
 
-      // Clear form fields
+      // Save additional information including the image
+      saveInfo(docRef.id);
+
+      // Reset form data
       setFormData({
         clubID: "",
         eventName: "",
@@ -69,51 +135,52 @@ const NewEvent: React.FC = () => {
         eventDate: new Date().toISOString().split("T")[0],
         eventDesc: "",
         eventCond: "",
-        eventType: "",
-        eventFee: "",
+        eventType: "Online",
         eventImage: "",
+        eventPrice: 0,
       });
 
-      // Show success message
       alert("Event added successfully!");
     } catch (error) {
       console.error("Error adding document: ", error);
-      // Optionally, you can show an error message here
     }
   };
+  useEffect(() => {
+    console.log(userClub);
+  }, [userClub]);
 
   const containerStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh",
-    marginTop: "80px",
-    marginBottom: "80px",
+    height: "85vh",
   };
 
   const formStyle: React.CSSProperties = {
     textAlign: "center",
-    padding: "20px",
+    padding: "2vw",
     border: "1px solid #ccc",
-    borderRadius: "8px",
+    borderRadius: "1vw",
     backgroundColor: "#f4f4f4",
-    width: "50vh",
+    width: "40vw",
+    maxHeight: "75vh",
+    overflowY: "auto",
   };
 
   const inputStyle: React.CSSProperties = {
-    marginBottom: "15px",
+    marginBottom: "1vw",
   };
 
   const submitButtonStyle: React.CSSProperties = {
     backgroundColor: "#4CAF50",
     color: "white",
-    padding: "10px 20px",
-    borderRadius: "5px",
+    padding: "1vw 2vw",
+    borderRadius: "0.5vw",
     cursor: "pointer",
   };
 
   const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date(formData.eventDate) // Convert string to Date
+    new Date(formData.eventDate)
   );
 
   const handleDateChange = (date: Date | null) => {
@@ -122,15 +189,16 @@ const NewEvent: React.FC = () => {
     if (date) {
       setFormData((prevData) => ({
         ...prevData,
-        eventDate: date.toISOString().split("T")[0], // Convert Date to string
+        eventDate: date.toISOString().split("T")[0],
       }));
     }
   };
   const [selectedTime, setSelectedTime] = useState<Date | null>(null);
-  const handleTimeChange = (time: string | null) => {
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      eventTime: time || "00:00", // Set a default time if time is null
+      eventTime: value,
     }));
   };
 
@@ -147,22 +215,23 @@ const NewEvent: React.FC = () => {
 
   const saveInfo = async (eventId: string) => {
     try {
+      console.log("saveInfo");
+      console.log(eventtempid);
       if (image) {
-        const storageRef = ref(getStorage(), `Event/${eventId}/picture`);
+        let storageRef = ref(getStorage(), `Event/${eventtempid}/picture`);
+        console.log("saveInfo2");
 
-        // Upload the image
         await uploadBytes(storageRef, image);
 
-        // Get the download URL
         const downloadURL = await getDownloadURL(storageRef);
 
-        // Update the Firestore document with the updated image URL
+        setFormData({ ...formData, eventImage: downloadURL });
+
         await updateDoc(doc(db, "Event", eventId), {
           ...formData,
-          eventImage: downloadURL,
+          imageUrl: downloadURL,
         });
       } else {
-        console.log("No picture");
       }
     } catch (error) {
       console.error("Error saving information:", error);
@@ -214,9 +283,15 @@ const NewEvent: React.FC = () => {
           />
         </div>
 
-        <div>
+        <div style={inputStyle}>
           <h3>Event Time</h3>
-          <TimePicker onChange={handleTimeChange} value={formData.eventTime} />
+          <input
+            className="inputField"
+            type="text"
+            name="eventTime"
+            value={formData.eventTime}
+            onChange={handleTimeChange}
+          />
         </div>
 
         <div style={inputStyle}>
@@ -232,7 +307,12 @@ const NewEvent: React.FC = () => {
 
         <div style={inputStyle}>
           <h3>Event Description</h3>
-          <textarea className="inputField" name="eventDesc"></textarea>
+          <textarea
+            className="inputField"
+            name="eventDesc"
+            value={formData.eventDesc}
+            onChange={handletextareaChange}
+          ></textarea>
         </div>
 
         <div style={inputStyle}>
@@ -249,8 +329,13 @@ const NewEvent: React.FC = () => {
         <div style={inputStyle}>
           <h3>Event Type</h3>
           <label></label>
-
-          <select name="eventType" id="eventType">
+          <select
+            name="eventType"
+            id="eventType"
+            value={formData.eventType}
+            onChange={handleSelectChange}
+            defaultValue="Online"
+          >
             <option value="Online">Online</option>
             <option value="Face-to-face">Face-to-face</option>
           </select>
@@ -260,9 +345,9 @@ const NewEvent: React.FC = () => {
           <h3>Event Price</h3>
           <input
             type="text"
-            className="inputField"
-            name="eventFee"
-            value={formData.eventFee}
+            className="inputFieldPrice"
+            name="eventPrice"
+            value={formData.eventPrice}
             onChange={handleChange}
           />
         </div>
