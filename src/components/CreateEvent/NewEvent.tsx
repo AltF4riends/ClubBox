@@ -36,7 +36,7 @@ const NewEvent: React.FC = () => {
   const [userID, setUserID] = useState<string | null>(null);
   const { imageUrl, image, setImageInfo } = useImageContext();
   const [formData, setFormData] = useState<FormData>({
-    clubID: "",
+    clubID: "cl001",
     eventName: "",
     eventTime: "",
     eventDate: new Date().toISOString().split("T")[0],
@@ -77,10 +77,6 @@ const NewEvent: React.FC = () => {
 
     fetchUserClub();
   }, [userID]);
-
-  useEffect(() => {
-    console.log(userClub);
-  }, [userClub]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -126,19 +122,6 @@ const NewEvent: React.FC = () => {
 
       // Save additional information including the image
       saveInfo(docRef.id);
-
-      // Reset form data
-      setFormData({
-        clubID: "",
-        eventName: "",
-        eventTime: "",
-        eventDate: new Date().toISOString().split("T")[0],
-        eventDesc: "",
-        eventCond: "",
-        eventType: "Online",
-        eventImage: "",
-        eventPrice: 0,
-      });
 
       alert("Event added successfully!");
     } catch (error) {
