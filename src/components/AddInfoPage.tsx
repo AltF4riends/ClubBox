@@ -112,13 +112,15 @@ const AddInfoPage = () => {
 
       const docRef = await updateDoc(
         doc(db, "Student", userID),
-        {
-          aboutMe: data.aboutMe, //Ignore this error
-          photoURL: data.photoURL,
-          videoURL: data.videoURL,
-        },
+        "aboutMe",
+        data.aboutMe,
+        "photoURL",
+        data.photoURL,
+        "videoURL",
+        data.videoURL,
         { merge: true }
       );
+
       console.log("Updated Database");
       navigate("/home"); //
     } catch {

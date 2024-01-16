@@ -67,10 +67,10 @@ function App() {
               element={<RegisterForm></RegisterForm>}
             />
 
-            <Route
+            {/* <Route
               path="/forget_password_qna"
               element={<ForgotPasswordQNA />}
-            />
+            /> */}
             <Route path="/additional_info" element={<AddInfoPage />} />
             <Route
               path="/about_me"
@@ -85,15 +85,15 @@ function App() {
                 />
               }
             />
-            <Route path="/upload_photo" element={<UploadPhoto />} />
-            <Route path="/upload_video" element={<UploadVideo />} />
+            {/* <Route path="/upload_photo" element={<UploadPhoto />} />
+            <Route path="/upload_video" element={<UploadVideo />} /> */}
             <Route
               path="/edit-personal-details"
               element={<EditPersonalDetailsPage />}
             />
             <Route path="/Clubs" element={<ClubPage />} />
             <Route path="/Cart" element={<CartPage />} />
-            <Route path="/payment_page" element={<PaymentPage/>}/>
+            <Route path="/payment_page" element={<PaymentPage />} />
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 

@@ -22,7 +22,7 @@ function Cards({
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <img
-          src={image !== "" ? image : "../../../public/event.png"}
+          src={image !== "" ? image : "/event.png"}
           className="card-img-top"
           alt="..."
           style={{ width: "286px", height: "250px" }}
@@ -32,7 +32,7 @@ function Cards({
           <p className="card-text">{desc}</p>
           <div style={{ display: "flex", flexDirection: "row" }}>
             <img
-              src={logo !== "" ? logo : "../../../public/event.png"}
+              src={logo !== "" ? logo : "/event.png"}
               style={{ borderRadius: "50%", width: "50px", height: "40px" }}
             />
             <h5 style={{ paddingLeft: "70px" }}>
