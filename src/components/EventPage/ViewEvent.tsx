@@ -40,8 +40,8 @@ function ViewEvent() {
     clubId: "clubid1",
     logo: "",
     price: "RM",
-    date: "date1",
-    location: "location1",
+    eventDate: "",
+    location: "",
   });
 
   const [cartData, setCartData] = useState<CartInfo>({
@@ -225,7 +225,7 @@ function ViewEvent() {
                         <br />
                         {/* Event Location */}
                         <p style={{ position: "absolute", left: "700px" }}>
-                          {eventData.location}
+                          {eventData.eventDate}
                         </p>
 
                         <div
