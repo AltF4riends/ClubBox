@@ -31,15 +31,17 @@ import CalendarMain from "./components/CalendarPage/CalendarMain";
 import NewEvent from "./components/CreateEvent/NewEvent";
 import NewEventComp from "./components/NewEventComp";
 import NewClubComp from "./components/NewClubComp";
-
+import ClubStatisticPage from "./components/ClubStatisticPage";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/Club_Admission/ClubAdmission";
 import CreateEvents from "./components/CreateEvents";
 import ClubPage from "./components/Club_Admission/ClubPage";
+import Admissionlist from "./components/Club_Admission/Admissionlist";
+
 import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
-
+import NewStatistic from "./components/Statistics/NewStatistic";
 import ViewEvent from "./components/EventPage/ViewEvent";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 function App() {
@@ -57,7 +59,8 @@ function App() {
               element={<PasswordQuestionPage />}
             />
             <Route path="/faqpage" element={<FaqMainPage />} />
-
+            <Route path="/clubstatistic" element={<ClubStatisticPage />} />
+            <Route path="/newstatistic" element={<NewStatistic />} />
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 
@@ -93,7 +96,12 @@ function App() {
             />
             <Route path="/Clubs" element={<ClubPage />} />
             <Route path="/Cart" element={<CartPage />} />
+<<<<<<< HEAD
             <Route path="/payment_page" element={<PaymentPage />} />
+=======
+            <Route path="/payment_page" element={<PaymentPage/>}/>
+            <Route path="/Admissionlist" element={<Admissionlist />} />
+>>>>>>> ccbfb1d3bc61df145ce8a1a470b5d203720fc241
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 

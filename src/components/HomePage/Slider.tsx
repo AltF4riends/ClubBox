@@ -1,10 +1,9 @@
 import Cards from "./Cards";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import "bootstrap/dist/js/bootstrap.bundle.min"; // Import Bootstrap JS
-import "./Slider.css"; // Import the CSS file
-import { Popover } from "antd";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import "./Slider.css";
+import { Spin } from "antd";
 import { useState, useEffect } from "react";
-import { Flex, Spin } from "antd";
 import {
   collection,
   getDoc,
@@ -15,7 +14,6 @@ import {
 } from "@firebase/firestore";
 import { db } from "../../firebase";
 
-// Updated EventInfo interface
 interface EventInfo {
   id: string;
   title: string;
@@ -28,11 +26,6 @@ interface EventInfo {
   location: string;
 }
 
-interface Number {
-  num: number;
-}
-
-// Updated eventData array
 const eventData: EventInfo[] = [
   {
     id: "1",
@@ -45,11 +38,11 @@ const eventData: EventInfo[] = [
     date: "",
     location: "",
   },
-  // Add more events as needed
 ];
 
 function Slider() {
   const [startIndex, setStartIndex] = useState(0);
+  const [loadingSlider, setLoadingSlider] = useState(true);
 
   const handleNext = () => {
     const newIndex = startIndex + 3;
@@ -74,59 +67,64 @@ function Slider() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [logos, setLogos] = useState("");
-  const cartNumber: number[] = [];
 
-  async function handleLogo(i = 1) {
-    var docClubRef = doc(db, "Club", eventData[i].clubId);
-    const docClubSnap = await getDoc(docClubRef);
-    if (docClubSnap.exists()) {
-      const data = docClubSnap.data();
-      setLogos(data.clubLogo);
-    } else {
-      console.log("The Club Does not exist");
+  async function handleLogo(clubId: string) {
+    try {
+      const docClubRef = doc(db, "Club", clubId);
+      const docClubSnap = await getDoc(docClubRef);
+      if (docClubSnap.exists()) {
+        const data = docClubSnap.data();
+        return data.clubLogo;
+      } else {
+        console.log("The Club Does not exist");
+        return "";
+      }
+    } catch (error) {
+      console.error("Error fetching club data:", error);
+      return "";
     }
   }
 
   useEffect(() => {
     const handleLoad = async () => {
       try {
-        console.log("handleLoad");
-        const docRef = collection(db, "Event");
-        const docSnap = await getDocs(docRef);
-        var i = 0;
-        var date = getCurrentDate("-");
-        console.log(date);
+        const currentDate = getCurrentDate("-");
         const q = query(
           collection(db, "Event"),
-          where("eventDate", ">=", date)
+          where("eventDate", ">=", currentDate)
         );
         const querySnapshot = await getDocs(q);
 
-        querySnapshot.forEach((e) => {
+        const newEventNames: string[] = [];
+        for (const e of querySnapshot.docs) {
           const newEvent: EventInfo = {
             id: e.id,
             title: e.data().eventName,
             description: e.data().eventDesc,
             clubId: e.data().clubID,
             image: e.data().eventImage,
-            logo: logos,
+            logo: "",
             price: e.data().eventFee,
             date: e.data().eventDate,
             location: e.data().eventLocation,
           };
+          var tempname: string = e.data().eventName;
+          newEventNames.push(tempname.toLowerCase());
+
           eventData.push(newEvent);
-          console.log(e.id);
-          cartNumber.push(i);
-          i++;
-        });
+
+          const logo = await handleLogo(e.data().clubID);
+          newEvent.logo = logo;
+        }
       } catch (error) {
         console.error("Error fetching event data:", error);
         setError("Error fetching event data");
       } finally {
         setLoading(false);
+        setLoadingSlider(false); // Set loadingSlider to false after data is loaded
       }
     };
+
     handleLoad();
   }, []);
 
@@ -139,150 +137,91 @@ function Slider() {
   }
 
   return (
-    <div
-      id="carouselExample"
-      className="carousel slide"
-      data-bs-ride="carousel"
-      style={{
-        paddingTop: "10px",
-        paddingBottom: "70px",
-      }}
-    >
-      <div
-        className="carousel-background"
-        style={{
-          backgroundColor: "rgba(240, 255, 255, 0.6)", // Azure with alpha for transparency
-          borderRadius: "15px",
-          paddingBottom: "15px",
-          paddingTop: "30px",
-          marginRight: "10px",
-          marginLeft: "10px",
-        }}
-      >
-        <div className="carousel-inner">
-          {[0, 1, 2].map((item, index) => (
-            <div
-              key={index}
-              className={`carousel-item ${index === 0 ? "active" : ""}`}
-            >
-              <div
-                className="d-flex justify-content-between"
-                style={{ margin: "0 150px" }}
-              >
-                {eventData
-                  .slice(startIndex, startIndex + 3)
-                  .map(
-                    (event, subIndex) =>
-                      event.title && (
-                        <Cards
-                          key={subIndex}
-                          image={event.image}
-                          title={event.title}
-                          desc={event.description}
-                          price={event.price}
-                          logo={event.logo}
-                          eventId={event.id}
-                        />
-                      )
-                  )}
-              </div>
-            </div>
-          ))}
-
-          {/*
-          <div className="carousel-item">
-            <div
-              className="d-flex justify-content-between"
-              style={{ margin: "0 150px" }}
-            >
-              <Cards
-                image={eventData[3].image}
-                title={eventData[3].title}
-                desc={eventData[3].description}
-                price="55RM"
-                logo={eventData[3].logo}
-                eventId={eventData[3].id}
-              ></Cards>
-              <Cards
-                image={eventData[4].image}
-                title={eventData[4].title}
-                desc={eventData[4].description}
-                price="55RM"
-                logo={eventData[4].logo}
-                eventId={eventData[4].id}
-              ></Cards>
-              <Cards
-                image={eventData[5].image}
-                title={eventData[5].title}
-                desc={eventData[5].description}
-                price="55RM"
-                logo={eventData[5].logo}
-                eventId={eventData[5].id}
-              ></Cards>
+    <div>
+      {loadingSlider ? (
+        <Spin size="large" />
+      ) : (
+        <div
+          id="carouselExample"
+          className="carousel slide"
+          data-bs-ride="carousel"
+          style={{
+            paddingTop: "10px",
+            paddingBottom: "70px",
+          }}
+        >
+          <div
+            className="carousel-background"
+            style={{
+              backgroundColor: "rgba(240, 255, 255, 0.6)",
+              borderRadius: "15px",
+              paddingBottom: "15px",
+              paddingTop: "30px",
+              marginRight: "10px",
+              marginLeft: "10px",
+            }}
+          >
+            <div className="carousel-inner">
+              {[0, 1, 2].map((item, index) => (
+                <div
+                  key={index}
+                  className={`carousel-item ${index === 0 ? "active" : ""}`}
+                >
+                  <div
+                    className="d-flex justify-content-between"
+                    style={{ margin: "0 150px" }}
+                  >
+                    {eventData
+                      .slice(startIndex, startIndex + 3)
+                      .map(
+                        (event, subIndex) =>
+                          event.title && (
+                            <Cards
+                              key={subIndex}
+                              image={event.image}
+                              title={event.title}
+                              desc={event.description}
+                              price={event.price}
+                              logo={event.logo}
+                              eventId={event.id}
+                            />
+                          )
+                      )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div className="carousel-item">
-            <div
-              className="d-flex justify-content-between"
-              style={{ margin: "0 150px" }}
-            >
-              <Cards
-                image={eventData[6].image}
-                title={eventData[6].title}
-                desc={eventData[6].description}
-                price="55RM"
-                logo={eventData[6].logo}
-                eventId={eventData[6].id}
-              ></Cards>
-              <Cards
-                image={eventData[7].image}
-                title={eventData[7].title}
-                desc={eventData[7].description}
-                price="55RM"
-                logo={eventData[7].logo}
-                eventId={eventData[7].id}
-              ></Cards>
-              <Cards
-                image={eventData[8].image}
-                title={eventData[8].title}
-                desc={eventData[8].description}
-                price="55RM"
-                logo={eventData[8].logo}
-                eventId={eventData[8].id}
-              ></Cards>
-            </div>
-          </div>
-          */}
+          <button
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="prev"
+            onClick={handlePrev}
+          >
+            <span
+              className="carousel-control-prev-icon"
+              aria-hidden="true"
+              style={{ backgroundColor: "black", borderRadius: "50%" }}
+            ></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselExample"
+            data-bs-slide="next"
+            onClick={handleNext}
+          >
+            <span
+              style={{ backgroundColor: "black", borderRadius: "50%" }}
+              className="carousel-control-next-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="visually-hidden">Next</span>
+          </button>
         </div>
-      </div>
-      <button
-        className="carousel-control-prev"
-        type="button"
-        data-bs-target="#carouselExample"
-        data-bs-slide="prev"
-        onClick={handlePrev}
-      >
-        <span
-          className="carousel-control-prev-icon"
-          aria-hidden="true"
-          style={{ backgroundColor: "black", borderRadius: "50%" }}
-        ></span>
-        <span className="visually-hidden">Previous</span>
-      </button>
-      <button
-        className="carousel-control-next"
-        type="button"
-        data-bs-target="#carouselExample"
-        data-bs-slide="next"
-        onClick={handleNext}
-      >
-        <span
-          style={{ backgroundColor: "black", borderRadius: "50%" }}
-          className="carousel-control-next-icon"
-          aria-hidden="true"
-        ></span>
-        <span className="visually-hidden">Next</span>
-      </button>
+      )}
     </div>
   );
 }
