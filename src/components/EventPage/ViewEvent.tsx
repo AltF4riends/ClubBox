@@ -34,14 +34,17 @@ function ViewEvent() {
   const { id: eventId } = useParams();
   const [eventData, setEventData] = useState({
     id: "9",
-    title: "Event 9",
-    description: "Description for Event 9",
+    title: "",
+    description: "",
     image: "",
     clubId: "clubid1",
     logo: "",
     price: "RM",
-    eventDate: "",
+    eventDate: "30-1-2024",
     location: "",
+    eventType: "Face-to-face",
+    eventTime: "from 3pm to 6pm",
+    eventCond: "open for all UTM Students",
   });
 
   const [cartData, setCartData] = useState<CartInfo>({
@@ -221,12 +224,26 @@ function ViewEvent() {
                         </p>
                         <br />
                         <br />
-                        <br />
-                        <br />
-                        {/* Event Location */}
                         <p style={{ position: "absolute", left: "700px" }}>
-                          {eventData.eventDate}
+                          <b>Event Date : </b> {eventData.eventDate}
                         </p>
+                        <br />
+                        <br />
+                        <p style={{ position: "absolute", left: "700px" }}>
+                          <b>Event Type : </b> {eventData.eventType}
+                        </p>
+                        <br />
+                        <br />
+                        <p style={{ position: "absolute", left: "700px" }}>
+                          <b>Event Time : </b> {eventData.eventTime}
+                        </p>
+                        <br />
+                        <br />
+                        <p style={{ position: "absolute", left: "700px" }}>
+                          <b>Event Condition : </b> {eventData.eventCond}
+                        </p>
+                        <br />
+                        <br />
 
                         <div
                           className="d-flex justify-content-end"
