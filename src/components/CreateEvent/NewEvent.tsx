@@ -26,7 +26,7 @@ interface FormData {
   eventCond: string;
   eventType: string;
   eventImage: string;
-  eventPrice: number;
+  eventFee: string;
 }
 
 const NewEvent: React.FC = () => {
@@ -44,7 +44,7 @@ const NewEvent: React.FC = () => {
     eventCond: "",
     eventType: "Online",
     eventImage: "",
-    eventPrice: 0,
+    eventFee: "0",
   });
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const NewEvent: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === "eventPrice" && !/^\d*\.?\d*$/.test(value)) {
+    if (name === "eventFee" && !/^\d*\.?\d*$/.test(value)) {
       alert("Please insert the price in numbers or decimals only.");
       return;
     }
@@ -204,17 +204,22 @@ const NewEvent: React.FC = () => {
         let storageRef = ref(getStorage(), `Event/${eventtempid}/picture`);
         console.log("saveInfo2");
 
+        // Upload image to storage
         await uploadBytes(storageRef, image);
 
+        // Get download URL for the uploaded image
         const downloadURL = await getDownloadURL(storageRef);
 
+        // Update the formData with the downloadURL
         setFormData({ ...formData, eventImage: downloadURL });
 
+        // Update the Firestore document with the downloadURL
         await updateDoc(doc(db, "Event", eventId), {
           ...formData,
-          imageUrl: downloadURL,
+          eventImage: downloadURL, // Ensure eventImage is included in the update
         });
       } else {
+        console.log("No image selected");
       }
     } catch (error) {
       console.error("Error saving information:", error);
@@ -243,7 +248,7 @@ const NewEvent: React.FC = () => {
             <img
               height="150vh"
               width="160vw"
-              src={formData.eventImage || "public/event.png"}
+              src={formData.eventImage || "/event.png"}
               alt="Profile"
             />
           )}
@@ -325,12 +330,12 @@ const NewEvent: React.FC = () => {
         </div>
 
         <div style={inputStyle}>
-          <h3>Event Price</h3>
+          <h3>Event Price (RM)</h3>
           <input
             type="text"
             className="inputFieldPrice"
-            name="eventPrice"
-            value={formData.eventPrice}
+            name="eventFee"
+            value={formData.eventFee}
             onChange={handleChange}
           />
         </div>

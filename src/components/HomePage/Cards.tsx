@@ -4,14 +4,14 @@ function Cards({
   image,
   title,
   desc,
-  price,
+  eventFee,
   logo,
   eventId,
 }: {
   image: string;
   title: string;
   desc: string;
-  price: string;
+  eventFee: string;
   logo: string;
   eventId?: string | null;
 }) {
@@ -30,14 +30,29 @@ function Cards({
         <div className="card-body">
           <h5 className="card-title">{title}</h5>
           <p className="card-text">{desc}</p>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <img
-              src={logo !== "" ? logo : "/event.png"}
-              style={{ borderRadius: "50%", width: "50px", height: "40px" }}
-            />
-            <h5 style={{ paddingLeft: "70px" }}>
-              <b>{price}</b>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <h5>
+              <b>Price :</b>
             </h5>
+            <button
+              style={{
+                backgroundColor: "blue",
+                color: "white",
+                border: "none",
+                padding: "5px 10px",
+                marginLeft: "10px",
+                cursor: "pointer",
+                borderRadius: "10px",
+              }}
+            >
+              <b>{eventFee}RM</b>
+            </button>
           </div>
         </div>
       </Link>

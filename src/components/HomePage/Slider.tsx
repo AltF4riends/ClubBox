@@ -23,7 +23,7 @@ interface EventInfo {
   image: string;
   clubId: string;
   logo: string;
-  price: string;
+  eventFee: string;
   date: string;
   location: string;
 }
@@ -41,7 +41,7 @@ const eventData: EventInfo[] = [
     image: "",
     clubId: "",
     logo: "",
-    price: "",
+    eventFee: "",
     date: "",
     location: "",
   },
@@ -82,7 +82,7 @@ function Slider() {
     const docClubSnap = await getDoc(docClubRef);
     if (docClubSnap.exists()) {
       const data = docClubSnap.data();
-      setLogos(data.clubLogo);
+      eventData[i].logo = data.clubLogo; // Update the logo property directly
     } else {
       console.log("The Club Does not exist");
     }
@@ -110,14 +110,15 @@ function Slider() {
             description: e.data().eventDesc,
             clubId: e.data().clubID,
             image: e.data().eventImage,
-            logo: logos,
-            price: e.data().eventFee,
+            logo: "", // Initialize logo property with an empty string
+            eventFee: e.data().eventFee,
             date: e.data().eventDate,
             location: e.data().eventLocation,
           };
           eventData.push(newEvent);
           console.log(e.id);
           cartNumber.push(i);
+          handleLogo(i); // Call handleLogo to update the logo property
           i++;
         });
       } catch (error) {
@@ -179,7 +180,7 @@ function Slider() {
                           image={event.image}
                           title={event.title}
                           desc={event.description}
-                          price={event.price}
+                          eventFee={event.eventFee}
                           logo={event.logo}
                           eventId={event.id}
                         />
@@ -199,7 +200,7 @@ function Slider() {
                 image={eventData[3].image}
                 title={eventData[3].title}
                 desc={eventData[3].description}
-                price="55RM"
+                eventFee="55RM"
                 logo={eventData[3].logo}
                 eventId={eventData[3].id}
               ></Cards>
@@ -207,7 +208,7 @@ function Slider() {
                 image={eventData[4].image}
                 title={eventData[4].title}
                 desc={eventData[4].description}
-                price="55RM"
+                eventFee="55RM"
                 logo={eventData[4].logo}
                 eventId={eventData[4].id}
               ></Cards>
@@ -215,7 +216,7 @@ function Slider() {
                 image={eventData[5].image}
                 title={eventData[5].title}
                 desc={eventData[5].description}
-                price="55RM"
+                eventFee="55RM"
                 logo={eventData[5].logo}
                 eventId={eventData[5].id}
               ></Cards>
@@ -230,7 +231,7 @@ function Slider() {
                 image={eventData[6].image}
                 title={eventData[6].title}
                 desc={eventData[6].description}
-                price="55RM"
+                eventFee="55RM"
                 logo={eventData[6].logo}
                 eventId={eventData[6].id}
               ></Cards>
@@ -238,7 +239,7 @@ function Slider() {
                 image={eventData[7].image}
                 title={eventData[7].title}
                 desc={eventData[7].description}
-                price="55RM"
+                eventFee="55RM"
                 logo={eventData[7].logo}
                 eventId={eventData[7].id}
               ></Cards>
@@ -246,7 +247,7 @@ function Slider() {
                 image={eventData[8].image}
                 title={eventData[8].title}
                 desc={eventData[8].description}
-                price="55RM"
+                eventFee="55RM"
                 logo={eventData[8].logo}
                 eventId={eventData[8].id}
               ></Cards>
