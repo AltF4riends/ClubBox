@@ -5,10 +5,12 @@ import joinButton from "./ECImages/JoinUs.png";
 import rocketIcon from "./ECImages/rocketIcon.png";
 import { Link } from "react-router-dom";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db, auth } from "../../firebase";
 import ClubAnnouncement from "../Club_Admission/ClubAnnouncement";
+import { onAuthStateChanged } from "firebase/auth";
 
 const ManageClubBody = () => {
+  const [userID, setUserID] = useState<string | null>(null);
   // State for profile information
   const [clubInfo, setClubInfo] = useState({
     clubName: "",
@@ -20,7 +22,22 @@ const ManageClubBody = () => {
     clubDesc: "",
     clubType: "",
     clubLogo: "",
+    PID: "",
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("Before: ", user);
+      if (user) {
+        setUserID(user.uid);
+      } else {
+        setUserID(null);
+      }
+    });
+
+    // Cleanup function to unsubscribe from the observer when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const handleOnLoad = async () => {
@@ -41,6 +58,7 @@ const ManageClubBody = () => {
       if (docClubSnap.exists()) {
         const clubData = docClubSnap.data();
         console.log("Access Club Info");
+
         setClubInfo({
           clubName: clubData.clubName,
           clubStatus: clubData.clubStatus,
@@ -51,6 +69,7 @@ const ManageClubBody = () => {
           clubDesc: clubData.clubDesc,
           clubType: clubData.clubType,
           clubLogo: clubData.clubLogo,
+          PID: clubData.PID,
         });
       } else {
         console.log("No such club documents!");
@@ -210,16 +229,18 @@ const ManageClubBody = () => {
             width: " 10vw",
           }}
         >
-          <Link to={"/edit_club_info"}>
-            <img
-              src={eButton}
-              style={{
-                maxHeight: "100%",
-                maxWidth: "100%",
-              }}
-              alt="Edit Button"
-            />
-          </Link>
+          {userID === clubInfo.PID && (
+            <Link to={"/edit_club_info"}>
+              <img
+                src={eButton}
+                style={{
+                  maxHeight: "100%",
+                  maxWidth: "100%",
+                }}
+                alt="Edit Button"
+              />
+            </Link>
+          )}
         </div>
 
         <div

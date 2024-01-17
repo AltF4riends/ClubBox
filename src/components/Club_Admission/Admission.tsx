@@ -120,6 +120,50 @@ const Admission: React.FC = () => {
           await updateDoc(clubDocRef, { Applist: updatedApplist });
           console.log("Profiles removed from Applist successfully!");
 
+          // Update profiles state by filtering out the admitted profiles
+          setProfiles((prevProfiles) =>
+            prevProfiles.filter(
+              (profile) =>
+                !selectedProfiles.some(
+                  (selectedProfile) => selectedProfile.id === profile.id
+                )
+            )
+          );
+
+          // Reset checked and selectedProfiles states
+          setChecked([]);
+          setSelectedProfiles([]);
+        } else {
+          console.error("No club document found for the given PID");
+        }
+      } catch (error) {
+        console.error("Error updating club document:", error);
+      }
+    }
+  };
+
+  const handleReject = async () => {
+    if (userID && selectedProfiles.length > 0) {
+      try {
+        const clubQuery = query(
+          collection(db, "Club"),
+          where("PID", "==", userID)
+        );
+        const clubQuerySnapshot = await getDocs(clubQuery);
+
+        if (!clubQuerySnapshot.empty) {
+          const clubDocRef = clubQuerySnapshot.docs[0].ref;
+
+          const updatedApplist = eventData.Applist.filter(
+            (appId: string, index: number) => {
+              return checked.indexOf(index) === -1;
+            }
+          );
+
+          await updateDoc(clubDocRef, { Applist: updatedApplist });
+          console.log("Profiles removed from Applist successfully!");
+
+          // Update profiles state by filtering out the rejected profiles
           setProfiles((prevProfiles) =>
             prevProfiles.filter(
               (profile) =>
@@ -258,7 +302,7 @@ const Admission: React.FC = () => {
               <NavigationIcon sx={{ mr: 1 }} />
               Admit
             </Fab>
-            <Fab variant="extended" color="secondary">
+            <Fab variant="extended" color="secondary" onClick={handleReject}>
               <NavigationIcon sx={{ mr: 1 }} />
               Reject
             </Fab>

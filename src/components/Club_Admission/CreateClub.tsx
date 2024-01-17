@@ -51,8 +51,7 @@ console.log("Next Document ID:", nextDocumentId);
 interface FormData {
   clubID: string;
   clubName: string;
-  pNumber: string;
-  clubP: string;
+  PID: string;
   B_Desc: string;
   clubDesc: string;
   clubAppReq: string[];
@@ -62,6 +61,7 @@ interface FormData {
   clubTelegram: string;
   clubLogo: string;
   Members: String[];
+  Applist: String[];
 }
 
 const CreateClub: React.FC = () => {
@@ -73,8 +73,7 @@ const CreateClub: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     clubID: "",
     clubName: "",
-    pNumber: "",
-    clubP: "",
+    PID: "",
     B_Desc: "",
     clubDesc: "",
     clubAppReq: [],
@@ -84,6 +83,7 @@ const CreateClub: React.FC = () => {
     clubTelegram: "",
     clubLogo: "",
     Members: [],
+    Applist: [],
   });
 
   const handleChange = (
@@ -117,6 +117,17 @@ const CreateClub: React.FC = () => {
         ...prevData,
         [name]: limitedWords,
       }));
+    } else if (name === "clubAppReq") {
+      // Handle textarea input for clubAppReq as an array
+      const inputValue = value as string;
+      const appReqArray = inputValue
+        .split(/[\r\n]+/)
+        .map((item) => item.trim());
+
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: appReqArray,
+      }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
@@ -149,8 +160,7 @@ const CreateClub: React.FC = () => {
       setFormData({
         clubID: "",
         clubName: "",
-        pNumber: "",
-        clubP: "",
+        PID: "",
         B_Desc: "",
         clubDesc: "",
         clubAppReq: [],
@@ -160,6 +170,7 @@ const CreateClub: React.FC = () => {
         clubTelegram: "",
         clubLogo: "",
         Members: [],
+        Applist: [],
       });
 
       // Show success message
@@ -300,29 +311,16 @@ const CreateClub: React.FC = () => {
             />
           </div>
           <div style={inputStyle}>
-            <h3>President name</h3>
+            <h3>President ID</h3>
             <input
               type="text"
               className="inputField"
-              name="clubP"
-              value={formData.clubP}
+              name="PID"
+              value={formData.PID}
               onChange={handleChange}
             />
           </div>
 
-          <div style={inputStyle}>
-            <h3>Phone Number</h3>
-            <input
-              type="text"
-              className="inputField"
-              name="pNumber"
-              value={formData.pNumber}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div style={formStyle}>
           <div style={inputStyle}>
             <h3>Brief Description</h3>
             <input
@@ -333,6 +331,9 @@ const CreateClub: React.FC = () => {
               onChange={handleChange}
             />
           </div>
+        </div>
+
+        <div style={formStyle}>
           <div style={inputStyle}>
             <h3>Facebook Link</h3>
             <input
@@ -341,6 +342,17 @@ const CreateClub: React.FC = () => {
               name="clubFacebook"
               value={formData.clubFacebook}
               onChange={handleChange}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Application Requirements</h3>
+            <textarea
+              className="inputField"
+              name="clubAppReq"
+              value={formData.clubAppReq.join("\n")} // Join array into a string with newlines
+              onChange={handleChange}
+              style={{ whiteSpace: "pre-wrap" }} // Set white-space style
             />
           </div>
 

@@ -190,6 +190,18 @@ const NavBar = () => {
               </li>
             )}
 
+            {userAccess != "admin" && (
+              <li className="nav-item">
+                <Link
+                  to="/newClubComp"
+                  className="nav-link"
+                  style={{ color: "white" }}
+                >
+                  Create Club
+                </Link>
+              </li>
+            )}
+
             <li className="nav-item">
               <Link to="/Clubs" className="nav-link" style={{ color: "white" }}>
                 Clubs
@@ -198,11 +210,11 @@ const NavBar = () => {
             {userAccess == "admin" && (
               <li className="nav-item">
                 <Link
-                  to="/manage_club"
+                  to="/admissionlist"
                   className="nav-link"
                   style={{ color: "white" }}
                 >
-                  Manage Club
+                  Admission
                 </Link>
               </li>
             )}

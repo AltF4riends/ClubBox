@@ -9,7 +9,6 @@ function ClubPage() {
   return (
     <div>
       <NavBar />
-      <Search />
       <ClubAdmission />
       <Footer />
     </div>
