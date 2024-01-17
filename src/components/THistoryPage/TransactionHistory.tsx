@@ -8,65 +8,98 @@ import {
   query,
   where,
   deleteDoc,
+  writeBatch,
+  updateDoc,
+  onSnapshot,
+  snapshotEqual
 } from "@firebase/firestore";
 import { auth, db } from "../../firebase";
 
-const [paymemntInfo, setPaymemntInfo] = useState({
-  clubName: "",
-  clubStatus: "",
-  clubLinkedIn: "",
-  clubTelegram: "",
-  clubFacebook: "",
-  clubAppReq: "",
-  clubDesc: "",
-  clubType: "",
-  clubLogo: "",
-  Applist: [] as string[],
-});
+interface PaymentInfo {
+  paymentStatus: string;
+}
 
-
-
-useEffect(() => {
-  const handleOnLoad = async () => {
-    console.log(userID);
-
-    console.log("Student Access 2");
-    const docClubRef = doc(db, "Payment", `${id}`); //change it to clubID later
-    const docPaymentSnap = await getDocs(collection(db, "Payment"));
-    console.log("Student Access 3");
-
-    if (docClubSnap.exists()) {
-      const clubData = docClubSnap.data();
-      console.log("Access Club Info");
-      setClubInfo({
-        clubName: clubData.clubName,
-        clubStatus: clubData.clubStatus,
-        clubLinkedIn: clubData.clubLinkedIn,
-        clubTelegram: clubData.clubTelegram,
-        clubFacebook: clubData.clubFacebook,
-        clubAppReq: clubData.clubAppReq,
-        clubDesc: clubData.clubDesc,
-        clubType: clubData.clubType,
-        clubLogo: clubData.clubLogo,
-        Applist: clubData.Applist,
-      });
-    } else {
-      console.log("No such club documents!");
-    }
-
-    //   } else {
-    //     console.log("No such document!");
-    //   }
-    // }
-  };
-
-  handleOnLoad();
-}, [userID]);
+interface EventInfo {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  clubId: string;
+  logo: string;
+  price: string;
+  date: string;
+  location: string;
+}
 
 const transactionHistory = () => {
-  return <div>
 
-  </div>;
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+ 
+    const handleOnLoad = async () => {
+    try{
+      console.log(userID);
+      console.log("Student Payment 1");
+
+      const paymentRef = collection(db, "Payment");
+      const q = query(
+        paymentRef,
+        where("paymentStatus", "==", "unpaid"),
+        where("studentID", "==", userID)
+      );
+      
+      console.log("Student Access 2");
+      const querySnapshot = await getDocs(q);
+      
+
+      if(querySnapshot.size == 0)
+      {
+        console.log("No Documents Found")
+      }
+
+      querySnapshot.forEach((doc) => {
+        const payRef = collection(db, "Payment", doc.id);
+      });
+    } catch (error) {
+    console.error("Error fetching event data:", error);
+    setError("Error fetching event data");
+  } finally {
+    setLoading(false);
+  };
+  }
+    handleOnLoad();
+  }, [userID]);
+
+
+  return(
+    <div 
+    style={{
+      display: "flex",
+      height: "89vh",
+      width: "100vw",
+      justifyContent: "center",
+      alignItems: "center",
+    }}>
+
+      <div style={{
+        display: "flex",
+        height: "85vh",
+        width: "90vw",
+        backgroundColor: "rgba(255,255,255,0.7)",
+        borderRadius: "45px",
+        justifyContent: "center",
+        alignItems: "center",
+      }}>
+        <div>
+          
+        </div>
+      </div>
+
+    </div>
+  )
+
 };
 
 export default transactionHistory;

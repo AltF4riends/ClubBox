@@ -9,15 +9,18 @@ const port = 3000; //change this to 5713 if can cuz server and client on one url
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:5173", //where to accept things from
+    //http://localhost:5173
+    //https://clubbox-system.web.app
+    origin: "https://clubbox-system.web.app", //where to accept things from
   })
 );
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY);
 
 const storeItems = new Map([
-  [1, { priceInCents: 10000, name: "Why Not" }],
-  [2, { priceInCents: 20000, name: "Learn Stuff" }],
+  [1, { priceInCents: 1000, name: "Confidence Event" }],
+  [2, { priceInCents: 2000, name: "Google Gonkers Event" }],
+  [3, { priceInCents: 3000, name: "UTM UNBOCS" }]
 ]);
 
 //Server posting
@@ -41,7 +44,7 @@ app.post("/create-checkout-session", async (req, res) => {
         };
       }),
 
-      success_url: `${process.env.CLIENT_URL}/home`, //where to go after success
+      success_url: `${process.env.CLIENT_URL}/home`, //where to go after success //transaction_history
       cancel_url: `${process.env.CLIENT_URL}/Cart`, //where to go after cancel
     });
 

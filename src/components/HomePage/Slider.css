@@ -1,14 +1,4 @@
 body {
-<<<<<<< HEAD
-    margin: 0;
-    padding: 0;
-    background-image: url('/back.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100%;
-}
-=======
   margin: 0;
   padding: 0;
   background-image: url("./back.png");
@@ -18,4 +8,3 @@ body {
   height: 100vh;
 }
 
->>>>>>> ccbfb1d3bc61df145ce8a1a470b5d203720fc241
