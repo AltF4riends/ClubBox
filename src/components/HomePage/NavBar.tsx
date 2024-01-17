@@ -142,7 +142,7 @@ const NavBar = () => {
     >
       <div className="container-fluid">
         <a className="navbar-brand" href="#" style={{ color: "white" }}>
-          <img src="public/ClubBox.png" width="80" height="30" alt="Logo" />
+          <img src="/ClubBox.png" width="80" height="30" alt="Logo" />
         </a>
         <button
           className="navbar-toggler"
@@ -266,7 +266,7 @@ const NavBar = () => {
                 className="rounded-circle"
                 height="27"
                 width="27"
-                src={imageUrl || "public/profile.png"}
+                src={imageUrl || "/profile.png"}
                 alt="Profile"
               />
             </button>

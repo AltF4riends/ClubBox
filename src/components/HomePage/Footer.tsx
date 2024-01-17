@@ -51,7 +51,7 @@ function Footer() {
         </a>
         <a style={{ marginRight: "10px", color: "white" }}>A product of</a>
         <div className="d-flex align-items-center mx-auto text-center">
-          <img src="public/ClubBox.png" width="80" height="30" alt="Logo" />
+          <img src="/ClubBox.png" width="80" height="30" alt="Logo" />
         </div>
         <div
           className="d-flex justify-content-end align-items-center collapse navbar-collapse"
