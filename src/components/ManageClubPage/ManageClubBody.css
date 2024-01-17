@@ -9,3 +9,16 @@ body {
     height: 100vh;
   }
 
+
+
+  .css-lbjakd-MuiStack-root {
+    height: 12vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: row;
+    width: 100%;
+  }
