@@ -3,74 +3,84 @@ import { collection, addDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import "./NewStatistic.css";
 import { ref } from "@firebase/storage";
+import Footer from "../HomePage/Footer";
+import NavBar from "../HomePage/NavBar";
 
 interface StatisticFormData {
-  eventId: string;
-  clubId: string;
+  clubID: string;
   id: number[];
   value: number[];
   label: string[];
-  xData: number[];
-  yData: number[];
-  xLabel: string[];
+  xdata: number[];
+  ydata: number[];
+  xlabel: string[];
 }
 
 const NewStatistic: React.FC = () => {
   const [statistictempid, setStatisticTempId] = useState("");
   const [formData, setFormData] = useState<StatisticFormData>({
-    eventId: "",
-    clubId: "",
+    clubID: "",
     id: [],
     value: [],
     label: [],
-    xData: [],
-    yData: [],
-    xLabel: [],
+    xdata: [],
+    ydata: [],
+    xlabel: [],
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
 
     if (
-      name === "Id" ||
+      name === "id" ||
       name === "value" ||
-      name === "label" ||
-      name === "xData" ||
-      name === "yData" ||
-      name === "xLabel"
+      name === "xdata" ||
+      name === "ydata"
     ) {
-      // Handle array inputs
-      const arrayValue = value.split(",").map(Number);
+      // Handle number array inputs
+      const arrayValue = value
+        .split(",")
+        .map(Number)
+        .filter((num) => !isNaN(num)); // Filter out NaN values
       setFormData({
         ...formData,
         [name]: arrayValue,
       });
+    } else if (name === "label" || name === "xlabel") {
+      // Handle string array inputs
+      const arrayValue = value.split(",");
+      setFormData({
+        ...formData,
+        [name]: arrayValue,
+      });
+    } else {
+      // Handle non-array inputs
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
     }
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      // Add the document to the "Statistics" collection without specifying a document ID
       const docRef = await addDoc(collection(db, "Statistic"), formData);
       console.log("Document written with ID: ", docRef.id);
 
       setStatisticTempId(docRef.id);
 
       setFormData({
-        eventId: "",
-        clubId: "",
+        clubID: "",
         id: [],
         value: [],
         label: [],
-        xData: [],
-        yData: [],
-        xLabel: [],
+        xdata: [],
+        ydata: [],
+        xlabel: [],
       });
 
       // Show success message
@@ -114,28 +124,18 @@ const NewStatistic: React.FC = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   return (
     <div>
+      <NavBar />
       <div style={containerStyle}>
         <form style={formStyle} onSubmit={handleSubmit}>
           <h1>New Statistics</h1>
-
-          <div style={inputStyle}>
-            <h3>Event ID</h3>
-            <input
-              type="text"
-              className="inputField"
-              name="eventId"
-              value={formData.eventId}
-              onChange={handleChange}
-            />
-          </div>
 
           <div style={inputStyle}>
             <h3>Club ID</h3>
             <input
               type="text"
               className="inputField"
-              name="clubId"
-              value={formData.clubId}
+              name="clubID"
+              value={formData.clubID}
               onChange={handleChange}
             />
           </div>
@@ -146,31 +146,62 @@ const NewStatistic: React.FC = () => {
 
           <div style={inputStyle}>
             <h3>ID</h3>
-            <textarea className="inputField" name="id"></textarea>
+            <textarea
+              className="inputField"
+              name="id"
+              value={formData.id.join(",")}
+              onChange={handleChange}
+            />
           </div>
 
           <div style={inputStyle}>
             <h3>Value</h3>
-            <textarea className="inputField" name="value"></textarea>
+            <textarea
+              className="inputField"
+              name="value"
+              value={formData.value.join(",")}
+              onChange={handleChange}
+            />
           </div>
+
           <div style={inputStyle}>
             <h3>Label</h3>
-            <textarea className="inputField" name="label"></textarea>
+            <textarea
+              className="inputField"
+              name="label"
+              value={formData.label.join(",")}
+              onChange={handleChange}
+            />
           </div>
 
           <div style={inputStyle}>
             <h3>Data For X-Axis</h3>
-            <textarea className="inputField" name="xdata"></textarea>
+            <textarea
+              className="inputField"
+              name="xdata"
+              value={formData.xdata.join(",")}
+              onChange={handleChange}
+            />
           </div>
 
           <div style={inputStyle}>
             <h3>Data For Y-Axis</h3>
-            <textarea className="inputField" name="ydata"></textarea>
+            <textarea
+              className="inputField"
+              name="ydata"
+              value={formData.ydata.join(",")}
+              onChange={handleChange}
+            />
           </div>
 
           <div style={inputStyle}>
             <h3>xLabels</h3>
-            <textarea className="inputField" name="xlabel"></textarea>
+            <textarea
+              className="inputField"
+              name="xlabel"
+              value={formData.xlabel.join(",")}
+              onChange={handleChange}
+            />
           </div>
 
           <button type="submit" style={submitButtonStyle}>
@@ -178,6 +209,7 @@ const NewStatistic: React.FC = () => {
           </button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 };

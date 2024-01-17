@@ -1,23 +1,11 @@
 import { useState, useEffect } from "react";
 
 import { LineChart } from "@mui/x-charts/LineChart";
-
 import "./SimpleLineChart.css"; // Import CSS file for styling
 
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 
 import { db } from "../../firebase";
-
-
-interface SimpleLineChartData {
-  data: number[];
-
-  xlabel: string[];
-
-  ylabel: number[];
-}
-
-export default function SimpleLineChart() {
 
 interface SimpleLineChartData {
   data: number[];
@@ -35,7 +23,7 @@ const SimpleLineChart = () => {
   useEffect(() => {
     const fetchDataFromFirebase = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "statistic2"));
+        const querySnapshot = await getDocs(collection(db, "Statistic"));
 
         const data: SimpleLineChartData[] = [];
 
@@ -83,5 +71,6 @@ const SimpleLineChart = () => {
       />
     </div>
   );
-}
-}
+};
+
+export default SimpleLineChart;
