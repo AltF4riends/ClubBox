@@ -1,449 +1,367 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { db } from "../../firebase";
+import React, { useEffect, useRef, useState, ChangeEvent } from "react";
+import { useParams } from "react-router-dom"; // Import useParams
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  setDoc,
+  doc,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
+import { db, auth } from "../../firebase";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import { useImageContext } from "../ImageContext";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "@firebase/storage";
 
-function EditInfoBody() {
-  const smallInfoBlockFormat = {
-    display: "flex",
-    height: "21vh",
-    width: "25vw",
-    justifyContent: "center",
-    alignItems: "center",
-    borderBottom: "1px solid light-grey",
-  };
+// Usage
 
-  const editBlockFormat: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    height: "11vh",
-    width: "52vw",
-    borderBottom: "1px solid light-grey",
-  };
+interface FormData {
+  clubID: string;
+  clubName: string;
+  PID: string;
+  B_Desc: string;
+  clubDesc: string;
+  clubAppReq: string[];
+  clubFacebook: string;
+  clubLinkedIn: string;
+  clubStatus: string;
+  clubTelegram: string;
+  clubLogo: string;
+  Members: String[];
+  Applist: String[];
+}
 
-  const smallTitleBox = {
-    height: "4vh",
-    width: "38vw",
-  };
+const EditInfoBody: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
 
-  const smallEditBox = {
-    height: "4vh",
-    width: "10vw",
-  };
+  const [image, setImage] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  const smallDefaultBox = {
-    height: "6vh",
-    width: "48vw",
-  };
-
-  const buttonFormatEdit = {
-    border: "none",
-    backgroundColor: "rgba(255,255,255,0.0)",
-  };
-
-  const [isInputEnabled, setIsInputEnabled] = useState(true);
-
-  const toggleInputEnabled = () => {
-    setIsInputEnabled((prevEnabled) => !prevEnabled);
-  };
-
-  const [isInputEnabled1, setIsInputEnabled1] = useState(true);
-
-  const toggleInputEnabled1 = () => {
-    setIsInputEnabled1((prevEnabled1) => !prevEnabled1);
-  };
-
-  const [isInputEnabled2, setIsInputEnabled2] = useState(true);
-
-  const toggleInputEnabled2 = () => {
-    setIsInputEnabled2((prevEnabled2) => !prevEnabled2);
-  };
-
-  const [isInputEnabled3, setIsInputEnabled3] = useState(true);
-
-  const toggleInputEnabled3 = () => {
-    setIsInputEnabled3((prevEnabled3) => !prevEnabled3);
-  };
-
-  const [isInputEnabled4, setIsInputEnabled4] = useState(true);
-
-  const toggleInputEnabled4 = () => {
-    setIsInputEnabled4((prevEnabled4) => !prevEnabled4);
-  };
-
-  const [isInputEnabled5, setIsInputEnabled5] = useState(true);
-
-  const toggleInputEnabled5 = () => {
-    setIsInputEnabled5((prevEnabled5) => !prevEnabled5);
-  };
-
-  // State for Club Info information and database
-  const [clubInfo, setClubInfo] = useState({
+  const [formData, setFormData] = useState<FormData>({
+    clubID: "",
     clubName: "",
-    clubStatus: "",
-    clubLinkedIn: "",
-    clubTelegram: "",
-    clubFacebook: "",
-    clubAppReq: "",
+    PID: "",
+    B_Desc: "",
     clubDesc: "",
-    clubType: "",
+    clubAppReq: [],
+    clubFacebook: "",
+    clubLinkedIn: "",
+    clubStatus: "",
+    clubTelegram: "",
     clubLogo: "",
+    Members: [],
+    Applist: [],
   });
 
-  async function handleOnLoads(e: any) {
-    setIsInputEnabled(false);
-    e.preventDefault();
+  const [editMode, setEditMode] = useState<boolean>(false);
 
-    const docRef = doc(db, "Club", "cl001");
-    const docSnap = await getDoc(docRef);
-    console.log("why");
+  useEffect(() => {
+    const fetchClubData = async () => {
+      if (!id) {
+        console.error("Club ID is undefined");
+        return;
+      }
 
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      console.log(docSnap.data().clubName);
-      setClubInfo({
-        clubName: "",
-        clubStatus: "",
-        clubLinkedIn: "",
-        clubTelegram: "",
-        clubFacebook: "",
-        clubAppReq: "",
-        clubDesc: "",
-        clubType: "",
-        clubLogo: "",
-      });
-      setIsInputEnabled(true);
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log(clubInfo.clubName);
-      console.log("No such document!");
-      setIsInputEnabled(true);
-    }
-  }
+      try {
+        const clubDoc = await getDoc(doc(db, "Club", id));
+        if (clubDoc.exists()) {
+          setFormData(clubDoc.data() as FormData);
+        } else {
+          console.error("Club not found");
+          // Handle the case where the club is not found, e.g., redirect to an error page
+        }
+      } catch (error) {
+        console.error("Error fetching club data:", error);
+        // Handle the error, e.g., redirect to an error page
+      }
+    };
 
-  const handleChange = (e: { target: { name: any; value: any } }) => {
-    setClubInfo({ ...clubInfo, [e.target.name]: e.target.value });
+    fetchClubData();
+  }, [id]);
+
+  const handleToggle = () => {
+    setEditMode((prevMode) => !prevMode);
   };
 
-  async function handleDBUpdate(e: any) {
-    //await updateDoc(docRef, clubInfo);
-  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      // Update the document in the "Club" collection with the provided ID
+      if (id) {
+        await updateDoc(
+          doc(db, "Club", id || ""),
+          formData as { [x: string]: any }
+        );
+
+        // Wait for the promise to resolve before calling saveInfo
+        await saveInfo(id);
+
+        // Clear form fields
+        setFormData({
+          clubID: "",
+          clubName: "",
+          PID: "",
+          B_Desc: "",
+          clubDesc: "",
+          clubAppReq: [],
+          clubFacebook: "",
+          clubLinkedIn: "",
+          clubStatus: "",
+          clubTelegram: "",
+          clubLogo: "",
+          Members: [],
+          Applist: [],
+        });
+
+        // Switch back to edit mode
+        setEditMode(true);
+
+        // Show success message
+        alert("Club information updated successfully!");
+      } else {
+        console.error("Club ID is undefined");
+      }
+
+      // Handle the case where id is undefined, e.g., show an error message or redirect
+    } catch (error) {
+      console.error("Error updating document: ", error);
+      // Optionally, you can show an error message here
+    }
+  };
+
+  const containerStyle: React.CSSProperties = {
+    display: "flex",
+    justifyContent: "top",
+    alignItems: "center",
+    height: "99vh",
+    marginLeft: "5vh",
+    marginRight: "5vh",
+  };
+
+  const formContainerStyle: React.CSSProperties = {
+    display: "flex", // Set display to flex to make children flex items
+    gap: "10px", // Add gap between the two halves
+    textAlign: "center", // Set text alignment to center within the form container
+    padding: "10px", // Add padding to the form container
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    backgroundColor: "#f4f4f4",
+    width: "100%", // Set width to 50% to make each half take half of the screen
+    height: "90%",
+  };
+
+  const formStyle: React.CSSProperties = {
+    width: "100%", // Set width to 100% to make each half take full width within the container
+    fontSize: "1vw", // Set the font size for the elements inside the form
+    gap: "10px",
+  };
+
+  const submitButtonStyle: React.CSSProperties = {
+    backgroundColor: "#4CAF50",
+    color: "white",
+    padding: "5px 10px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    width: "50%", // Set width to 100% to make it take the full width
+  };
+
+  const inputStyle: React.CSSProperties = {
+    marginBottom: "10px",
+    pointerEvents: editMode ? "auto" : "none",
+    opacity: editMode ? 1 : 0.5,
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target.files?.[0];
+    console.log("In change function");
+
+    if (image) {
+      console.log("Inside if change function");
+      setImage(image);
+      setImageUrl(URL.createObjectURL(image));
+    }
+  };
+
+  const handleImageClick = () => {
+    console.log("In click function");
+    inputRef.current?.click();
+  };
+
+  const saveInfo = async (ClubId: string) => {
+    try {
+      if (image) {
+        console.log("inside save image: ", image);
+        const storageRef = ref(getStorage(), `Club/${ClubId}/logo`);
+
+        // Upload the image
+        await uploadBytes(storageRef, image);
+
+        // Get the download URL
+        const downloadURL = await getDownloadURL(storageRef);
+
+        // Update the Firestore document with the updated image URL
+        await updateDoc(doc(db, "Club", ClubId), {
+          ...formData,
+          clubLogo: downloadURL,
+        });
+      } else {
+        console.log("No picture");
+      }
+    } catch (error) {
+      console.error("Error saving information:", error);
+    }
+  };
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <>
-      <div
-        onLoad={handleOnLoads}
-        style={{
-          display: "flex",
-          height: "89vh",
-          width: "100vw",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <form>
+    <div style={containerStyle}>
+      <form style={formContainerStyle} onSubmit={handleSubmit}>
+        <div style={formStyle}>
+          <h1>Editing Club Info</h1>
           <div
+            onClick={handleImageClick}
             style={{
-              display: "flex",
-              height: "85vh",
-              width: "90vw",
-              backgroundColor: "rgba(255,255,255,0.7)",
-              borderRadius: "45px",
-              justifyContent: "center",
-              alignItems: "center",
+              cursor: "pointer",
+              marginTop: "30px",
+              marginBottom: "30px",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                height: "78vh",
-                width: "57vw",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div style={editBlockFormat}>
-                <div style={smallTitleBox}>
-                  <h2>Club Name</h2>
-                </div>
+            {image ? (
+              <img
+                height="150vh"
+                width="160vw"
+                src={URL.createObjectURL(image)}
+                alt="Profile"
+              />
+            ) : (
+              <img
+                height="150vh"
+                width="160vw"
+                src={formData.clubLogo || "profile.png"}
+                alt="Profile"
+              />
+            )}
 
-                <div style={smallEditBox}>
-                  <button
-                    type="button"
-                    onClick={toggleInputEnabled}
-                    style={buttonFormatEdit}
-                  >
-                    <h6
-                      style={{
-                        fontStyle: "bold",
-                        textDecoration: "underline",
-                        fontSize: "24px",
-                      }}
-                    >
-                      {isInputEnabled ? "" : "Save "}
-                      Edit
-                    </h6>
-                  </button>
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id=""
-                    name="clubName"
-                    readOnly={isInputEnabled}
-                    value={clubInfo.clubName}
-                    onChange={handleChange}
-                    disabled={isInputEnabled}
-                  />
-                </div>
-              </div>
-
-              <div style={editBlockFormat}>
-                <div style={smallTitleBox}>
-                  <h2>LinkedIn</h2>
-                </div>
-
-                <div style={smallEditBox}>
-                  <button
-                    type="button"
-                    onClick={toggleInputEnabled1}
-                    style={buttonFormatEdit}
-                  >
-                    <h6
-                      style={{
-                        fontStyle: "bold",
-                        textDecoration: "underline",
-                        fontSize: "24px",
-                      }}
-                    >
-                      {isInputEnabled1 ? "" : "Save "}
-                      Edit
-                    </h6>
-                  </button>
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id=""
-                    placeholder="LinkedIn Account Link"
-                    disabled={isInputEnabled1}
-                  />
-                </div>
-              </div>
-
-              <div style={editBlockFormat}>
-                <div style={smallTitleBox}>
-                  <h2>Twitter</h2>
-                </div>
-
-                <div style={smallEditBox}>
-                  <button
-                    type="button"
-                    onClick={toggleInputEnabled2}
-                    style={buttonFormatEdit}
-                  >
-                    <h6
-                      style={{
-                        fontStyle: "bold",
-                        textDecoration: "underline",
-                        fontSize: "24px",
-                      }}
-                    >
-                      {isInputEnabled2 ? "" : "Save "}
-                      Edit
-                    </h6>
-                  </button>
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id=""
-                    placeholder="Twitter Link"
-                    disabled={isInputEnabled2}
-                  />
-                </div>
-              </div>
-
-              <div style={editBlockFormat}>
-                <div style={smallTitleBox}>
-                  <h2>Facebook</h2>
-                </div>
-
-                <div style={smallEditBox}>
-                  <button
-                    type="button"
-                    onClick={toggleInputEnabled3}
-                    style={buttonFormatEdit}
-                  >
-                    <h6
-                      style={{
-                        fontStyle: "bold",
-                        textDecoration: "underline",
-                        fontSize: "24px",
-                      }}
-                    >
-                      {isInputEnabled3 ? "" : "Save "}
-                      Edit
-                    </h6>
-                  </button>
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id=""
-                    placeholder="Facebook Link"
-                    disabled={isInputEnabled3}
-                  />
-                </div>
-              </div>
-
-              <div style={editBlockFormat}>
-                <div style={smallTitleBox}>
-                  <h2>Application Requirements</h2>
-                </div>
-
-                <div style={smallEditBox}>
-                  <button
-                    type="button"
-                    onClick={toggleInputEnabled4}
-                    style={buttonFormatEdit}
-                  >
-                    <h6
-                      style={{
-                        fontStyle: "bold",
-                        textDecoration: "underline",
-                        fontSize: "24px",
-                      }}
-                    >
-                      {isInputEnabled4 ? "" : "Save "}
-                      Edit
-                    </h6>
-                  </button>
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id=""
-                    placeholder="Not Provided"
-                    disabled={isInputEnabled4}
-                  />
-                </div>
-              </div>
-
-              <div style={editBlockFormat}>
-                <div style={smallTitleBox}>
-                  <h2>Club Description</h2>
-                </div>
-
-                <div style={smallEditBox}>
-                  <button
-                    type="button"
-                    onClick={toggleInputEnabled5}
-                    style={buttonFormatEdit}
-                  >
-                    <h6
-                      style={{
-                        fontStyle: "bold",
-                        textDecoration: "underline",
-                        fontSize: "24px",
-                      }}
-                    >
-                      {isInputEnabled5 ? "" : "Save "}
-                      Edit
-                    </h6>
-                  </button>
-                </div>
-
-                <div className="form-group">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id=""
-                    placeholder="Not Provided"
-                    disabled={isInputEnabled5}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                height: "75vh",
-                width: "28vw",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div style={smallInfoBlockFormat}>
-                <div>
-                  <h1>Can I update the info ?</h1>
-                  <h4>Definitely, Info can be updated whenever you want !</h4>
-                </div>
-              </div>
-
-              <div style={smallInfoBlockFormat}>
-                <div>
-                  <h1>What do mean by requirements ?</h1>
-                  <h4>
-                    Special requirements that are not as common as name and
-                    matric number. for example, CV.
-                  </h4>
-                </div>
-              </div>
-
-              <div style={smallInfoBlockFormat}>
-                <div>
-                  <h1>Why do we add description ?</h1>
-                  <h4>
-                    So Students can get an idea about what is this club all
-                    about
-                  </h4>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  height: "12vh",
-                  width: "28vw",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <Link to={"/manage_club"}>
-                    <button
-                      type="submit"
-                      className="btn btn-primary btn-lg"
-                      style={{
-                        width: "300px",
-                      }}
-                    >
-                      Save Information
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <input
+              type="file"
+              ref={inputRef}
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
           </div>
-        </form>
-      </div>
-    </>
+          <div style={inputStyle}>
+            <h3>Club Name</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubName"
+              value={formData.clubName}
+              disabled={!editMode} // Disable input when not in edit mode
+            />
+          </div>
+          <div style={inputStyle}>
+            <h3>President ID</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="PID"
+              value={formData.PID}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Brief Description</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="B_Desc"
+              value={formData.B_Desc}
+            />
+          </div>
+        </div>
+
+        <div style={formStyle}>
+          <div style={inputStyle}>
+            <h3>Facebook Link</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubFacebook"
+              value={formData.clubFacebook}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Application Requirements</h3>
+            <textarea
+              className="inputField"
+              name="clubAppReq"
+              value={formData.clubAppReq.join("\n")} // Join array into a string with newlines
+              style={{ whiteSpace: "pre-wrap" }} // Set white-space style
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>LinkedIn Link</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubLinkedIn"
+              value={formData.clubLinkedIn}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Telegram Link</h3>
+            <input
+              type="text"
+              className="inputField"
+              name="clubTelegram"
+              value={formData.clubTelegram}
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Club Description</h3>
+            <textarea
+              className="inputField"
+              name="clubDesc"
+              value={formData.clubDesc} // You might want to use a value if you want to control the textarea content
+            />
+          </div>
+
+          <div style={inputStyle}>
+            <h3>Club Type</h3>
+            <label></label>
+
+            <select name="clubStatus" id="ClubType" value={formData.clubStatus}>
+              <option value=""></option>
+              <option value="Active">Active</option>
+              <option value="In-Active">In-Active</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            style={submitButtonStyle}
+            onClick={handleToggle}
+          >
+            {editMode ? "Save" : "Edit"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
-}
+};
 
 export default EditInfoBody;

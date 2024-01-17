@@ -101,10 +101,11 @@ const NavBar = () => {
       if (userID) {
         const docRef = doc(db, "Student", userID);
         const docSnap = await getDoc(docRef);
+        console.log("Why");
 
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          setUserAccess(userData.accessLevel);
+          setUserAccess(userData.accessLevel); //Damn it its accessLvl
           console.log(userAccess); // Assuming access is a string, adjust accordingly
         } else {
           console.log("No document");
@@ -189,6 +190,18 @@ const NavBar = () => {
               </li>
             )}
 
+            {userAccess != "admin" && (
+              <li className="nav-item">
+                <Link
+                  to="/newClubComp"
+                  className="nav-link"
+                  style={{ color: "white" }}
+                >
+                  Create Club
+                </Link>
+              </li>
+            )}
+
             <li className="nav-item">
               <Link to="/Clubs" className="nav-link" style={{ color: "white" }}>
                 Clubs
@@ -197,11 +210,11 @@ const NavBar = () => {
             {userAccess == "admin" && (
               <li className="nav-item">
                 <Link
-                  to="/manage_club"
+                  to="/admissionlist"
                   className="nav-link"
                   style={{ color: "white" }}
                 >
-                  Manage Club
+                  Admission
                 </Link>
               </li>
             )}

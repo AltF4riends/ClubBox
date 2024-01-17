@@ -31,17 +31,20 @@ import CalendarMain from "./components/CalendarPage/CalendarMain";
 import NewEvent from "./components/CreateEvent/NewEvent";
 import NewEventComp from "./components/NewEventComp";
 import NewClubComp from "./components/NewClubComp";
-
+import ClubStatisticPage from "./components/ClubStatisticPage";
 import CalendarComp from "./components/CalendarComp";
 import ProfilePage from "./components/ProfilePage";
 import ClubAdmission from "./components/Club_Admission/ClubAdmission";
 import CreateEvents from "./components/CreateEvents";
 import ClubPage from "./components/Club_Admission/ClubPage";
+import Admissionlist from "./components/Club_Admission/Admissionlist";
+
 import AddInfoPage from "./components/AddInfoPage";
 import CartPage from "./components/PaymentPage/CartPage";
-
+import NewStatistic from "./components/Statistics/NewStatistic";
 import ViewEvent from "./components/EventPage/ViewEvent";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
+import TransactionHistoryPage from "./components/TransactionHistoryPage";
 function App() {
   return (
     <AuthContextProvider>
@@ -57,7 +60,8 @@ function App() {
               element={<PasswordQuestionPage />}
             />
             <Route path="/faqpage" element={<FaqMainPage />} />
-
+            <Route path="/clubstatistic" element={<ClubStatisticPage />} />
+            <Route path="/newstatistic" element={<NewStatistic />} />
             <Route path="/createevents" element={<CreateEvents />} />
             <Route path="/Club_Admission" element={<ClubAdmission />} />
 
@@ -69,6 +73,23 @@ function App() {
 
             {/* <Route
               path="/forget_password_qna"
+              element={
+                <ForgotPasswordQNA
+                  ans1={""}
+                  ans2={""}
+                  ans3={""}
+                  updateFields={function (
+                    fields: Partial<{
+                      ans1: String;
+                      ans2: String;
+                      ans3: String;
+                    }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
               element={<ForgotPasswordQNA />}
             /> */}
             <Route path="/additional_info" element={<AddInfoPage />} />
@@ -85,15 +106,46 @@ function App() {
                 />
               }
             />
-            {/* <Route path="/upload_photo" element={<UploadPhoto />} />
-            <Route path="/upload_video" element={<UploadVideo />} /> */}
+            <Route
+              path="/upload_photo"
+              element={
+                <UploadPhoto
+                  photoURL={""}
+                  updateFields={function (
+                    fields: Partial<{ photoURL: String }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/upload_video"
+              element={
+                <UploadVideo
+                  videoURL={""}
+                  updateFields={function (
+                    fields: Partial<{ videoURL: String }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
             <Route
               path="/edit-personal-details"
               element={<EditPersonalDetailsPage />}
             />
             <Route path="/Clubs" element={<ClubPage />} />
             <Route path="/Cart" element={<CartPage />} />
+
             <Route path="/payment_page" element={<PaymentPage />} />
+            <Route path="/Admissionlist" element={<Admissionlist />} />
+            <Route
+              path="/transaction_history"
+              element={<TransactionHistoryPage />}
+            />
+
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 
