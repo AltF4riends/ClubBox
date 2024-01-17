@@ -114,7 +114,7 @@ const RegisterForm = () => {
           address: data.curAddress,
           utmEmail: data.email,
           password: data.password,
-          accessLvl: data.accessLvl,
+          accessLevel: data.accessLvl, //
           clubID: data.clubID,
           aboutMe: data.aboutMe,
           photoURL: data.photoURL,

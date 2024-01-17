@@ -56,14 +56,14 @@ const buttonFormat = {
 };
 
 type UVData = {
-  videoURL: String,
-}
+  videoURL: String;
+};
 
 type UVProps = UVData & {
-  updateFields:(fields: Partial<UVData>) => void
-}
+  updateFields: (fields: Partial<UVData>) => void;
+};
 
-const UploadVideo = ({videoURL, updateFields}:UVProps) => {
+const UploadVideo = ({ videoURL, updateFields }: UVProps) => {
   let heading1 = "Upload Video of Introduction";
   return (
     <div>
@@ -71,14 +71,14 @@ const UploadVideo = ({videoURL, updateFields}:UVProps) => {
         Upload a maximum of 3000MB size video of your desired choice below
       </h6>
       <div style={dropArea}>
-      <input
-        type="text"
-        className="form-control"
-        id="vURL"
-        placeholder="eg. Video Link"
-        aria-label="Video Link"
-        onChange={(e) => updateFields({videoURL: e.target.value})}
-      />
+        <input
+          type="text"
+          className="form-control"
+          id="vURL"
+          placeholder="eg. Video Link"
+          aria-label="Video Link"
+          onChange={(e) => updateFields({ videoURL: e.target.value })}
+        />
       </div>
     </div>
   );

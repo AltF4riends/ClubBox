@@ -263,6 +263,7 @@ const CartPage: React.FC = () => {
     return <p style={{ color: "white" }}>Error: {error}</p>;
   }
 
+  //Payment API calling
   const handleCheckOut = (e:any) => {
     e.preventDefault();
     fetch("http://localhost:3000/create-checkout-session", {

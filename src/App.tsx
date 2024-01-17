@@ -44,6 +44,7 @@ import CartPage from "./components/PaymentPage/CartPage";
 import NewStatistic from "./components/Statistics/NewStatistic";
 import ViewEvent from "./components/EventPage/ViewEvent";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
+import TransactionHistoryPage from "./components/TransactionHistoryPage";
 function App() {
   return (
     <AuthContextProvider>
@@ -72,7 +73,22 @@ function App() {
 
             <Route
               path="/forget_password_qna"
-              element={<ForgotPasswordQNA />}
+              element={
+                <ForgotPasswordQNA
+                  ans1={""}
+                  ans2={""}
+                  ans3={""}
+                  updateFields={function (
+                    fields: Partial<{
+                      ans1: String;
+                      ans2: String;
+                      ans3: String;
+                    }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
             />
             <Route path="/additional_info" element={<AddInfoPage />} />
             <Route
@@ -88,16 +104,44 @@ function App() {
                 />
               }
             />
-            <Route path="/upload_photo" element={<UploadPhoto />} />
-            <Route path="/upload_video" element={<UploadVideo />} />
+            <Route
+              path="/upload_photo"
+              element={
+                <UploadPhoto
+                  photoURL={""}
+                  updateFields={function (
+                    fields: Partial<{ photoURL: String }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
+            <Route
+              path="/upload_video"
+              element={
+                <UploadVideo
+                  videoURL={""}
+                  updateFields={function (
+                    fields: Partial<{ videoURL: String }>
+                  ): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
             <Route
               path="/edit-personal-details"
               element={<EditPersonalDetailsPage />}
             />
             <Route path="/Clubs" element={<ClubPage />} />
             <Route path="/Cart" element={<CartPage />} />
-            <Route path="/payment_page" element={<PaymentPage/>}/>
+            <Route path="/payment_page" element={<PaymentPage />} />
             <Route path="/Admissionlist" element={<Admissionlist />} />
+            <Route
+              path="/transaction_history"
+              element={<TransactionHistoryPage />}
+            />
 
             <Route path="/manage_club/:id" element={<ManageClub />} />
 
