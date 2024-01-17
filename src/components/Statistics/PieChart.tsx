@@ -26,12 +26,20 @@ export default function PieActiveArc() {
         console.log("length", querySnapshot.docs.length);
         const data: ChartData[] = [];
         querySnapshot.forEach((doc) => {
-          data.push({
-            id: doc.data().id,
-            value: doc.data().value,
-            label: doc.data().label,
-          });
+          const ids = doc.data().id;
+          const values = doc.data().value;
+          const labels = doc.data().label;
+
+          // Transform data into correct format
+          for (let i = 0; i < ids.length; i++) {
+            data.push({
+              id: ids[i],
+              value: values[i],
+              label: labels[i],
+            });
+          }
         });
+        console.log("Data fetched from Firebase:", data);
         setDataFromDB(data);
       } catch (error) {
         console.error("Error fetching data from Firebase:", error);
